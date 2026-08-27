@@ -5,13 +5,29 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' shape-rendering='geometricPrecision' text-rendering='geometricPrecision' image-rendering='optimizeQuality' fill-rule='evenodd' clip-rule='evenodd' viewBox='0 0 276 512.56'><path fill='%23FFB21A' d='M0 257.35 44.98 0h215.18l-93.73 191.42H276L132.56 371.74c12.54 3.81 26.09 7.01 41.71 9.68 11.86 2.65 15.26 14.32 6.35 22.96l-122.94 96.7c-6.81 5.35-14.35 13.07-23.85 11.19-5.87-1.17-9.72-6.19-9.8-13.34l-2.36-136.01-.33-19.11c.16-7.5 2.96-12.13 7.18-14.08 3.43-1.58 7.79-1.41 12.43.43 12.87 6.81 24.37 12.91 35.33 18.39l21.41-91.2H0z'/></svg>">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SuperProject</title>
+<script>
+try{
+  const savedPrefs = JSON.parse(localStorage.getItem("superProjectPrefs") || "{}");
+  document.documentElement.dataset.theme = savedPrefs.theme === "light" ? "light" : "dark";
+}catch(_){ document.documentElement.dataset.theme = "dark"; }
+</script>
 <style>
 :root{
-  --bg:#0d1117; --bg2:#161b22; --bg3:#010409;
-  --line:#30363d; --txt:#c9d1d9; --dim:#8b949e;
-  --danger:#f85149;
+  /* Tema escuro permanece como padrão e mantém o fundo original solicitado. */
+  --bg:#0d1117; --bg2:#161b22; --bg3:#010409; --card:#1b222c; --surface-hover:#202833;
+  --line:#30363d; --txt:#c9d1d9; --dim:#8b949e; --input-txt:#f0f6fc;
+  --accent:#58a6ff; --accent-soft:#1f6feb26; --accent-soft-strong:#1f6feb44;
+  --button-bg:#21262d; --shadow:#0008; --danger:#f85149;
   --st-none:#8b949e; --st-iniciacao:#58a6ff; --st-planejamento:#e3b341;
   --st-execucao:#a371f7; --st-review:#9e6a03; --st-fechamento:#39d353;
+  color-scheme:dark;
+}
+html[data-theme="light"]{
+  --bg:#f4f7fa; --bg2:#ffffff; --bg3:#eef2f6; --card:#ffffff; --surface-hover:#e8eef5;
+  --line:#d0d7de; --txt:#1f2328; --dim:#656d76; --input-txt:#1f2328;
+  --accent:#0969da; --accent-soft:#0969da16; --accent-soft-strong:#0969da28;
+  --button-bg:#f6f8fa; --shadow:#1f23281f;
+  color-scheme:light;
 }
 *{box-sizing:border-box;font-family:"Consolas","Courier New",monospace;}
 body{margin:0;background:var(--bg);color:var(--txt);zoom:.8;}
@@ -137,7 +153,7 @@ button.ghost{background:transparent;}
 
 .page-head{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;}
 .page-head h2{margin:2px 0;}
-.nl-wrap{display:none}
+
 /* ---------- BARRA DE FERRAMENTAS ---------- */
 .toolbar{
   display:flex;flex-wrap:wrap;gap:10px;align-items:center;
@@ -341,6 +357,71 @@ input[type=range]{accent-color:#58a6ff;padding:0;}
   z-index:200;box-shadow:0 10px 30px #000a;animation:slideUp .3s;
 }
 
+/* ---------- TEMA, CONTRASTE E PERSONALIZACAO ---------- */
+html,body{min-height:100%;}
+body{background:var(--bg);color:var(--txt);transition:background .25s ease,color .25s ease;}
+h1,h2,h3{color:var(--accent);}
+header{background:var(--bg2);box-shadow:0 8px 24px var(--shadow);}
+.header-tools{display:flex;align-items:center;justify-content:flex-end;gap:10px;min-width:0;}
+#headerNav{display:flex;align-items:center;gap:10px;}
+#themeToggle{white-space:nowrap;display:inline-flex;align-items:center;gap:7px;}
+button{background:var(--button-bg);color:var(--txt);}
+button:hover{border-color:var(--accent);}
+button:focus-visible{outline-color:var(--accent);}
+button.primary{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);}
+button.primary:hover{background:var(--accent-soft-strong);}
+button.danger:hover{color:var(--bg);}
+.menu,.modal-box,.toolbar,.page-chip,.kanban-col,.sprint-stage,.gantt-wrap,.item-card,.sub-card{background-color:var(--bg2);}
+.menu button:hover,.gantt-row:hover .gantt-label{background:var(--accent-soft);color:var(--accent);}
+.card{background:var(--bg2);}
+.project-card{
+  background:var(--project-card-bg,var(--card));
+  border-color:color-mix(in srgb,var(--line) 76%,var(--project-accent,var(--accent)) 24%);
+  box-shadow:0 8px 22px var(--shadow);
+}
+.project-card:hover{border-color:var(--project-accent,var(--accent));box-shadow:0 16px 36px var(--shadow);}
+.project-card::before{background:var(--project-accent,var(--accent));transform:scaleX(.18);opacity:.9;}
+.project-card:hover::before{transform:scaleX(1);}
+.project-title{
+  color:var(--project-title,var(--project-accent,var(--accent)));cursor:pointer;display:block;
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.project-card-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;
+}
+.project-card-head .project-title{flex:1;min-width:0;margin:0;}
+.project-card-head .project-delete{flex:none;}
+.project-card-meta{display:block;margin:5px 0 12px;}
+.project-title:hover{text-decoration:underline;text-underline-offset:4px;}
+#projectName{color:var(--project-title,var(--project-accent,var(--accent)));}
+.project-title:focus-visible{outline:2px solid var(--project-accent,var(--accent));outline-offset:4px;border-radius:4px;}
+.progress,.chip-bar,.ring .bg{background:var(--bg3);}
+.ring .bg{stroke:var(--bg3);}
+.page-chip.active,#project .view-btn.active{border-color:var(--project-accent,var(--accent));background:var(--accent-soft);color:var(--project-accent,var(--accent));}
+.timeline-strip{background:linear-gradient(90deg,var(--bg2),var(--bg));border-left-color:var(--project-accent,var(--accent));}
+.timeline-strip b{color:var(--project-accent,var(--accent));}
+input,textarea,select{background:var(--bg3);color:var(--input-txt);}
+.task,.kanban-card,.sprint-item,.canvas .box,.sub-col,.lane{background:var(--bg3);}
+.task:hover{background:var(--surface-hover);}
+.kr,.li{background:var(--bg2);}
+.gantt-label{background:var(--bg2);}
+.gantt-head,.gantt-head .gantt-label{background:var(--bg3);}
+.gantt-row,.gantt-cell,.gantt-slot{border-color:var(--line);}
+.gantt-head .gantt-label,.blue{color:var(--accent);}
+#toast{border-color:var(--accent);border-left-color:var(--accent);background:var(--bg2);box-shadow:0 10px 30px var(--shadow);}
+.color-settings{margin-top:22px;padding:16px;border:1px solid var(--line);border-radius:10px;background:var(--bg3);}
+.color-settings h3{margin-top:0;}
+.color-control{display:flex;align-items:center;gap:8px;}
+.color-control input[type=color]{width:54px;height:38px;flex:none;}
+.color-control code{color:var(--dim);font-size:11px;}
+@media (max-width:720px){
+  header{height:auto;min-height:70px;padding:12px 16px;gap:10px;align-items:flex-start;}
+  header h2{font-size:18px;}
+  .header-tools{flex-wrap:wrap;}
+  #themeToggle{padding:9px 10px;}
+  .container{padding:16px;}
+}
+
 /* ---------- ANIMACOES ---------- */
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
@@ -359,7 +440,10 @@ input[type=range]{accent-color:#58a6ff;padding:0;}
 
 <header>
   <h2><span class="bolt">⚡</span> SuperProject</h2>
-  <div id="headerNav"></div>
+  <div class="header-tools">
+    <button id="themeToggle" class="ghost" onclick="toggleTheme()" aria-label="Alternar tema"></button>
+    <div id="headerNav"></div>
+  </div>
 </header>
 
 <div class="container">
@@ -367,32 +451,32 @@ input[type=range]{accent-color:#58a6ff;padding:0;}
   <!-- ================= HOME ================= -->
   <section id="home">
     <div class="row">
-      <button class="primary" onclick="createProject()">+ Novo Projeto</button>
+      <button id="newProjectBtn" class="primary" onclick="createProject()">+ Novo Projeto</button>
 
       <div class="menu-wrap" id="wrap-impHome">
-        <button onclick="toggleMenu(event,'impHome')">⬆ Importar <span class="caret">▾</span></button>
+        <button id="importHomeBtn" onclick="toggleMenu(event,'impHome')">⬆ Importar <span class="caret">▾</span></button>
         <div class="menu hidden" id="impHome">
-          <div class="menu-label">TRAZER PARA O SUPERPROJECT</div>
-          <button onclick="pickFile('txt','project')">📄 Arquivo TXT</button>
-          <button onclick="pickFile('json','project')">🧩 Arquivo JSON</button>
+          <div class="menu-label" id="importHomeLabel">TRAZER PARA O SUPERPROJECT</div>
+          <button id="importHomeTxt" onclick="pickFile('txt','project')">📄 Arquivo TXT</button>
+          <button id="importHomeJson" onclick="pickFile('json','project')">🧩 Arquivo JSON</button>
           <hr>
-          <button onclick="importManual('project')">✍ Escrever manualmente</button>
+          <button id="importHomeManual" onclick="importManual('project')">✍ Escrever manualmente</button>
         </div>
       </div>
 
       <div class="menu-wrap" id="wrap-savHome">
-        <button onclick="toggleMenu(event,'savHome')">💾 Salvar <span class="caret">▾</span></button>
+        <button id="saveHomeBtn" onclick="toggleMenu(event,'savHome')">💾 Salvar <span class="caret">▾</span></button>
         <div class="menu hidden" id="savHome">
-          <div class="menu-label">TODOS OS PROJETOS</div>
-          <button onclick="saveAll('txt')">📄 TXT (lista de tarefas)</button>
-          <button onclick="saveAll('json')">🧩 JSON (backup completo)</button>
+          <div class="menu-label" id="saveHomeLabel">TODOS OS PROJETOS</div>
+          <button id="saveHomeTxt" onclick="saveAll('txt')">📄 TXT (lista de tarefas)</button>
+          <button id="saveHomeJson" onclick="saveAll('json')">🧩 JSON (backup completo)</button>
         </div>
       </div>
 
-      <button class="ghost" onclick="openHelp()" title="Como usar">?</button>
+      <button id="helpBtn" class="ghost" onclick="openHelp()" title="Como usar">?</button>
     </div>
 
-    <h2>Meus Projetos</h2>
+    <h2 id="myProjectsTitle">Meus Projetos</h2>
     <div id="projects" class="grid"></div>
   </section>
 
@@ -400,8 +484,8 @@ input[type=range]{accent-color:#58a6ff;padding:0;}
   <section id="project" class="hidden">
     <div class="spread">
       <div>
-        <span class="eyebrow">Projeto</span>
-        <h1 id="projectName" style="margin-top:2px"></h1>
+        <span class="eyebrow" id="projectEyebrow">Projeto</span>
+        <h1 id="projectName" class="project-main-title" style="margin-top:2px"></h1>
       </div>
       <div class="row" id="projectActions"></div>
     </div>
@@ -411,11 +495,11 @@ input[type=range]{accent-color:#58a6ff;padding:0;}
     <div class="progress"><div id="globalProgress" class="progress-bar"></div></div>
     <h3 id="globalPercent"></h3>
 
-    <span class="eyebrow">Páginas do projeto</span>
+    <span class="eyebrow" id="projectPagesLabel">Páginas do projeto</span>
     <div id="pageRail" class="page-rail"></div>
 
     <div class="toolbar">
-      <span class="eyebrow">Visualização</span>
+      <span class="eyebrow" id="viewLabel">Visualização</span>
       <div class="sep"></div>
       <div class="view-switch" id="viewSwitch"></div>
     </div>
@@ -433,13 +517,13 @@ input[type=range]{accent-color:#58a6ff;padding:0;}
     <button class="modal-close" onclick="closeModal()" title="Fechar">✕</button>
     <h2 class="modal-title" id="modalTitle">Importar</h2>
     <p class="dim" id="modalHint">Uma linha por página. O primeiro texto vira o nome da página, o resto vira itens.</p>
-    <p class="green">Página - tarefa 1 - tarefa 2 - tarefa 3</p>
+    <p class="green" id="modalFormat">Página - tarefa 1 - tarefa 2 - tarefa 3</p>
     <textarea id="modalText" placeholder="Configuração Inicial - Instalar Node - Instalar Expo
 Frontend - Criar Login - Criar Home
 Backend - Criar API - Criar Banco"></textarea>
     <div class="row">
-      <button class="primary" onclick="confirmImport()">Confirmar</button>
-      <button onclick="openHelp()">Ver exemplo completo</button>
+      <button id="confirmImportBtn" class="primary" onclick="confirmImport()">Confirmar</button>
+      <button id="exampleHelpBtn" onclick="openHelp()">Ver exemplo completo</button>
     </div>
   </div>
 </div>
@@ -448,7 +532,7 @@ Backend - Criar API - Criar Banco"></textarea>
 <div id="editModal" class="modal hidden">
   <div class="modal-box">
     <button class="modal-close" onclick="closeEdit()" title="Fechar">✕</button>
-    <h2 class="modal-title">✏️ Editar projeto</h2>
+    <h2 class="modal-title" id="editModalTitle">✏️ Editar projeto</h2>
     <div id="editBody"></div>
   </div>
 </div>
@@ -465,70 +549,7 @@ Backend - Criar API - Criar Banco"></textarea>
 <div id="helpModal" class="modal hidden">
   <div class="modal-box">
     <button class="modal-close" onclick="closeHelp()" title="Fechar">✕</button>
-    <h2 class="modal-title">❓ Como usar o SuperProject</h2>
-
-    <h3>Escrever um projeto de uma vez</h3>
-    <p>Uma linha por página, itens separados por hífen:</p>
-    <p class="green">Página - tarefa 1 - tarefa 2 - tarefa 3</p>
-
-    <h3>Exemplo</h3>
-    <textarea readonly>Configuração Inicial - Instalar Node - Instalar Expo - Configurar VS Code - Testar Android - Testar iOS
-Frontend - Criar Login - Criar Home - Criar Perfil
-Backend - Criar API - Criar Banco - Criar Autenticação
-Firebase - Criar Projeto - Configurar Firestore</textarea>
-
-    <h3>Resultado</h3>
-<pre>📁 Configuração Inicial
-   ☐ Instalar Node
-   ☐ Instalar Expo
-
-📁 Frontend
-   ☐ Criar Login
-   ☐ Criar Home</pre>
-
-    <h3>Regras</h3>
-    <ul>
-      <li>O primeiro texto antes do "-" vira o nome da página.</li>
-      <li>Cada item depois do "-" vira uma tarefa.</li>
-      <li>Cada linha cria uma nova página.</li>
-      <li>Você pode importar centenas de tarefas de uma vez.</li>
-    </ul>
-
-    <h3>Salvar e importar</h3>
-    <ul>
-      <li><b>Salvar → TXT</b> gera a lista no mesmo formato de cima.</li>
-      <li><b>Salvar → JSON</b> guarda tudo: fases, tipos, prazos, detalhes e OKRs.</li>
-      <li><b>Importar</b> aceita arquivo TXT, arquivo JSON ou texto escrito na hora.</li>
-    </ul>
-
-    <h3>Visualizações</h3>
-    <ul>
-      <li><b class="blue">Lista</b> — o checklist clássico, linha a linha.</li>
-      <li><b class="blue">Quadros</b> — cartões lado a lado.</li>
-      <li><b class="blue">Kanban</b> — colunas por fase, arraste para mudar.</li>
-      <li><b class="blue">Sprint</b> — cada fase com progresso próprio.</li>
-      <li><b class="blue">Gantt</b> — linha do tempo por semana ou mês.</li>
-    </ul>
-
-    <h3>Fases</h3>
-    <ul>
-      <li><span class="pill" style="color:#58a6ff">Iniciação</span> azul</li>
-      <li><span class="pill" style="color:#e3b341">Planejamento</span> amarelo</li>
-      <li><span class="pill" style="color:#a371f7">Execução</span> roxo</li>
-      <li><span class="pill" style="color:#9e6a03">Review</span> amarelo queimado</li>
-      <li><span class="pill" style="color:#39d353">Fechamento</span> verde</li>
-    </ul>
-
-    <h3>Dentro de cada item</h3>
-    <p>Clique em <b>⋯</b> em qualquer item para abrir os detalhes. Lá dentro há abas:</p>
-    <ul>
-      <li><b>Detalhes</b> — descrição, prioridade, fase, tipo e prazo.</li>
-      <li><b>OKR Canvas</b> — aparece quando o item é marcado como planejamento geral do projeto.</li>
-      <li><b>Kanban</b> e <b>Roadmap</b> — para os demais itens, organizando as subtarefas por andamento ou por prioridade.</li>
-    </ul>
-
-    <h3>Datas</h3>
-    <p>A <b>data inicial</b> e a <b>escala</b> ficam em "Editar projeto", na tela inicial. Dentro do projeto, o botão <b>Mostrar datas</b> ao lado do Gantt liga e desliga as datas no diagrama.</p>
+    <div id="helpBody"></div>
   </div>
 </div>
 <script>
@@ -536,47 +557,239 @@ Firebase - Criar Projeto - Configurar Firestore</textarea>
    SUPERPROJECT — estado
    ========================================================== */
 
+const PREFS_KEY = "superProjectPrefs";
+let appPrefs = {};
+try{ appPrefs = JSON.parse(localStorage.getItem(PREFS_KEY) || "{}"); }catch(_){ appPrefs = {}; }
+
+function detectLanguage(){
+  const raw = (navigator.languages && navigator.languages[0]) || navigator.language || "pt-BR";
+  return String(raw).toLowerCase().startsWith("pt") ? "pt" : "en";
+}
+const APP_LANG = detectLanguage();
+document.documentElement.lang = APP_LANG === "pt" ? "pt-BR" : "en";
+
+const I18N = {
+  pt:{
+    "theme.light":"☀️ Claro", "theme.dark":"🌙 Escuro", "theme.label":"Alternar tema",
+    "home.newProject":"+ Novo Projeto", "common.import":"⬆ Importar", "common.save":"💾 Salvar",
+    "home.importLabel":"TRAZER PARA O SUPERPROJECT", "home.allProjects":"TODOS OS PROJETOS",
+    "common.txt":"📄 Arquivo TXT", "common.json":"🧩 Arquivo JSON", "common.manual":"✍ Escrever manualmente",
+    "home.saveTxt":"📄 TXT (lista de tarefas)", "home.saveJson":"🧩 JSON (backup completo)",
+    "common.help":"Como usar", "home.myProjects":"Meus Projetos", "common.project":"Projeto",
+    "project.pages":"Páginas do projeto", "project.view":"Visualização", "common.close":"Fechar",
+    "import.defaultTitle":"Importar", "import.hint":"Uma linha por página. O primeiro texto vira o nome da página, o resto vira itens.",
+    "import.format":"Página - tarefa 1 - tarefa 2 - tarefa 3", "common.confirm":"Confirmar", "common.fullExample":"Ver exemplo completo",
+    "edit.title":"✏️ Editar projeto", "empty.projectsTitle":"Nenhum projeto ainda",
+    "empty.projectsText":'Crie um projeto do zero, ou use "Importar" para trazer sua lista pronta.',
+    "project.meta":"{pages} página(s) · {items} item(ns)", "project.delete":"Excluir projeto",
+    "project.completed":"{percent}% concluído", "common.open":"Abrir", "project.edit":"✏️ Editar projeto",
+    "prompt.projectName":"Nome do projeto:", "default.generalPlanning":"Planejamento Geral",
+    "default.defineObjective":"Definir objetivo do projeto", "default.configureEnvironment":"Configurar ambiente",
+    "toast.projectCreated":"Projeto criado.", "confirm.deleteProject":'Excluir o projeto "{name}" e todas as suas páginas?',
+    "toast.projectDeleted":"Projeto excluído.", "edit.projectName":"Nome do projeto", "edit.startDate":"Data inicial",
+    "edit.timelineScale":"Escala do cronograma", "scale.weekOption":"Semanal (Semana 1, com datas)",
+    "scale.monthOption":"Mensal (Janeiro, Fevereiro...)", "scale.simpleOption":"Simples (Semana 1, Semana 2...)",
+    "edit.dateHint":'As datas aparecem no diagrama quando você liga "Mostrar datas", ao lado do Gantt.',
+    "edit.pages":"Páginas", "edit.pagesHint":"Renomeie e reordene aqui. Para excluir uma página, abra ela dentro do projeto.",
+    "common.items":"{count} itens", "common.up":"Subir", "common.down":"Descer", "page.new":"+ Nova página",
+    "appearance.title":"🎨 Cores do projeto", "appearance.hint":"Personalize este projeto. Se uma cor for redefinida, ela volta a acompanhar automaticamente o tema claro/escuro.",
+    "appearance.nameColor":"Cor do nome", "appearance.accentColor":"Cor de destaque", "appearance.cardColor":"Cor do cartão na tela inicial",
+    "appearance.reset":"Redefinir", "appearance.resetAll":"Redefinir todas as cores",
+    "toast.colorsReset":"Cores do projeto redefinidas.", "prompt.newPage":"Nome da nova página:",
+    "common.back":"← Voltar", "project.thisProject":"ESTE PROJETO", "project.addPages":"ADICIONAR PÁGINAS AQUI",
+    "page.upper":"PÁGINA {n}", "page.newUpper":"+ Nova Página", "toast.datesVisible":"Datas visíveis no diagrama.",
+    "toast.datesHidden":"Datas ocultas.", "page.mustKeepOne":"O projeto precisa de pelo menos uma página.",
+    "confirm.deletePage":'Excluir a página "{name}" e todos os seus itens?', "toast.pageDeleted":"Página excluída.",
+    "scale.week":"Semana {n}", "timeline.notStarted":"ainda não começou", "scale.weekName":"Semanal",
+    "scale.monthName":"Mensal", "scale.simpleName":"Simples", "timeline.start":"📅 Início:", "timeline.scale":"Escala:",
+    "timeline.now":"Agora:", "timeline.horizon":"Horizonte:", "timeline.months":"meses", "timeline.weeks":"semanas",
+    "page.position":"Página {current} de {total}", "page.doneItems":"{done} de {total} itens concluídos",
+    "page.delete":"Excluir esta página", "page.emptyTitle":"Página vazia",
+    "page.emptyText":'Adicione um item acima, ou use "Importar" para colar vários de uma vez.',
+    "project.progress":"{percent}% do projeto concluído", "status.mark":"Marcar como {status}",
+    "type.cycle":"Clique para alternar entre Checklist, Task e Épico", "badge.description":"Tem descrição",
+    "badge.subtasks":"Subtarefas", "badge.planning":"Planejamento geral (OKR)", "item.details":"Abrir detalhes do item",
+    "item.rename":"Renomear", "item.delete":"Excluir item", "item.doubleClick":"Clique duas vezes para abrir os detalhes",
+    "item.textColor":"Cor do texto", "item.addEpic":"+ Épico", "common.completed":"concluído", "kanban.dragHere":"Arraste itens para cá",
+    "sprint.empty":"Nenhum item nesta fase", "gantt.schedule":"Cronograma", "gantt.hideDates":"🙈 Ocultar datas",
+    "gantt.showDates":"👁 Mostrar datas", "gantt.realDates":"Mostrando as datas reais de cada período.",
+    "gantt.simpleDates":"Mostrando apenas Semana 1, Semana 2...", "gantt.item":"Item", "gantt.advance":"Adiantar",
+    "gantt.delay":"Adiar", "gantt.shorten":"Encurtar", "gantt.lengthen":"Alongar", "gantt.details":"Detalhes",
+    "gantt.until":" até ", "gantt.clickPhase":"clique para mudar a fase", "gantt.legend":"Legenda:",
+    "gantt.today":"▏hoje", "gantt.help":"Clique na barra para avançar a fase. ◀ ▶ movem no tempo, − + mudam a duração, ⋯ abre os detalhes.",
+    "prompt.itemName":"Nome do item:", "prompt.renameItem":"Renomear item:", "confirm.deleteItem":"Excluir item?",
+    "detail.details":"📝 Detalhes", "detail.itemMeta":"{page} · item {n}",
+    "detail.description":"Descrição — o que precisa ser feito, como e por quê",
+    "detail.descriptionPlaceholder":"Anote aqui o contexto, os critérios de aceite, links, decisões...",
+    "detail.priority":"Prioridade", "detail.phase":"Fase", "detail.type":"Tipo", "detail.starts":"Começa em",
+    "detail.duration":"Duração (períodos)", "detail.color":"Cor",
+    "detail.planning":"Este item é <b>planejamento geral do projeto</b> — abre o OKR Model Canvas no lugar do Kanban e do Roadmap.",
+    "detail.done":"Item concluído", "okr.intro":"Modelo para o planejamento geral: um objetivo claro, resultados-chave mensuráveis e as iniciativas que levam até lá.",
+    "okr.objective":"🎯 Objetivo", "okr.objectivePlaceholder":"Onde queremos chegar, em uma frase. Ex.: Lançar o app na Play Store com cadastro funcionando.",
+    "okr.average":"📈 Key Results — {percent}% em média", "okr.noKr":"Nenhum resultado-chave ainda.",
+    "okr.initiatives":"🚀 Iniciativas", "okr.noIni":"O que vamos fazer para mover os KRs?", "okr.addIni":"+ Iniciativa",
+    "okr.risks":"⚠️ Riscos e notas", "okr.risksPlaceholder":"O que pode dar errado, dependências, decisões pendentes...",
+    "prompt.kr":"Resultado-chave (algo mensurável):", "prompt.initiative":"Iniciativa:",
+    "sub.intro":"Quebre o item em subtarefas e mova entre as colunas.", "sub.add":"+ Subtarefa", "common.empty":"vazio",
+    "sub.back":"Voltar", "sub.forward":"Avançar", "prompt.subtask":"Nome da subtarefa:",
+    "roadmap.intro":"As mesmas subtarefas, organizadas pelo que precisa sair primeiro.", "roadmap.empty":"Nada nesta prioridade",
+    "roadmap.move":"Mover para {priority}", "import.writeProject":"✍ Escrever um projeto",
+    "import.writePages":"✍ Escrever páginas neste projeto", "default.page":"Página", "default.importedProject":"Projeto Importado",
+    "toast.projectImported":"Projeto importado com {count} página(s).", "toast.pagesAdded":"{count} página(s) adicionada(s).",
+    "toast.projectsImported":"{count} projeto(s) importado(s).", "import.error":'Não consegui ler esse arquivo. Confira se é um TXT no formato "Página - tarefa 1 - tarefa 2" ou um JSON gerado pelo próprio SuperProject.',
+    "toast.saved":"{kind} salvo.", "toast.nothingToSave":"Nenhum projeto para salvar.",
+    "status.backlog":"Backlog", "status.initiation":"Iniciação", "status.planning":"Planejamento", "status.execution":"Execução",
+    "status.review":"Review", "status.closing":"Fechamento", "type.checklist":"CHECKLIST", "type.task":"TASK", "type.epic":"ÉPICO",
+    "prio.urgent":"Urgente", "prio.normal":"Normal", "prio.low":"Baixa", "sub.todo":"A fazer", "sub.doing":"Fazendo", "sub.done":"Feito",
+    "view.list":"☰ Lista", "view.boards":"▦ Quadros", "view.kanban":"▤ Kanban", "view.sprint":"🏁 Sprint", "view.gantt":"📊 Gantt"
+  },
+  en:{
+    "theme.light":"☀️ Light", "theme.dark":"🌙 Dark", "theme.label":"Toggle theme",
+    "home.newProject":"+ New Project", "common.import":"⬆ Import", "common.save":"💾 Save",
+    "home.importLabel":"BRING INTO SUPERPROJECT", "home.allProjects":"ALL PROJECTS",
+    "common.txt":"📄 TXT file", "common.json":"🧩 JSON file", "common.manual":"✍ Type manually",
+    "home.saveTxt":"📄 TXT (task list)", "home.saveJson":"🧩 JSON (full backup)",
+    "common.help":"How to use", "home.myProjects":"My Projects", "common.project":"Project",
+    "project.pages":"Project pages", "project.view":"View", "common.close":"Close",
+    "import.defaultTitle":"Import", "import.hint":"One line per page. The first text becomes the page name; the rest becomes items.",
+    "import.format":"Page - task 1 - task 2 - task 3", "common.confirm":"Confirm", "common.fullExample":"See full example",
+    "edit.title":"✏️ Edit project", "empty.projectsTitle":"No projects yet",
+    "empty.projectsText":'Create a project from scratch, or use "Import" to bring in a ready-made list.',
+    "project.meta":"{pages} page(s) · {items} item(s)", "project.delete":"Delete project",
+    "project.completed":"{percent}% complete", "common.open":"Open", "project.edit":"✏️ Edit project",
+    "prompt.projectName":"Project name:", "default.generalPlanning":"General Planning",
+    "default.defineObjective":"Define project objective", "default.configureEnvironment":"Configure environment",
+    "toast.projectCreated":"Project created.", "confirm.deleteProject":'Delete project "{name}" and all its pages?',
+    "toast.projectDeleted":"Project deleted.", "edit.projectName":"Project name", "edit.startDate":"Start date",
+    "edit.timelineScale":"Timeline scale", "scale.weekOption":"Weekly (Week 1, with dates)",
+    "scale.monthOption":"Monthly (January, February...)", "scale.simpleOption":"Simple (Week 1, Week 2...)",
+    "edit.dateHint":'Dates appear in the chart when you enable "Show dates" next to Gantt.',
+    "edit.pages":"Pages", "edit.pagesHint":"Rename and reorder them here. To delete a page, open it inside the project.",
+    "common.items":"{count} items", "common.up":"Move up", "common.down":"Move down", "page.new":"+ New page",
+    "appearance.title":"🎨 Project colors", "appearance.hint":"Customize this project. Reset a color to make it follow the light/dark theme automatically again.",
+    "appearance.nameColor":"Name color", "appearance.accentColor":"Accent color", "appearance.cardColor":"Home card color",
+    "appearance.reset":"Reset", "appearance.resetAll":"Reset all colors",
+    "toast.colorsReset":"Project colors reset.", "prompt.newPage":"New page name:",
+    "common.back":"← Back", "project.thisProject":"THIS PROJECT", "project.addPages":"ADD PAGES HERE",
+    "page.upper":"PAGE {n}", "page.newUpper":"+ New Page", "toast.datesVisible":"Dates are visible in the chart.",
+    "toast.datesHidden":"Dates are hidden.", "page.mustKeepOne":"The project needs at least one page.",
+    "confirm.deletePage":'Delete page "{name}" and all its items?', "toast.pageDeleted":"Page deleted.",
+    "scale.week":"Week {n}", "timeline.notStarted":"has not started yet", "scale.weekName":"Weekly",
+    "scale.monthName":"Monthly", "scale.simpleName":"Simple", "timeline.start":"📅 Start:", "timeline.scale":"Scale:",
+    "timeline.now":"Now:", "timeline.horizon":"Horizon:", "timeline.months":"months", "timeline.weeks":"weeks",
+    "page.position":"Page {current} of {total}", "page.doneItems":"{done} of {total} items completed",
+    "page.delete":"Delete this page", "page.emptyTitle":"Empty page",
+    "page.emptyText":'Add an item above, or use "Import" to paste several at once.',
+    "project.progress":"{percent}% of project completed", "status.mark":"Mark as {status}",
+    "type.cycle":"Click to switch between Checklist, Task and Epic", "badge.description":"Has description",
+    "badge.subtasks":"Subtasks", "badge.planning":"General planning (OKR)", "item.details":"Open item details",
+    "item.rename":"Rename", "item.delete":"Delete item", "item.doubleClick":"Double-click to open details",
+    "item.textColor":"Text color", "item.addEpic":"+ Epic", "common.completed":"completed", "kanban.dragHere":"Drag items here",
+    "sprint.empty":"No items in this phase", "gantt.schedule":"Timeline", "gantt.hideDates":"🙈 Hide dates",
+    "gantt.showDates":"👁 Show dates", "gantt.realDates":"Showing the actual dates for each period.",
+    "gantt.simpleDates":"Showing only Week 1, Week 2...", "gantt.item":"Item", "gantt.advance":"Move earlier",
+    "gantt.delay":"Move later", "gantt.shorten":"Shorten", "gantt.lengthen":"Lengthen", "gantt.details":"Details",
+    "gantt.until":" to ", "gantt.clickPhase":"click to change phase", "gantt.legend":"Legend:",
+    "gantt.today":"▏today", "gantt.help":"Click a bar to advance its phase. ◀ ▶ move it in time, − + change duration, ⋯ opens details.",
+    "prompt.itemName":"Item name:", "prompt.renameItem":"Rename item:", "confirm.deleteItem":"Delete item?",
+    "detail.details":"📝 Details", "detail.itemMeta":"{page} · item {n}",
+    "detail.description":"Description — what needs to be done, how, and why",
+    "detail.descriptionPlaceholder":"Add context, acceptance criteria, links, decisions...",
+    "detail.priority":"Priority", "detail.phase":"Phase", "detail.type":"Type", "detail.starts":"Starts in",
+    "detail.duration":"Duration (periods)", "detail.color":"Color",
+    "detail.planning":"This item is <b>general project planning</b> — it opens the OKR Model Canvas instead of Kanban and Roadmap.",
+    "detail.done":"Item completed", "okr.intro":"A model for general planning: a clear objective, measurable key results, and the initiatives that move them forward.",
+    "okr.objective":"🎯 Objective", "okr.objectivePlaceholder":"Where do we want to get, in one sentence? Example: Launch the app on Google Play with sign-up working.",
+    "okr.average":"📈 Key Results — {percent}% average", "okr.noKr":"No key results yet.",
+    "okr.initiatives":"🚀 Initiatives", "okr.noIni":"What will we do to move the KRs?", "okr.addIni":"+ Initiative",
+    "okr.risks":"⚠️ Risks and notes", "okr.risksPlaceholder":"What could go wrong, dependencies, pending decisions...",
+    "prompt.kr":"Key result (something measurable):", "prompt.initiative":"Initiative:",
+    "sub.intro":"Break the item into subtasks and move them between columns.", "sub.add":"+ Subtask", "common.empty":"empty",
+    "sub.back":"Back", "sub.forward":"Forward", "prompt.subtask":"Subtask name:",
+    "roadmap.intro":"The same subtasks, organized by what needs to ship first.", "roadmap.empty":"Nothing at this priority",
+    "roadmap.move":"Move to {priority}", "import.writeProject":"✍ Write a project",
+    "import.writePages":"✍ Write pages in this project", "default.page":"Page", "default.importedProject":"Imported Project",
+    "toast.projectImported":"Project imported with {count} page(s).", "toast.pagesAdded":"{count} page(s) added.",
+    "toast.projectsImported":"{count} project(s) imported.", "import.error":'I could not read this file. Check that it is a TXT in the "Page - task 1 - task 2" format or a JSON generated by SuperProject.',
+    "toast.saved":"{kind} saved.", "toast.nothingToSave":"No projects to save.",
+    "status.backlog":"Backlog", "status.initiation":"Initiation", "status.planning":"Planning", "status.execution":"Execution",
+    "status.review":"Review", "status.closing":"Closing", "type.checklist":"CHECKLIST", "type.task":"TASK", "type.epic":"EPIC",
+    "prio.urgent":"Urgent", "prio.normal":"Normal", "prio.low":"Low", "sub.todo":"To do", "sub.doing":"Doing", "sub.done":"Done",
+    "view.list":"☰ List", "view.boards":"▦ Boards", "view.kanban":"▤ Kanban", "view.sprint":"🏁 Sprint", "view.gantt":"📊 Gantt"
+  }
+};
+
+function tr(key, vars){
+  let out = (I18N[APP_LANG] && I18N[APP_LANG][key]) || I18N.pt[key] || key;
+  Object.entries(vars || {}).forEach(([k,v]) => { out = out.replaceAll("{"+k+"}", String(v)); });
+  return out;
+}
+function savePrefs(){ localStorage.setItem(PREFS_KEY, JSON.stringify(appPrefs)); }
+function currentTheme(){ return document.documentElement.dataset.theme === "light" ? "light" : "dark"; }
+function applyTheme(theme, persist){
+  const next = theme === "light" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  if(persist !== false){ appPrefs.theme = next; savePrefs(); }
+  updateThemeButton();
+  applyCurrentProjectColors();
+  if(editIndex !== null) renderEdit();
+}
+function toggleTheme(){ applyTheme(currentTheme() === "dark" ? "light" : "dark", true); }
+function updateThemeButton(){
+  const btn = document.getElementById("themeToggle");
+  if(!btn) return;
+  btn.innerText = currentTheme() === "dark" ? tr("theme.light") : tr("theme.dark");
+  btn.title = tr("theme.label");
+  btn.setAttribute("aria-label", tr("theme.label"));
+}
+function cssVar(name, fallback){
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return v || fallback;
+}
+function safeColor(v, fallback){ return /^#[0-9a-f]{6}$/i.test(String(v||"")) ? v : (fallback || ""); }
+
 let projects = JSON.parse(localStorage.getItem("devProjects")) || [];
 let currentProject = null;
 let currentPage = 0;
 
 const STATUSES = [
-  { key:"none",         label:"Backlog",      hex:"#8b949e" },
-  { key:"iniciacao",    label:"Iniciação",    hex:"#58a6ff" },
-  { key:"planejamento", label:"Planejamento", hex:"#e3b341" },
-  { key:"execucao",     label:"Execução",     hex:"#a371f7" },
-  { key:"review",       label:"Review",       hex:"#9e6a03" },
-  { key:"fechamento",   label:"Fechamento",   hex:"#39d353" }
+  { key:"none",         label:tr("status.backlog"),    hex:"#8b949e" },
+  { key:"iniciacao",    label:tr("status.initiation"), hex:"#58a6ff" },
+  { key:"planejamento", label:tr("status.planning"),   hex:"#e3b341" },
+  { key:"execucao",     label:tr("status.execution"),  hex:"#a371f7" },
+  { key:"review",       label:tr("status.review"),     hex:"#9e6a03" },
+  { key:"fechamento",   label:tr("status.closing"),    hex:"#39d353" }
 ];
 
 const TYPES = [
-  { key:"checklist", label:"CHECKLIST", icon:"☑" },
-  { key:"task",      label:"TASK",      icon:"▸" },
-  { key:"epico",     label:"ÉPICO",     icon:"◆" }
+  { key:"checklist", label:tr("type.checklist"), icon:"☑" },
+  { key:"task",      label:tr("type.task"),      icon:"▸" },
+  { key:"epico",     label:tr("type.epic"),      icon:"◆" }
 ];
 
 const PRIOS = [
-  { key:"urgente", label:"Urgente", hex:"#f85149" },
-  { key:"normal",  label:"Normal",  hex:"#58a6ff" },
-  { key:"baixa",   label:"Baixa",   hex:"#8b949e" }
+  { key:"urgente", label:tr("prio.urgent"), hex:"#f85149" },
+  { key:"normal",  label:tr("prio.normal"), hex:"#58a6ff" },
+  { key:"baixa",   label:tr("prio.low"),    hex:"#8b949e" }
 ];
 
 const SUBCOLS = [
-  { key:"todo",  label:"A fazer",  hex:"#58a6ff" },
-  { key:"doing", label:"Fazendo",  hex:"#a371f7" },
-  { key:"done",  label:"Feito",    hex:"#39d353" }
+  { key:"todo",  label:tr("sub.todo"),  hex:"#58a6ff" },
+  { key:"doing", label:tr("sub.doing"), hex:"#a371f7" },
+  { key:"done",  label:tr("sub.done"),  hex:"#39d353" }
 ];
 
 const VIEWS = [
-  { key:"lista",   label:"☰ Lista" },
-  { key:"quadros", label:"▦ Quadros" },
-  { key:"kanban",  label:"▤ Kanban" },
-  { key:"sprint",  label:"🏁 Sprint" },
-  { key:"gantt",   label:"📊 Gantt" }
+  { key:"lista",   label:tr("view.list") },
+  { key:"quadros", label:tr("view.boards") },
+  { key:"kanban",  label:tr("view.kanban") },
+  { key:"sprint",  label:tr("view.sprint") },
+  { key:"gantt",   label:tr("view.gantt") }
 ];
 
-const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-               "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const MESES = APP_LANG === "pt"
+  ? ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"]
+  : ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
 function statusOf(k){ return STATUSES.find(s => s.key === k) || STATUSES[0]; }
 function typeOf(k){ return TYPES.find(t => t.key === k) || TYPES[0]; }
@@ -605,6 +818,9 @@ function migrate(){
     if(!p.scale) p.scale = "week";
     if(!p.view) p.view = "lista";
     if(typeof p.showDates !== "boolean") p.showDates = false;
+    if(typeof p.nameColor !== "string") p.nameColor = "";
+    if(typeof p.accentColor !== "string") p.accentColor = "";
+    if(typeof p.cardColor !== "string") p.cardColor = "";
     if(!Array.isArray(p.pages)) p.pages = [];
 
     p.pages.forEach(pg => {
@@ -680,15 +896,103 @@ document.addEventListener("keydown", e => {
    Navegação
    ========================================================== */
 
+function applyStaticLanguage(){
+  const setText = (id, value) => { const el=document.getElementById(id); if(el) el.innerText=value; };
+  const setHTML = (id, value) => { const el=document.getElementById(id); if(el) el.innerHTML=value; };
+  setText("newProjectBtn", tr("home.newProject"));
+  setHTML("importHomeBtn", tr("common.import") + ' <span class="caret">▾</span>');
+  setText("importHomeLabel", tr("home.importLabel"));
+  setText("importHomeTxt", tr("common.txt"));
+  setText("importHomeJson", tr("common.json"));
+  setText("importHomeManual", tr("common.manual"));
+  setHTML("saveHomeBtn", tr("common.save") + ' <span class="caret">▾</span>');
+  setText("saveHomeLabel", tr("home.allProjects"));
+  setText("saveHomeTxt", tr("home.saveTxt"));
+  setText("saveHomeJson", tr("home.saveJson"));
+  const help=document.getElementById("helpBtn"); if(help) help.title=tr("common.help");
+  setText("myProjectsTitle", tr("home.myProjects"));
+  setText("projectEyebrow", tr("common.project"));
+  setText("projectPagesLabel", tr("project.pages"));
+  setText("viewLabel", tr("project.view"));
+  setText("modalTitle", tr("import.defaultTitle"));
+  setText("modalHint", tr("import.hint"));
+  setText("modalFormat", tr("import.format"));
+  setText("confirmImportBtn", tr("common.confirm"));
+  setText("exampleHelpBtn", tr("common.fullExample"));
+  setText("editModalTitle", tr("edit.title"));
+  document.querySelectorAll(".modal-close").forEach(b => b.title=tr("common.close"));
+}
+
+function renderHelp(){
+  const body=document.getElementById("helpBody");
+  if(!body) return;
+  if(APP_LANG === "en"){
+    body.innerHTML = `
+      <h2 class="modal-title">❓ How to use SuperProject</h2>
+      <h3>Write a project all at once</h3><p>One line per page, items separated by hyphens:</p>
+      <p class="green">Page - task 1 - task 2 - task 3</p>
+      <h3>Example</h3><textarea readonly>Initial Setup - Install Node - Install Expo - Configure VS Code - Test Android - Test iOS
+Frontend - Create Login - Create Home - Create Profile
+Backend - Create API - Create Database - Create Authentication
+Firebase - Create Project - Configure Firestore</textarea>
+      <h3>Result</h3><pre>📁 Initial Setup
+   ☐ Install Node
+   ☐ Install Expo
+
+📁 Frontend
+   ☐ Create Login
+   ☐ Create Home</pre>
+      <h3>Rules</h3><ul><li>The first text before "-" becomes the page name.</li><li>Each item after "-" becomes a task.</li><li>Each line creates a new page.</li><li>You can import hundreds of tasks at once.</li></ul>
+      <h3>Save and import</h3><ul><li><b>Save → TXT</b> creates the list in the same format above.</li><li><b>Save → JSON</b> stores everything: phases, types, deadlines, details and OKRs.</li><li><b>Import</b> accepts TXT, JSON or text typed manually.</li></ul>
+      <h3>Views</h3><ul><li><b class="blue">List</b> — classic checklist.</li><li><b class="blue">Boards</b> — cards side by side.</li><li><b class="blue">Kanban</b> — columns by phase; drag to change.</li><li><b class="blue">Sprint</b> — each phase with its own progress.</li><li><b class="blue">Gantt</b> — timeline by week or month.</li></ul>
+      <h3>Phases</h3><ul><li><span class="pill" style="color:#58a6ff">Initiation</span> blue</li><li><span class="pill" style="color:#e3b341">Planning</span> yellow</li><li><span class="pill" style="color:#a371f7">Execution</span> purple</li><li><span class="pill" style="color:#9e6a03">Review</span> amber</li><li><span class="pill" style="color:#39d353">Closing</span> green</li></ul>
+      <h3>Inside each item</h3><p>Click <b>⋯</b> on any item to open details. The dialog has tabs:</p><ul><li><b>Details</b> — description, priority, phase, type and deadline.</li><li><b>OKR Canvas</b> — shown when the item is marked as general project planning.</li><li><b>Kanban</b> and <b>Roadmap</b> — for the other items, organizing subtasks by progress or priority.</li></ul>
+      <h3>Dates</h3><p>The <b>start date</b> and <b>scale</b> are in "Edit project" on the home screen. Inside the project, <b>Show dates</b> next to Gantt toggles real dates.</p>`;
+  }else{
+    body.innerHTML = `
+      <h2 class="modal-title">❓ Como usar o SuperProject</h2>
+      <h3>Escrever um projeto de uma vez</h3><p>Uma linha por página, itens separados por hífen:</p>
+      <p class="green">Página - tarefa 1 - tarefa 2 - tarefa 3</p>
+      <h3>Exemplo</h3><textarea readonly>Configuração Inicial - Instalar Node - Instalar Expo - Configurar VS Code - Testar Android - Testar iOS
+Frontend - Criar Login - Criar Home - Criar Perfil
+Backend - Criar API - Criar Banco - Criar Autenticação
+Firebase - Criar Projeto - Configurar Firestore</textarea>
+      <h3>Resultado</h3><pre>📁 Configuração Inicial
+   ☐ Instalar Node
+   ☐ Instalar Expo
+
+📁 Frontend
+   ☐ Criar Login
+   ☐ Criar Home</pre>
+      <h3>Regras</h3><ul><li>O primeiro texto antes do "-" vira o nome da página.</li><li>Cada item depois do "-" vira uma tarefa.</li><li>Cada linha cria uma nova página.</li><li>Você pode importar centenas de tarefas de uma vez.</li></ul>
+      <h3>Salvar e importar</h3><ul><li><b>Salvar → TXT</b> gera a lista no mesmo formato de cima.</li><li><b>Salvar → JSON</b> guarda tudo: fases, tipos, prazos, detalhes e OKRs.</li><li><b>Importar</b> aceita arquivo TXT, arquivo JSON ou texto escrito na hora.</li></ul>
+      <h3>Visualizações</h3><ul><li><b class="blue">Lista</b> — o checklist clássico, linha a linha.</li><li><b class="blue">Quadros</b> — cartões lado a lado.</li><li><b class="blue">Kanban</b> — colunas por fase, arraste para mudar.</li><li><b class="blue">Sprint</b> — cada fase com progresso próprio.</li><li><b class="blue">Gantt</b> — linha do tempo por semana ou mês.</li></ul>
+      <h3>Fases</h3><ul><li><span class="pill" style="color:#58a6ff">Iniciação</span> azul</li><li><span class="pill" style="color:#e3b341">Planejamento</span> amarelo</li><li><span class="pill" style="color:#a371f7">Execução</span> roxo</li><li><span class="pill" style="color:#9e6a03">Review</span> amarelo queimado</li><li><span class="pill" style="color:#39d353">Fechamento</span> verde</li></ul>
+      <h3>Dentro de cada item</h3><p>Clique em <b>⋯</b> em qualquer item para abrir os detalhes. Lá dentro há abas:</p><ul><li><b>Detalhes</b> — descrição, prioridade, fase, tipo e prazo.</li><li><b>OKR Canvas</b> — aparece quando o item é marcado como planejamento geral do projeto.</li><li><b>Kanban</b> e <b>Roadmap</b> — para os demais itens, organizando as subtarefas por andamento ou por prioridade.</li></ul>
+      <h3>Datas</h3><p>A <b>data inicial</b> e a <b>escala</b> ficam em "Editar projeto", na tela inicial. Dentro do projeto, o botão <b>Mostrar datas</b> ao lado do Gantt liga e desliga as datas no diagrama.</p>`;
+  }
+}
+
+function applyCurrentProjectColors(){
+  const section=document.getElementById("project");
+  if(!section) return;
+  const p=proj();
+  ["--project-accent","--project-title"].forEach(k => section.style.removeProperty(k));
+  if(!p) return;
+  if(safeColor(p.accentColor)) section.style.setProperty("--project-accent", p.accentColor);
+  if(safeColor(p.nameColor)) section.style.setProperty("--project-title", p.nameColor);
+}
+
 function home(){
   currentProject = null;
   document.getElementById("home").classList.remove("hidden");
   document.getElementById("project").classList.add("hidden");
   document.getElementById("headerNav").innerHTML = "";
+  applyCurrentProjectColors();
   renderProjects();
 }
 
-function openHelp(){ document.getElementById("helpModal").classList.remove("hidden"); }
+function openHelp(){ renderHelp(); document.getElementById("helpModal").classList.remove("hidden"); }
 function closeHelp(){ document.getElementById("helpModal").classList.add("hidden"); }
 
 /* ==========================================================
@@ -701,8 +1005,8 @@ function renderProjects(){
 
   if(projects.length === 0){
     box.innerHTML = `<div class="empty">
-      <h3>Nenhum projeto ainda</h3>
-      <p>Crie um projeto do zero, ou use "Importar" para trazer sua lista pronta.</p>
+      <h3>${tr("empty.projectsTitle")}</h3>
+      <p>${tr("empty.projectsText")}</p>
     </div>`;
     return;
   }
@@ -719,23 +1023,27 @@ function renderProjects(){
     const card = document.createElement("div");
     card.className = "card project-card " + (percent === 100 ? "completed" : "");
     card.style.animationDelay = (index * 0.05) + "s";
+    if(safeColor(p.accentColor)) card.style.setProperty("--project-accent", p.accentColor);
+    if(safeColor(p.nameColor)) card.style.setProperty("--project-title", p.nameColor);
+    if(safeColor(p.cardColor)) card.style.setProperty("--project-card-bg", p.cardColor);
 
     card.innerHTML = `
-      <div class="spread">
-        <div style="flex:1;min-width:0">
-          <span class="eyebrow">${p.pages.length} página(s) · ${totalTasks} item(ns)</span>
-          <h2 style="margin:4px 0">${esc(p.name)}</h2>
-        </div>
-        <button class="danger icon" onclick="removeProject(${index})" title="Excluir projeto">🗑</button>
+      <div class="project-card-head">
+        <h2 class="project-title" role="link" tabindex="0"
+          onclick="openProject(${index})"
+          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openProject(${index})}"
+          title="${tr("common.open")}: ${esc(p.name)}">${esc(p.name)}</h2>
+        <button class="danger icon project-delete" onclick="removeProject(${index})" title="${tr("project.delete")}">🗑</button>
       </div>
+      <span class="eyebrow project-card-meta">${tr("project.meta",{pages:p.pages.length,items:totalTasks})}</span>
 
       <div class="progress"><div class="progress-bar" style="width:${percent}%"></div></div>
-      <p>${percent}% concluído</p>
+      <p>${tr("project.completed",{percent})}</p>
       <div class="status-row">${chips}</div>
 
       <div class="row" style="margin-top:14px">
-        <button class="primary" onclick="openProject(${index})">Abrir</button>
-        <button onclick="openEdit(${index})">✏️ Editar projeto</button>
+        <button class="primary" onclick="openProject(${index})">${tr("common.open")}</button>
+        <button onclick="openEdit(${index})">${tr("project.edit")}</button>
       </div>`;
 
     box.appendChild(card);
@@ -760,23 +1068,23 @@ function calculatePage(pg){
 }
 
 function createProject(){
-  const name = prompt("Nome do projeto:");
+  const name = prompt(tr("prompt.projectName"));
   if(!name) return;
 
   projects.push({
-    name: name, startDate: todayISO(), scale:"week", view:"lista", showDates:false,
+    name: name, startDate: todayISO(), scale:"week", view:"lista", showDates:false, nameColor:"", accentColor:"", cardColor:"",
     pages: [{
-      name:"Planejamento Geral",
+      name:tr("default.generalPlanning"),
       tasks:[
-        newTask("Definir objetivo do projeto", { status:"iniciacao", type:"epico", planning:true, start:0 }),
-        newTask("Configurar ambiente", { status:"planejamento", type:"task", start:1 })
+        newTask(tr("default.defineObjective"), { status:"iniciacao", type:"epico", planning:true, start:0 }),
+        newTask(tr("default.configureEnvironment"), { status:"planejamento", type:"task", start:1 })
       ]
     }]
   });
 
   save();
   renderProjects();
-  toast("Projeto criado.");
+  toast(tr("toast.projectCreated"));
 }
 
 function newTask(text, extra){
@@ -788,11 +1096,11 @@ function newTask(text, extra){
 }
 
 function removeProject(index){
-  if(confirm('Excluir o projeto "' + projects[index].name + '" e todas as suas páginas?')){
+  if(confirm(tr("confirm.deleteProject",{name:projects[index].name}))){
     projects.splice(index,1);
     save();
     renderProjects();
-    toast("Projeto excluído.");
+    toast(tr("toast.projectDeleted"));
   }
 }
 
@@ -816,49 +1124,90 @@ function closeEdit(){
 function renderEdit(){
   const p = projects[editIndex];
   const body = document.getElementById("editBody");
+  const defaultAccent = cssVar("--accent", "#58a6ff");
+  const defaultCard = cssVar("--card", currentTheme()==="light" ? "#ffffff" : "#1b222c");
 
   const pagesHTML = p.pages.map((pg,i) => `
     <div class="li">
       <span class="dim" style="flex:none">${i+1}.</span>
       <input value="${esc(pg.name)}" onchange="renamePageAt(${i},this.value)" style="margin:0">
-      <span class="dim" style="flex:none;font-size:12px">${pg.tasks.length} itens</span>
-      <button class="mini" onclick="movePage(${i},-1)" title="Subir" ${i===0?"disabled":""}>▲</button>
-      <button class="mini" onclick="movePage(${i},1)" title="Descer" ${i===p.pages.length-1?"disabled":""}>▼</button>
+      <span class="dim" style="flex:none;font-size:12px">${tr("common.items",{count:pg.tasks.length})}</span>
+      <button class="mini" onclick="movePage(${i},-1)" title="${tr("common.up")}" ${i===0?"disabled":""}>▲</button>
+      <button class="mini" onclick="movePage(${i},1)" title="${tr("common.down")}" ${i===p.pages.length-1?"disabled":""}>▼</button>
     </div>`).join("");
 
   body.innerHTML = `
     <div class="field">
-      <label>Nome do projeto</label>
+      <label>${tr("edit.projectName")}</label>
       <input id="editName" value="${esc(p.name)}" onchange="setProjectName(this.value)">
     </div>
 
     <div class="row">
       <div class="field" style="flex:1;min-width:200px">
-        <label>Data inicial</label>
+        <label>${tr("edit.startDate")}</label>
         <input type="date" value="${esc(p.startDate)}" onchange="setStartDate(this.value)">
       </div>
       <div class="field" style="flex:1;min-width:200px">
-        <label>Escala do cronograma</label>
+        <label>${tr("edit.timelineScale")}</label>
         <select onchange="setScale(this.value)">
-          <option value="week" ${p.scale==="week"?"selected":""}>Semanal (Semana 1, com datas)</option>
-          <option value="month" ${p.scale==="month"?"selected":""}>Mensal (Janeiro, Fevereiro...)</option>
-          <option value="simple" ${p.scale==="simple"?"selected":""}>Simples (Semana 1, Semana 2...)</option>
+          <option value="week" ${p.scale==="week"?"selected":""}>${tr("scale.weekOption")}</option>
+          <option value="month" ${p.scale==="month"?"selected":""}>${tr("scale.monthOption")}</option>
+          <option value="simple" ${p.scale==="simple"?"selected":""}>${tr("scale.simpleOption")}</option>
         </select>
       </div>
     </div>
-    <p class="dim" style="margin-top:0">As datas aparecem no diagrama quando você liga "Mostrar datas", ao lado do Gantt.</p>
+    <p class="dim" style="margin-top:0">${tr("edit.dateHint")}</p>
 
-    <h3 style="margin-top:22px">Páginas</h3>
-    <p class="dim">Renomeie e reordene aqui. Para excluir uma página, abra ela dentro do projeto.</p>
+    <div class="color-settings">
+      <h3>${tr("appearance.title")}</h3>
+      <p class="dim">${tr("appearance.hint")}</p>
+      <div class="row">
+        <div class="field" style="flex:1;min-width:210px">
+          <label>${tr("appearance.nameColor")}</label>
+          <div class="color-control"><input type="color" value="${safeColor(p.nameColor,defaultAccent)}" onchange="setProjectColor('nameColor',this.value)"><code>${p.nameColor || "auto"}</code><button class="mini" onclick="resetProjectColor('nameColor')">${tr("appearance.reset")}</button></div>
+        </div>
+        <div class="field" style="flex:1;min-width:210px">
+          <label>${tr("appearance.accentColor")}</label>
+          <div class="color-control"><input type="color" value="${safeColor(p.accentColor,defaultAccent)}" onchange="setProjectColor('accentColor',this.value)"><code>${p.accentColor || "auto"}</code><button class="mini" onclick="resetProjectColor('accentColor')">${tr("appearance.reset")}</button></div>
+        </div>
+        <div class="field" style="flex:1;min-width:210px">
+          <label>${tr("appearance.cardColor")}</label>
+          <div class="color-control"><input type="color" value="${safeColor(p.cardColor,defaultCard)}" onchange="setProjectColor('cardColor',this.value)"><code>${p.cardColor || "auto"}</code><button class="mini" onclick="resetProjectColor('cardColor')">${tr("appearance.reset")}</button></div>
+        </div>
+      </div>
+      <button class="mini ghost" onclick="resetProjectColors()">↺ ${tr("appearance.resetAll")}</button>
+    </div>
+
+    <h3 style="margin-top:22px">${tr("edit.pages")}</h3>
+    <p class="dim">${tr("edit.pagesHint")}</p>
     ${pagesHTML}
-    <button style="margin-top:10px" onclick="addPageFromEdit()">+ Nova página</button>`;
+    <button style="margin-top:10px" onclick="addPageFromEdit()">${tr("page.new")}</button>`;
+}
+
+function setProjectColor(field, value){
+  if(!["nameColor","accentColor","cardColor"].includes(field)) return;
+  projects[editIndex][field] = safeColor(value, "");
+  save();
+  renderProjects();
+  if(currentProject === editIndex){ applyCurrentProjectColors(); renderTimeline(); renderPage(); }
+  renderEdit();
+}
+function resetProjectColor(field){
+  if(!["nameColor","accentColor","cardColor"].includes(field)) return;
+  projects[editIndex][field] = "";
+  save(); renderProjects(); applyCurrentProjectColors(); renderEdit();
+}
+function resetProjectColors(){
+  const p=projects[editIndex];
+  p.nameColor=""; p.accentColor=""; p.cardColor="";
+  save(); renderProjects(); applyCurrentProjectColors(); renderEdit(); toast(tr("toast.colorsReset"));
 }
 
 function setProjectName(v){
   if(!v.trim()) return;
   projects[editIndex].name = v.trim();
   save();
-  if(currentProject === editIndex) document.getElementById("projectName").innerText = v.trim();
+  if(currentProject === editIndex){ document.getElementById("projectName").innerText = v.trim(); applyCurrentProjectColors(); }
 }
 function renamePageAt(i, v){
   if(!v.trim()) return;
@@ -876,7 +1225,7 @@ function movePage(i, delta){
   if(currentProject === editIndex){ currentPage = 0; renderPageRail(); renderPage(); }
 }
 function addPageFromEdit(){
-  const name = prompt("Nome da nova página:");
+  const name = prompt(tr("prompt.newPage"));
   if(!name) return;
   projects[editIndex].pages.push({ name:name, tasks:[] });
   save();
@@ -905,27 +1254,28 @@ function openProject(index){
   document.getElementById("home").classList.add("hidden");
   document.getElementById("project").classList.remove("hidden");
   document.getElementById("projectName").innerText = projects[index].name;
+  applyCurrentProjectColors();
 
   document.getElementById("headerNav").innerHTML =
-    `<button class="back-btn" onclick="home()"><span class="arrow">←</span> Voltar</button>`;
+    `<button class="back-btn" onclick="home()"><span class="arrow">←</span> ${APP_LANG==="pt"?"Voltar":"Back"}</button>`;
 
   document.getElementById("projectActions").innerHTML = `
     <div class="menu-wrap" id="wrap-savProj">
-      <button onclick="toggleMenu(event,'savProj')">💾 Salvar <span class="caret">▾</span></button>
+      <button onclick="toggleMenu(event,'savProj')">${tr("common.save")} <span class="caret">▾</span></button>
       <div class="menu right hidden" id="savProj">
-        <div class="menu-label">ESTE PROJETO</div>
-        <button onclick="saveProject('txt')">📄 TXT (lista de tarefas)</button>
-        <button onclick="saveProject('json')">🧩 JSON (backup completo)</button>
+        <div class="menu-label">${tr("project.thisProject")}</div>
+        <button onclick="saveProject('txt')">${tr("home.saveTxt")}</button>
+        <button onclick="saveProject('json')">${tr("home.saveJson")}</button>
       </div>
     </div>
     <div class="menu-wrap" id="wrap-impProj">
-      <button onclick="toggleMenu(event,'impProj')">⬆ Importar <span class="caret">▾</span></button>
+      <button onclick="toggleMenu(event,'impProj')">${tr("common.import")} <span class="caret">▾</span></button>
       <div class="menu right hidden" id="impProj">
-        <div class="menu-label">ADICIONAR PÁGINAS AQUI</div>
-        <button onclick="pickFile('txt','page')">📄 Arquivo TXT</button>
-        <button onclick="pickFile('json','page')">🧩 Arquivo JSON</button>
+        <div class="menu-label">${tr("project.addPages")}</div>
+        <button onclick="pickFile('txt','page')">${tr("common.txt")}</button>
+        <button onclick="pickFile('json','page')">${tr("common.json")}</button>
         <hr>
-        <button onclick="importManual('page')">✍ Escrever manualmente</button>
+        <button onclick="importManual('page')">${tr("common.manual")}</button>
       </div>
     </div>`;
 
@@ -952,7 +1302,7 @@ function toggleDates(){
   proj().showDates = !proj().showDates;
   save();
   renderPage();
-  toast(proj().showDates ? "Datas visíveis no diagrama." : "Datas ocultas.");
+  toast(proj().showDates ? tr("toast.datesVisible") : tr("toast.datesHidden"));
 }
 
 /* ---------- trilho de páginas ---------- */
@@ -970,7 +1320,7 @@ function renderPageRail(){
     btn.style.animationDelay = (i * 0.04) + "s";
     btn.innerHTML = `
       <div class="chip-top">
-        <span class="chip-idx">PÁGINA ${i+1}</span>
+        <span class="chip-idx">${tr("page.upper",{n:i+1})}</span>
         <span class="chip-meta">${pg.tasks.filter(t=>t.done).length}/${pg.tasks.length}</span>
       </div>
       <span class="chip-name">${esc(pg.name)}</span>
@@ -981,13 +1331,13 @@ function renderPageRail(){
 
   const add = document.createElement("button");
   add.className = "page-chip add";
-  add.innerText = "+ Nova Página";
+  add.innerText = tr("page.newUpper");
   add.onclick = addPage;
   rail.appendChild(add);
 }
 
 function addPage(){
-  const name = prompt("Nome da nova página:");
+  const name = prompt(tr("prompt.newPage"));
   if(!name) return;
   proj().pages.push({ name:name, tasks:[] });
   currentPage = proj().pages.length - 1;
@@ -998,14 +1348,14 @@ function addPage(){
 
 function deletePage(){
   const pages = proj().pages;
-  if(pages.length <= 1){ toast("O projeto precisa de pelo menos uma página."); return; }
-  if(!confirm('Excluir a página "' + page().name + '" e todos os seus itens?')) return;
+  if(pages.length <= 1){ toast(tr("page.mustKeepOne")); return; }
+  if(!confirm(tr("confirm.deletePage",{name:page().name}))) return;
   pages.splice(currentPage,1);
   currentPage = 0;
   save();
   renderPageRail();
   renderPage();
-  toast("Página excluída.");
+  toast(tr("toast.pageDeleted"));
 }
 
 function refresh(){
@@ -1033,14 +1383,14 @@ function fmtFull(d){ return fmtShort(d) + "/" + d.getFullYear(); }
 
 function periodLabel(i){
   const scale = proj().scale || "week";
-  if(scale === "simple") return { top:"Semana " + (i+1), sub:"" };
+  if(scale === "simple") return { top:tr("scale.week",{n:i+1}), sub:"" };
   if(scale === "month"){
     const d = periodStart(i);
     return { top:MESES[d.getMonth()], sub:String(d.getFullYear()) };
   }
   const s = periodStart(i);
   const e = new Date(s); e.setDate(e.getDate()+6);
-  return { top:"Semana " + (i+1), sub:fmtShort(s) + "–" + fmtShort(e) };
+  return { top:tr("scale.week",{n:i+1}), sub:fmtShort(s) + "–" + fmtShort(e) };
 }
 
 function currentPeriodFloat(){
@@ -1069,20 +1419,20 @@ function renderTimeline(){
   const idx = Math.floor(currentPeriodFloat());
 
   let agora;
-  if(idx < 0) agora = "ainda não começou";
-  else if(scale === "simple") agora = "Semana " + (idx+1);
+  if(idx < 0) agora = tr("timeline.notStarted");
+  else if(scale === "simple") agora = tr("scale.week",{n:idx+1});
   else { const l = periodLabel(idx); agora = l.top + (l.sub ? " (" + l.sub + ")" : ""); }
 
-  const escala = scale === "week" ? "Semanal" : scale === "month" ? "Mensal" : "Simples";
+  const escala = scale === "week" ? tr("scale.weekName") : scale === "month" ? tr("scale.monthName") : tr("scale.simpleName");
 
   document.getElementById("timelineStrip").innerHTML = `
-    <span>📅 Início: <b>${fmtFull(baseDate())}</b></span>
+    <span>${tr("timeline.start")} <b>${fmtFull(baseDate())}</b></span>
     <span class="dim">|</span>
-    <span>Escala: <b>${escala}</b></span>
+    <span>${tr("timeline.scale")} <b>${escala}</b></span>
     <span class="dim">|</span>
-    <span>Agora: <b class="now">${agora}</b></span>
+    <span>${tr("timeline.now")} <b class="now">${agora}</b></span>
     <span class="dim">|</span>
-    <span>Horizonte: <b>${periodCount()} ${scale === "month" ? "meses" : "semanas"}</b></span>`;
+    <span>${tr("timeline.horizon")} <b>${periodCount()} ${scale === "month" ? tr("timeline.months") : tr("timeline.weeks")}</b></span>`;
 }
 
 /* ==========================================================
@@ -1111,18 +1461,18 @@ function renderPage(){
   area.innerHTML = `
     <div class="card page-head">
       <div>
-        <span class="eyebrow">Página ${currentPage+1} de ${proj().pages.length}</span>
+        <span class="eyebrow">${tr("page.position",{current:currentPage+1,total:proj().pages.length})}</span>
         <h2>${esc(pg.name)}</h2>
-        <p class="dim" style="margin:0">${done} de ${pg.tasks.length} itens concluídos</p>
+        <p class="dim" style="margin:0">${tr("page.doneItems",{done,total:pg.tasks.length})}</p>
         <div class="row" style="margin-top:14px">
           <button onclick="addTask('checklist')">+ Checklist</button>
           <button onclick="addTask('task')">+ Task</button>
-          <button onclick="addTask('epico')">+ Épico</button>
+          <button onclick="addTask('epico')">${tr("item.addEpic")}</button>
         </div>
       </div>
       <div class="row" style="align-items:center">
         ${ringHTML(pct, 74)}
-        <button class="danger icon" onclick="deletePage()" title="Excluir esta página">🗑</button>
+        <button class="danger icon" onclick="deletePage()" title="${tr("page.delete")}">🗑</button>
       </div>
     </div>
     <div id="viewArea"></div>`;
@@ -1131,8 +1481,8 @@ function renderPage(){
 
   if(pg.tasks.length === 0){
     view.innerHTML = `<div class="empty">
-      <h3>Página vazia</h3>
-      <p>Adicione um item acima, ou use "Importar" para colar vários de uma vez.</p>
+      <h3>${tr("page.emptyTitle")}</h3>
+      <p>${tr("page.emptyText")}</p>
     </div>`;
     updateProgress();
     return;
@@ -1151,7 +1501,7 @@ function renderPage(){
 function updateProgress(){
   const percent = calculateProject(proj());
   document.getElementById("globalProgress").style.width = percent + "%";
-  document.getElementById("globalPercent").innerText = percent + "% do projeto concluído";
+  document.getElementById("globalPercent").innerText = tr("project.progress",{percent});
 }
 
 /* ---------- pedaços reutilizáveis ---------- */
@@ -1160,21 +1510,21 @@ function statusRow(i, current){
   return `<div class="status-row">` + STATUSES.slice(1).map(s => `
     <button class="st-btn ${current === s.key ? "on" : ""}"
       style="${current === s.key ? "background:"+s.hex+";border-color:"+s.hex+";color:#0d1117" : "color:"+s.hex}"
-      onclick="setStatus(${i},'${s.key}')" title="Marcar como ${s.label}">${s.label}</button>`).join("") + `</div>`;
+      onclick="setStatus(${i},'${s.key}')" title="${tr("status.mark",{status:s.label})}">${s.label}</button>`).join("") + `</div>`;
 }
 
 function typeTag(i, t){
   const ty = typeOf(t.type);
   return `<span class="type-tag ${ty.key}" onclick="cycleType(${i})"
-    title="Clique para alternar entre Checklist, Task e Épico">${ty.icon} ${ty.label}</span>`;
+    title="${tr("type.cycle")}">${ty.icon} ${ty.label}</span>`;
 }
 
 function badges(t){
   const done = t.subs.filter(s => s.col === "done").length;
   const out = [];
-  if(t.desc) out.push(`<span title="Tem descrição">📝</span>`);
-  if(t.subs.length) out.push(`<span title="Subtarefas">▤ ${done}/${t.subs.length}</span>`);
-  if(t.planning) out.push(`<span title="Planejamento geral (OKR)">🎯</span>`);
+  if(t.desc) out.push(`<span title="${tr("badge.description")}">📝</span>`);
+  if(t.subs.length) out.push(`<span title="${tr("badge.subtasks")}">▤ ${done}/${t.subs.length}</span>`);
+  if(t.planning) out.push(`<span title="${tr("badge.planning")}">🎯</span>`);
   return out.length ? `<span class="badges">${out.join("")}</span>` : "";
 }
 
@@ -1184,9 +1534,9 @@ function prioPill(t){
 }
 
 function actionButtons(i){
-  return `<button class="mini" onclick="openDetail(${i})" title="Abrir detalhes do item">⋯</button>
-          <button class="mini" onclick="editTask(${i})" title="Renomear">✏</button>
-          <button class="mini danger" onclick="deleteTask(${i})" title="Excluir item">X</button>`;
+  return `<button class="mini" onclick="openDetail(${i})" title="${tr("item.details")}">⋯</button>
+          <button class="mini" onclick="editTask(${i})" title="${tr("item.rename")}">✏</button>
+          <button class="mini danger" onclick="deleteTask(${i})" title="${tr("item.delete")}">X</button>`;
 }
 
 /* ==========================================================
@@ -1210,14 +1560,14 @@ function renderListView(view){
         <input type="checkbox" ${task.done ? "checked" : ""} onchange="toggleTask(${index})">
         ${typeTag(index, task)}
         <span class="task-text" style="color:${esc(task.color)};text-decoration:${task.done?"line-through":"none"};cursor:pointer"
-          ondblclick="openDetail(${index})" title="Clique duas vezes para abrir os detalhes">${esc(task.text)}</span>
+          ondblclick="openDetail(${index})" title="${tr("item.doubleClick")}">${esc(task.text)}</span>
         <span class="pill" style="color:${st.hex}">${st.label}</span>
         ${prioPill(task)}
         ${badges(task)}
       </div>
       <div class="row">
         ${statusRow(index, task.status)}
-        <input type="color" value="${esc(task.color)}" onchange="changeColor(${index},this.value)" title="Cor do texto">
+        <input type="color" value="${esc(task.color)}" onchange="changeColor(${index},this.value)" title="${tr("item.textColor")}">
         ${actionButtons(index)}
       </div>`;
 
@@ -1251,7 +1601,7 @@ function renderBoardView(view){
       ${statusRow(index, task.status)}
       <div class="item-foot">
         <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim);cursor:pointer">
-          <input type="checkbox" ${task.done?"checked":""} onchange="toggleTask(${index})"> concluído
+          <input type="checkbox" ${task.done?"checked":""} onchange="toggleTask(${index})"> ${tr("common.completed")}
         </label>
         <div class="row" style="gap:6px">
           <input type="color" value="${esc(task.color)}" onchange="changeColor(${index},this.value)">
@@ -1290,7 +1640,7 @@ function renderKanbanView(view){
     if(items.length === 0){
       const em = document.createElement("div");
       em.className = "kanban-empty";
-      em.innerText = "Arraste itens para cá";
+      em.innerText = tr("kanban.dragHere");
       col.appendChild(em);
     }
 
@@ -1309,7 +1659,7 @@ function renderKanbanView(view){
         <div style="margin:8px 0;color:${esc(o.t.color)};text-decoration:${o.t.done?"line-through":"none"}">${esc(o.t.text)}</div>
         <div class="row" style="gap:6px">${prioPill(o.t)} ${badges(o.t)}</div>
         <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim);cursor:pointer;margin-top:8px">
-          <input type="checkbox" ${o.t.done?"checked":""} onchange="toggleTask(${o.i})"> concluído
+          <input type="checkbox" ${o.t.done?"checked":""} onchange="toggleTask(${o.i})"> ${tr("common.completed")}
         </label>`;
       col.appendChild(card);
     });
@@ -1355,7 +1705,7 @@ function renderSprintView(view){
       <div class="sprint-items"></div>`;
 
     const box = stage.querySelector(".sprint-items");
-    if(items.length === 0) box.innerHTML = `<div class="kanban-empty">Nenhum item nesta fase</div>`;
+    if(items.length === 0) box.innerHTML = `<div class="kanban-empty">${tr("sprint.empty")}</div>`;
 
     items.forEach((o,k) => {
       const el = document.createElement("div");
@@ -1394,10 +1744,10 @@ function renderGanttView(view){
   const bar = document.createElement("div");
   bar.className = "toolbar";
   bar.innerHTML = `
-    <span class="eyebrow">Cronograma</span>
+    <span class="eyebrow">${tr("gantt.schedule")}</span>
     <div class="sep"></div>
-    <button onclick="toggleDates()">${showDates ? "🙈 Ocultar datas" : "👁 Mostrar datas"}</button>
-    <span class="dim">${showDates ? "Mostrando as datas reais de cada período." : "Mostrando apenas Semana 1, Semana 2..."}</span>`;
+    <button onclick="toggleDates()">${showDates ? tr("gantt.hideDates") : tr("gantt.showDates")}</button>
+    <span class="dim">${showDates ? tr("gantt.realDates") : tr("gantt.simpleDates")}</span>`;
   view.appendChild(bar);
 
   const wrap = document.createElement("div");
@@ -1409,7 +1759,7 @@ function renderGanttView(view){
   const head = document.createElement("div");
   head.className = "gantt-row gantt-head";
   head.style.gridTemplateColumns = "330px repeat(" + periods + ",1fr)";
-  let headHTML = `<div class="gantt-label"><b>Item</b></div>`;
+  let headHTML = `<div class="gantt-label"><b>${tr("gantt.item")}</b></div>`;
   for(let i=0;i<periods;i++){
     const l = periodLabel(i);
     headHTML += `<div class="gantt-cell"><b style="color:#c9d1d9">${l.top}</b>${(showDates && l.sub) ? "<br>"+l.sub : ""}</div>`;
@@ -1436,11 +1786,11 @@ function renderGanttView(view){
       <span style="flex:1;min-width:0;color:${esc(task.color)};text-decoration:${task.done?"line-through":"none"};overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
         title="${esc(task.text)}">${esc(task.text)}</span>
       <span class="gantt-ctrl">
-        <button onclick="moveBar(${index},-1)" title="Adiantar">◀</button>
-        <button onclick="moveBar(${index},1)" title="Adiar">▶</button>
-        <button onclick="resizeBar(${index},-1)" title="Encurtar">−</button>
-        <button onclick="resizeBar(${index},1)" title="Alongar">+</button>
-        <button onclick="openDetail(${index})" title="Detalhes">⋯</button>
+        <button onclick="moveBar(${index},-1)" title="${tr("gantt.advance")}">◀</button>
+        <button onclick="moveBar(${index},1)" title="${tr("gantt.delay")}">▶</button>
+        <button onclick="resizeBar(${index},-1)" title="${tr("gantt.shorten")}">−</button>
+        <button onclick="resizeBar(${index},1)" title="${tr("gantt.lengthen")}">+</button>
+        <button onclick="openDetail(${index})" title="${tr("gantt.details")}">⋯</button>
       </span>`;
 
     const track = document.createElement("div");
@@ -1462,7 +1812,7 @@ function renderGanttView(view){
     gbar.style.animationDelay = (index * 0.04) + "s";
     const l0 = periodLabel(start), l1 = periodLabel(start+dur-1);
     gbar.title = task.text + " — " + st.label + " · " + l0.top + (showDates && l0.sub ? " ("+l0.sub+")" : "") +
-                 (dur > 1 ? " até " + l1.top : "") + " · clique para mudar a fase";
+                 (dur > 1 ? tr("gantt.until") + l1.top : "") + " · " + tr("gantt.clickPhase");
     gbar.innerHTML = `<span>${typeOf(task.type).icon}</span><span style="overflow:hidden;text-overflow:ellipsis">${esc(task.text)}</span>`;
     gbar.onclick = () => cycleStatus(index);
     track.appendChild(gbar);
@@ -1484,10 +1834,10 @@ function renderGanttView(view){
 
   const legend = document.createElement("div");
   legend.className = "card";
-  legend.innerHTML = `<span class="dim">Legenda:</span> ` +
+  legend.innerHTML = `<span class="dim">${tr("gantt.legend")}</span> ` +
     STATUSES.slice(1).map(s => `<span class="pill" style="color:${s.hex}">${s.label}</span>`).join(" ") +
-    ` <span class="pill" style="color:#f85149">▏hoje</span>
-      <p class="dim" style="margin-top:12px">Clique na barra para avançar a fase. ◀ ▶ movem no tempo, − + mudam a duração, ⋯ abre os detalhes.</p>`;
+    ` <span class="pill" style="color:#f85149">${tr("gantt.today")}</span>
+      <p class="dim" style="margin-top:12px">${tr("gantt.help")}</p>`;
   view.appendChild(legend);
 }
 
@@ -1499,7 +1849,7 @@ function resizeBar(i, d){ const t = tasks()[i]; t.dur = Math.max(1,(t.dur||1)+d)
    ========================================================== */
 
 function addTask(type){
-  const text = prompt("Nome do item:");
+  const text = prompt(tr("prompt.itemName"));
   if(!text) return;
   const list = tasks();
   list.push(newTask(text, {
@@ -1539,11 +1889,11 @@ function cycleType(i){
 }
 function editTask(i){
   const t = tasks()[i];
-  const v = prompt("Renomear item:", t.text);
+  const v = prompt(tr("prompt.renameItem"), t.text);
   if(v){ t.text = v; refresh(); }
 }
 function deleteTask(i){
-  if(!confirm("Excluir item?")) return;
+  if(!confirm(tr("confirm.deleteItem"))) return;
   tasks().splice(i,1);
   if(detailIndex === i) closeDetail();
   refresh();
@@ -1569,7 +1919,7 @@ function closeDetail(){
 function item(){ return tasks()[detailIndex]; }
 
 function detailTabs(t){
-  const list = [{ key:"detalhes", label:"📝 Detalhes" }];
+  const list = [{ key:"detalhes", label:tr("detail.details") }];
   if(t.planning) list.push({ key:"okr", label:"🎯 OKR Canvas" });
   else {
     list.push({ key:"kanban", label:"▤ Kanban" });
@@ -1602,7 +1952,7 @@ function renderDetail(){
   body.innerHTML = `
     <div class="spread">
       <div style="flex:1;min-width:0">
-        <span class="eyebrow">${esc(page().name)} · item ${detailIndex+1}</span>
+        <span class="eyebrow">${tr("detail.itemMeta",{page:esc(page().name),n:detailIndex+1})}</span>
         <h2 class="modal-title" style="margin:4px 0">${esc(t.text)}</h2>
         <div class="row" style="gap:8px">
           ${typeTag(detailIndex, t)}
@@ -1629,25 +1979,25 @@ function renderDetail(){
 function renderDetailMain(pane, t){
   pane.innerHTML = `
     <div class="field">
-      <label>Descrição — o que precisa ser feito, como e por quê</label>
-      <textarea oninput="setItemField('desc',this.value)" placeholder="Anote aqui o contexto, os critérios de aceite, links, decisões...">${esc(t.desc)}</textarea>
+      <label>${tr("detail.description")}</label>
+      <textarea oninput="setItemField('desc',this.value)" placeholder="${tr("detail.descriptionPlaceholder")}">${esc(t.desc)}</textarea>
     </div>
 
     <div class="row">
       <div class="field" style="flex:1;min-width:180px">
-        <label>Prioridade</label>
+        <label>${tr("detail.priority")}</label>
         <select onchange="setItemField('prio',this.value)">
           ${PRIOS.map(p => `<option value="${p.key}" ${t.prio===p.key?"selected":""}>${p.label}</option>`).join("")}
         </select>
       </div>
       <div class="field" style="flex:1;min-width:180px">
-        <label>Fase</label>
+        <label>${tr("detail.phase")}</label>
         <select onchange="setItemField('status',this.value)">
           ${STATUSES.map(s => `<option value="${s.key}" ${t.status===s.key?"selected":""}>${s.label}</option>`).join("")}
         </select>
       </div>
       <div class="field" style="flex:1;min-width:180px">
-        <label>Tipo</label>
+        <label>${tr("detail.type")}</label>
         <select onchange="setItemField('type',this.value)">
           ${TYPES.map(x => `<option value="${x.key}" ${t.type===x.key?"selected":""}>${x.label}</option>`).join("")}
         </select>
@@ -1656,30 +2006,30 @@ function renderDetailMain(pane, t){
 
     <div class="row">
       <div class="field" style="flex:1;min-width:150px">
-        <label>Começa em</label>
+        <label>${tr("detail.starts")}</label>
         <select onchange="setItemNumber('start',this.value)">
           ${Array.from({length:periodCount()},(_,i) =>
             `<option value="${i}" ${(t.start||0)===i?"selected":""}>${periodLabel(i).top}${proj().showDates && periodLabel(i).sub ? " ("+periodLabel(i).sub+")" : ""}</option>`).join("")}
         </select>
       </div>
       <div class="field" style="flex:1;min-width:150px">
-        <label>Duração (períodos)</label>
+        <label>${tr("detail.duration")}</label>
         <input type="number" min="1" value="${t.dur||1}" onchange="setItemNumber('dur',this.value)">
       </div>
       <div class="field" style="flex:none">
-        <label>Cor</label>
+        <label>${tr("detail.color")}</label>
         <input type="color" value="${esc(t.color)}" onchange="setItemField('color',this.value)">
       </div>
     </div>
 
     <div class="li">
       <input type="checkbox" style="flex:none" ${t.planning?"checked":""} onchange="setPlanning(this.checked)">
-      <span>Este item é <b>planejamento geral do projeto</b> — abre o OKR Model Canvas no lugar do Kanban e do Roadmap.</span>
+      <span>${tr("detail.planning")}</span>
     </div>
 
     <div class="li">
       <input type="checkbox" style="flex:none" ${t.done?"checked":""} onchange="toggleTask(${detailIndex})">
-      <span>Item concluído</span>
+      <span>${tr("detail.done")}</span>
     </div>`;
 }
 
@@ -1709,16 +2059,16 @@ function renderOKR(pane, t){
   const media = o.krs.length ? Math.round(o.krs.reduce((a,k)=>a+(k.pct||0),0)/o.krs.length) : 0;
 
   pane.innerHTML = `
-    <p class="dim">Modelo para o planejamento geral: um objetivo claro, resultados-chave mensuráveis e as iniciativas que levam até lá.</p>
+    <p class="dim">${tr("okr.intro")}</p>
     <div class="canvas">
       <div class="box full">
-        <h4>🎯 Objetivo</h4>
+        <h4>${tr("okr.objective")}</h4>
         <textarea style="height:80px" oninput="setOKR('objetivo',this.value)"
-          placeholder="Onde queremos chegar, em uma frase. Ex.: Lançar o app na Play Store com cadastro funcionando.">${esc(o.objetivo)}</textarea>
+          placeholder="${tr("okr.objectivePlaceholder")}">${esc(o.objetivo)}</textarea>
       </div>
 
       <div class="box full">
-        <h4>📈 Key Results — ${media}% em média</h4>
+        <h4>${tr("okr.average",{percent:media})}</h4>
         <div class="progress slim" style="margin-bottom:10px"><div class="progress-bar" style="width:${media}%"></div></div>
         ${o.krs.length ? o.krs.map((k,i) => `
           <div class="kr" style="animation-delay:${i*0.04}s">
@@ -1726,31 +2076,31 @@ function renderOKR(pane, t){
             <input type="range" min="0" max="100" value="${k.pct||0}" onchange="setKR(${i},this.value)">
             <span class="kr-pct">${k.pct||0}%</span>
             <button class="mini danger" onclick="delKR(${i})">X</button>
-          </div>`).join("") : `<p class="dim">Nenhum resultado-chave ainda.</p>`}
+          </div>`).join("") : `<p class="dim">${tr("okr.noKr")}</p>`}
         <button class="mini" style="margin-top:8px" onclick="addKR()">+ Key Result</button>
       </div>
 
       <div class="box">
-        <h4>🚀 Iniciativas</h4>
+        <h4>${tr("okr.initiatives")}</h4>
         ${o.iniciativas.length ? o.iniciativas.map((x,i) => `
           <div class="li" style="animation-delay:${i*0.04}s">
             <span>${esc(x)}</span>
             <button class="mini danger" onclick="delIni(${i})">X</button>
-          </div>`).join("") : `<p class="dim">O que vamos fazer para mover os KRs?</p>`}
-        <button class="mini" style="margin-top:8px" onclick="addIni()">+ Iniciativa</button>
+          </div>`).join("") : `<p class="dim">${tr("okr.noIni")}</p>`}
+        <button class="mini" style="margin-top:8px" onclick="addIni()">${tr("okr.addIni")}</button>
       </div>
 
       <div class="box">
-        <h4>⚠️ Riscos e notas</h4>
+        <h4>${tr("okr.risks")}</h4>
         <textarea style="height:120px" oninput="setOKR('notas',this.value)"
-          placeholder="O que pode dar errado, dependências, decisões pendentes...">${esc(o.notas)}</textarea>
+          placeholder="${tr("okr.risksPlaceholder")}">${esc(o.notas)}</textarea>
       </div>
     </div>`;
 }
 
 function setOKR(field, v){ item().okr[field] = v; save(); }
 function addKR(){
-  const v = prompt("Resultado-chave (algo mensurável):");
+  const v = prompt(tr("prompt.kr"));
   if(!v) return;
   item().okr.krs.push({ text:v, pct:0 });
   refresh();
@@ -1758,7 +2108,7 @@ function addKR(){
 function setKR(i, v){ item().okr.krs[i].pct = parseInt(v,10)||0; refresh(); }
 function delKR(i){ item().okr.krs.splice(i,1); refresh(); }
 function addIni(){
-  const v = prompt("Iniciativa:");
+  const v = prompt(tr("prompt.initiative"));
   if(!v) return;
   item().okr.iniciativas.push(v);
   refresh();
@@ -1772,8 +2122,8 @@ let subDrag = null;
 function renderSubKanban(pane, t){
   pane.innerHTML = `
     <div class="spread">
-      <p class="dim" style="margin:0">Quebre o item em subtarefas e mova entre as colunas.</p>
-      <button class="mini" onclick="addSub()">+ Subtarefa</button>
+      <p class="dim" style="margin:0">${tr("sub.intro")}</p>
+      <button class="mini" onclick="addSub()">${tr("sub.add")}</button>
     </div>
     <div class="sub-board" id="subBoard"></div>`;
 
@@ -1793,7 +2143,7 @@ function renderSubKanban(pane, t){
     if(!items.length){
       const em = document.createElement("div");
       em.className = "kanban-empty";
-      em.innerText = "vazio";
+      em.innerText = tr("common.empty");
       col.appendChild(em);
     }
 
@@ -1807,8 +2157,8 @@ function renderSubKanban(pane, t){
       el.innerHTML = `
         <i class="prio-dot" title="${prioOf(o.s.prio).label}"></i>
         <span class="sub-txt" style="color:var(--txt);text-decoration:${o.s.col==="done"?"line-through":"none"}">${esc(o.s.text)}</span>
-        <button class="mini" onclick="moveSub(${o.i},-1)" title="Voltar">◀</button>
-        <button class="mini" onclick="moveSub(${o.i},1)" title="Avançar">▶</button>
+        <button class="mini" onclick="moveSub(${o.i},-1)" title="${tr("sub.back")}">◀</button>
+        <button class="mini" onclick="moveSub(${o.i},1)" title="${tr("sub.forward")}">▶</button>
         <button class="mini danger" onclick="delSub(${o.i})">X</button>`;
       col.appendChild(el);
     });
@@ -1818,7 +2168,7 @@ function renderSubKanban(pane, t){
 }
 
 function addSub(prio){
-  const v = prompt("Nome da subtarefa:");
+  const v = prompt(tr("prompt.subtask"));
   if(!v) return;
   item().subs.push({ text:v, col:"todo", prio: prio || "normal" });
   refresh();
@@ -1844,7 +2194,7 @@ function setSubPrio(i, p){ item().subs[i].prio = p; refresh(); }
 function renderRoadmap(pane, t){
   pane.innerHTML = `
     <div class="spread">
-      <p class="dim" style="margin:0">As mesmas subtarefas, organizadas pelo que precisa sair primeiro.</p>
+      <p class="dim" style="margin:0">${tr("roadmap.intro")}</p>
       <div class="row" style="gap:6px">
         ${PRIOS.map(p => `<button class="mini" style="color:${p.hex};border-color:${p.hex}66" onclick="addSub('${p.key}')">+ ${p.label}</button>`).join("")}
       </div>
@@ -1864,7 +2214,7 @@ function renderRoadmap(pane, t){
     if(!items.length){
       const em = document.createElement("div");
       em.className = "kanban-empty";
-      em.innerText = "Nada nesta prioridade";
+      em.innerText = tr("roadmap.empty");
       lane.appendChild(em);
     }
 
@@ -1876,7 +2226,7 @@ function renderRoadmap(pane, t){
         <span class="sub-txt" style="color:var(--txt);text-decoration:${o.s.col==="done"?"line-through":"none"}">${esc(o.s.text)}</span>
         <span class="pill" style="color:${subcolOf(o.s.col).hex};font-size:11px">${subcolOf(o.s.col).label}</span>
         ${PRIOS.filter(x => x.key !== p.key).map(x =>
-          `<button class="mini" style="color:${x.hex}" onclick="setSubPrio(${o.i},'${x.key}')" title="Mover para ${x.label}">${x.label}</button>`).join("")}
+          `<button class="mini" style="color:${x.hex}" onclick="setSubPrio(${o.i},'${x.key}')" title="${tr("roadmap.move",{priority:x.label})}">${x.label}</button>`).join("")}
         <button class="mini danger" onclick="delSub(${o.i})">X</button>`;
       lane.appendChild(el);
     });
@@ -1900,14 +2250,14 @@ let importMode = "project";
 function importManual(mode){
   importMode = mode;
   document.getElementById("modalTitle").innerText =
-    mode === "project" ? "✍ Escrever um projeto" : "✍ Escrever páginas neste projeto";
+    mode === "project" ? tr("import.writeProject") : tr("import.writePages");
   document.getElementById("modal").classList.remove("hidden");
 }
 function closeModal(){ document.getElementById("modal").classList.add("hidden"); }
 
 function buildPage(line, offset){
   const parts = line.split("-").map(x => x.trim());
-  const pg = { name: parts[0] || "Página", tasks: [] };
+  const pg = { name: parts[0] || tr("default.page"), tasks: [] };
   parts.slice(1).filter(Boolean).forEach((task,i) => pg.tasks.push(newTask(task, { start: offset+i })));
   return pg;
 }
@@ -1922,12 +2272,12 @@ function confirmImport(){
   const pages = pagesFromText(text);
 
   if(importMode === "project"){
-    const name = prompt("Nome do projeto:", "Projeto Importado") || "Projeto Importado";
+    const name = prompt(tr("prompt.projectName"), tr("default.importedProject")) || tr("default.importedProject");
     addProject(name, pages);
     document.getElementById("modalText").value = "";
     closeModal();
     home();
-    toast("Projeto importado com " + pages.length + " página(s).");
+    toast(tr("toast.projectImported",{count:pages.length}));
     return;
   }
 
@@ -1935,11 +2285,11 @@ function confirmImport(){
   document.getElementById("modalText").value = "";
   closeModal();
   refresh();
-  toast(pages.length + " página(s) adicionada(s).");
+  toast(tr("toast.pagesAdded",{count:pages.length}));
 }
 
 function addProject(name, pages){
-  projects.push({ name:name, startDate:todayISO(), scale:"week", view:"lista", showDates:false, pages:pages });
+  projects.push({ name:name, startDate:todayISO(), scale:"week", view:"lista", showDates:false, nameColor:"", accentColor:"", cardColor:"", pages:pages });
   save();
 }
 
@@ -1978,13 +2328,13 @@ function handleFile(content, filename){
           projects.push(p);
         });
         migrate(); save(); home();
-        toast(list.length + " projeto(s) importado(s).");
+        toast(tr("toast.projectsImported",{count:list.length}));
       } else {
         let n = 0;
         list.forEach(p => (p.pages || []).forEach(pg => { proj().pages.push(pg); n++; }));
         if(!n) throw new Error("formato");
         migrate(); refresh();
-        toast(n + " página(s) adicionada(s).");
+        toast(tr("toast.pagesAdded",{count:n}));
       }
       return;
     }
@@ -1993,16 +2343,16 @@ function handleFile(content, filename){
     if(!pages.length) throw new Error("vazio");
 
     if(mode === "project"){
-      addProject(filename.replace(/\.[^.]+$/,"") || "Projeto Importado", pages);
+      addProject(filename.replace(/\.[^.]+$/,"") || tr("default.importedProject"), pages);
       home();
-      toast("Projeto importado com " + pages.length + " página(s).");
+      toast(tr("toast.projectImported",{count:pages.length}));
     } else {
       pages.forEach(pg => proj().pages.push(pg));
       refresh();
-      toast(pages.length + " página(s) adicionada(s).");
+      toast(tr("toast.pagesAdded",{count:pages.length}));
     }
   }catch(err){
-    alert("Não consegui ler esse arquivo. Confira se é um TXT no formato \"Página - tarefa 1 - tarefa 2\" ou um JSON gerado pelo próprio SuperProject.");
+    alert(tr("import.error"));
   }
 }
 
@@ -2032,14 +2382,14 @@ function saveProject(kind){
   const p = proj();
   if(kind === "txt") download(p.name + ".txt", projectToTxt(p), "text/plain");
   else download(p.name + ".json", JSON.stringify(p, null, 2), "application/json");
-  toast(kind.toUpperCase() + " salvo.");
+  toast(tr("toast.saved",{kind:kind.toUpperCase()}));
 }
 
 function saveAll(kind){
-  if(!projects.length){ toast("Nenhum projeto para salvar."); return; }
+  if(!projects.length){ toast(tr("toast.nothingToSave")); return; }
   if(kind === "txt") download("superproject.txt", projects.map(projectToTxt).join("\n"), "text/plain");
   else download("superproject-backup.json", JSON.stringify(projects, null, 2), "application/json");
-  toast(kind.toUpperCase() + " salvo.");
+  toast(tr("toast.saved",{kind:kind.toUpperCase()}));
 }
 
 /* ==========================================================
@@ -2048,6 +2398,9 @@ function saveAll(kind){
 
 migrate();
 save();
+applyStaticLanguage();
+updateThemeButton();
+applyTheme(appPrefs.theme === "light" ? "light" : "dark", false);
 home();
 
 </script>
