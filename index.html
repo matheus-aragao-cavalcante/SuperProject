@@ -1,0 +1,2056 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' shape-rendering='geometricPrecision' text-rendering='geometricPrecision' image-rendering='optimizeQuality' fill-rule='evenodd' clip-rule='evenodd' viewBox='0 0 276 512.56'><path fill='%23FFB21A' d='M0 257.35 44.98 0h215.18l-93.73 191.42H276L132.56 371.74c12.54 3.81 26.09 7.01 41.71 9.68 11.86 2.65 15.26 14.32 6.35 22.96l-122.94 96.7c-6.81 5.35-14.35 13.07-23.85 11.19-5.87-1.17-9.72-6.19-9.8-13.34l-2.36-136.01-.33-19.11c.16-7.5 2.96-12.13 7.18-14.08 3.43-1.58 7.79-1.41 12.43.43 12.87 6.81 24.37 12.91 35.33 18.39l21.41-91.2H0z'/></svg>">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SuperProject</title>
+<style>
+:root{
+  --bg:#0d1117; --bg2:#161b22; --bg3:#010409;
+  --line:#30363d; --txt:#c9d1d9; --dim:#8b949e;
+  --danger:#f85149;
+  --st-none:#8b949e; --st-iniciacao:#58a6ff; --st-planejamento:#e3b341;
+  --st-execucao:#a371f7; --st-review:#9e6a03; --st-fechamento:#39d353;
+}
+*{box-sizing:border-box;font-family:"Consolas","Courier New",monospace;}
+body{margin:0;background:var(--bg);color:var(--txt);zoom:.8;}
+h1,h2,h3{color:#58a6ff;margin:.4em 0;}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-thumb{background:#30363d;border-radius:10px;}
+::-webkit-scrollbar-thumb:hover{background:#484f58;}
+
+/* ---------- HEADER ---------- */
+header{
+  height:70px;background:var(--bg2);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 25px;position:sticky;top:0;z-index:60;
+}
+header h2{display:flex;align-items:center;gap:10px;}
+.bolt{display:inline-block;animation:pulse 2.4s ease-in-out infinite;}
+.back-btn{animation:slideIn .3s both;}
+.back-btn .arrow{display:inline-block;transition:transform .2s;}
+.back-btn:hover .arrow{transform:translateX(-4px);}
+
+/* ---------- BOTOES ---------- */
+button{
+  background:#21262d;border:1px solid var(--line);color:var(--txt);
+  padding:10px 15px;border-radius:6px;cursor:pointer;
+  transition:transform .15s, border-color .2s, background .2s, color .2s, box-shadow .2s;
+}
+button:hover{border-color:#58a6ff;transform:translateY(-2px);}
+button:active{transform:translateY(0) scale(.97);}
+button:focus-visible{outline:2px solid #58a6ff;outline-offset:2px;}
+button.primary{background:#1f6feb26;border-color:#58a6ff;color:#58a6ff;}
+button.primary:hover{background:#1f6feb44;}
+button.danger{background:#f8514912;border-color:#f8514955;color:var(--danger);}
+button.danger:hover{background:var(--danger);color:#0d1117;border-color:var(--danger);}
+button.icon{padding:8px 11px;line-height:1;}
+button.mini{padding:5px 9px;font-size:12px;}
+button.ghost{background:transparent;}
+
+.container{padding:25px;max-width:1800px;margin:0 auto;}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.spread{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;}
+
+/* ---------- MENUS SUSPENSOS ---------- */
+.menu-wrap{position:relative;display:inline-block;}
+.menu{
+  position:absolute;top:calc(100% + 6px);left:0;z-index:70;
+  background:var(--bg2);border:1px solid var(--line);border-radius:10px;
+  padding:6px;min-width:230px;display:flex;flex-direction:column;gap:4px;
+  box-shadow:0 16px 34px #000b;animation:menuIn .18s ease-out;
+}
+.menu.right{left:auto;right:0;}
+.menu button{
+  background:transparent;border:none;text-align:left;padding:10px 12px;border-radius:6px;
+}
+.menu button:hover{background:#1f6feb26;color:#58a6ff;transform:none;padding-left:16px;}
+.menu .menu-label{color:var(--dim);font-size:11px;padding:6px 12px 2px;letter-spacing:.6px;}
+.menu hr{border:none;border-top:1px solid var(--line);margin:4px 0;}
+.caret{display:inline-block;transition:transform .2s;}
+.menu-wrap.open .caret{transform:rotate(180deg);}
+
+/* ---------- CARDS ---------- */
+.card{
+  background:var(--bg2);border:1px solid var(--line);border-radius:12px;
+  padding:20px;margin:15px 0;
+  transition:transform .2s, border-color .2s, box-shadow .2s;
+  animation:fadeUp .35s both;
+}
+.card:hover{border-color:#3d444d;}
+.project-card:hover{transform:translateY(-5px);box-shadow:0 14px 30px #0008;}
+.project-card{position:relative;overflow:hidden;}
+.project-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#58a6ff,#a371f7,#39d353);
+  transform:scaleX(0);transform-origin:left;transition:transform .35s;
+}
+.project-card:hover::before{transform:scaleX(1);}
+.project-card.completed{border:2px solid var(--st-fechamento);box-shadow:0 0 18px #39d35322;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;}
+
+/* ---------- PROGRESSO ---------- */
+.progress{height:14px;background:var(--bg3);border-radius:20px;overflow:hidden;}
+.progress-bar{
+  height:100%;width:0;background:linear-gradient(90deg,#2ea043,#39d353);
+  transition:width .6s cubic-bezier(.2,.8,.2,1);position:relative;
+}
+.progress-bar::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,#fff0,#ffffff30,#fff0);animation:shine 2.4s linear infinite;
+}
+.progress.slim{height:7px;}
+.chip-bar{height:4px;background:#0d1117;border-radius:4px;overflow:hidden;margin-top:6px;}
+.chip-bar i{display:block;height:100%;background:#39d353;transition:width .5s;}
+
+/* anel de progresso */
+.ring{position:relative;width:74px;height:74px;flex:none;}
+.ring svg{transform:rotate(-90deg);}
+.ring circle{fill:none;stroke-width:7;stroke-linecap:round;}
+.ring .bg{stroke:#0d1117;}
+.ring .fg{stroke:#39d353;transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1);}
+.ring b{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:var(--txt);
+}
+
+.hidden{display:none !important;}
+.dim{color:var(--dim);}
+.eyebrow{color:var(--dim);font-size:11px;letter-spacing:1.4px;text-transform:uppercase;}
+
+/* ---------- TRILHO DE PAGINAS ---------- */
+.page-rail{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0;}
+.page-chip{
+  background:var(--bg2);border:1px solid var(--line);border-radius:10px;
+  padding:11px 16px;min-width:170px;text-align:left;position:relative;overflow:hidden;
+  animation:fadeUp .3s both;
+}
+.page-chip .chip-top{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.page-chip .chip-idx{color:var(--dim);font-size:11px;}
+.page-chip .chip-name{display:block;margin:2px 0;}
+.page-chip .chip-meta{color:var(--dim);font-size:12px;}
+.page-chip.active{border-color:#58a6ff;background:#1f6feb1a;color:#58a6ff;box-shadow:inset 0 -3px 0 #58a6ff;}
+.page-chip.done .chip-bar i{background:#39d353;}
+.page-chip.add{border-style:dashed;color:var(--dim);min-width:150px;display:flex;align-items:center;justify-content:center;}
+.page-chip.add:hover{color:#58a6ff;border-color:#58a6ff;}
+
+.page-head{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;}
+.page-head h2{margin:2px 0;}
+
+/* ---------- BARRA DE FERRAMENTAS ---------- */
+.toolbar{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  background:var(--bg2);border:1px solid var(--line);border-radius:10px;
+  padding:12px 15px;margin:15px 0;
+}
+.toolbar .sep{width:1px;height:26px;background:var(--line);}
+.view-switch{display:flex;gap:8px;flex-wrap:wrap;}
+.view-btn.active{background:#1f6feb26;border-color:#58a6ff;color:#58a6ff;box-shadow:inset 0 -2px 0 #58a6ff;}
+
+.timeline-strip{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  background:linear-gradient(90deg,#161b22,#0d1117);
+  border:1px solid var(--line);border-left:3px solid #58a6ff;border-radius:8px;
+  padding:10px 15px;margin:10px 0 18px;animation:slideIn .4s both;
+}
+.timeline-strip b{color:#58a6ff;}
+.timeline-strip .now{color:var(--st-execucao);}
+
+/* ---------- CAMPOS ---------- */
+input,textarea,select{
+  width:100%;background:var(--bg3);border:1px solid var(--line);color:white;
+  padding:10px;margin:5px 0;border-radius:6px;transition:border-color .2s, box-shadow .2s;
+}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#58a6ff;box-shadow:0 0 0 3px #58a6ff26;}
+textarea{height:130px;resize:vertical;}
+input[type=color]{padding:2px;height:32px;width:38px;cursor:pointer;}
+input[type=checkbox]{width:auto;accent-color:#39d353;cursor:pointer;transform:scale(1.2);}
+input[type=range]{accent-color:#58a6ff;padding:0;}
+.field{margin:12px 0;}
+.field label{display:block;color:var(--dim);font-size:12px;margin-bottom:2px;}
+
+/* ---------- LISTA ---------- */
+.task{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:var(--bg3);padding:12px;margin:8px 0;border-radius:8px;
+  border-left:4px solid var(--st-none);
+  transition:transform .18s, background .2s, border-color .2s;animation:fadeUp .3s both;
+}
+.task:hover{transform:translateX(5px);background:#0d1117;}
+.task-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.task.done .task-text{opacity:.55;}
+
+/* ---------- ETIQUETAS ---------- */
+.pill{
+  display:inline-flex;align-items:center;gap:5px;font-size:12px;
+  padding:3px 9px;border-radius:20px;border:1px solid currentColor;white-space:nowrap;
+}
+.type-tag{
+  font-size:11px;letter-spacing:.5px;padding:3px 8px;border-radius:4px;
+  background:#30363d;color:var(--dim);border:1px solid var(--line);cursor:pointer;
+  transition:transform .15s;
+}
+.type-tag:hover{transform:scale(1.06);}
+.type-tag.epico{background:#a371f71f;color:#a371f7;border-color:#a371f7;}
+.type-tag.task{background:#58a6ff1f;color:#58a6ff;border-color:#58a6ff;}
+.prio-dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:currentColor;box-shadow:0 0 8px currentColor;}
+.badges{display:flex;gap:6px;align-items:center;color:var(--dim);font-size:11px;}
+
+.status-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.st-btn{font-size:11px;padding:5px 9px;border-radius:20px;background:transparent;border:1px solid var(--line);color:var(--dim);}
+.st-btn.on{color:#fff;animation:pop .25s;}
+
+/* ---------- QUADROS ---------- */
+.board-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;}
+.item-card{
+  background:var(--bg2);border:1px solid var(--line);border-top:3px solid var(--st-none);
+  border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;
+  transition:transform .2s, box-shadow .2s;animation:fadeUp .35s both;
+}
+.item-card:hover{transform:translateY(-5px);box-shadow:0 12px 26px #0008;}
+.item-card.done{opacity:.62;}
+.item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.item-title{font-size:15px;line-height:1.35;word-break:break-word;}
+.item-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto;padding-top:8px;border-top:1px dashed var(--line);}
+
+/* ---------- KANBAN ---------- */
+.kanban{display:flex;gap:14px;overflow-x:auto;padding-bottom:14px;}
+.kanban-col{
+  min-width:270px;flex:1;background:var(--bg2);border:1px solid var(--line);
+  border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px;
+  transition:background .2s, border-color .2s;animation:slideIn .35s both;
+}
+.kanban-col.drop{border-color:#58a6ff;background:#1f6feb14;}
+.col-head{display:flex;align-items:center;justify-content:space-between;font-size:14px;padding-bottom:8px;border-bottom:2px solid currentColor;}
+.col-count{background:#30363d;color:var(--txt);border-radius:20px;padding:2px 8px;font-size:12px;}
+.kanban-card{
+  background:var(--bg3);border:1px solid var(--line);border-left:3px solid currentColor;
+  border-radius:8px;padding:11px;cursor:grab;
+  transition:transform .18s, box-shadow .2s;animation:fadeUp .3s both;
+}
+.kanban-card:hover{transform:scale(1.02);box-shadow:0 6px 18px #0007;}
+.kanban-card.dragging{opacity:.4;transform:rotate(2deg);}
+.kanban-empty{color:var(--dim);font-size:12px;text-align:center;padding:18px 6px;border:1px dashed var(--line);border-radius:8px;}
+
+/* ---------- SPRINT ---------- */
+.sprint-stage{
+  background:var(--bg2);border:1px solid var(--line);border-left:5px solid currentColor;
+  border-radius:10px;padding:16px;margin:14px 0;animation:slideIn .35s both;
+}
+.stage-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+.stage-title{display:flex;align-items:center;gap:10px;font-size:16px;}
+.stage-dot{width:12px;height:12px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor;animation:pulse 2s ease-in-out infinite;}
+.stage-bar{flex:1;min-width:180px;}
+.sprint-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:14px;}
+.sprint-item{
+  background:var(--bg3);border:1px solid var(--line);border-radius:8px;padding:10px;
+  display:flex;flex-direction:column;gap:6px;transition:transform .18s;animation:fadeUp .3s both;
+}
+.sprint-item:hover{transform:translateY(-3px);}
+
+/* ---------- GANTT ---------- */
+.gantt-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--bg2);animation:fadeUp .35s both;}
+.gantt{min-width:900px;}
+.gantt-row{display:grid;align-items:center;border-bottom:1px solid #21262d;}
+.gantt-row:last-child{border-bottom:none;}
+.gantt-row:hover .gantt-label{background:#1f6feb14;}
+.gantt-label{
+  padding:10px 12px;border-right:1px solid var(--line);display:flex;align-items:center;gap:8px;
+  font-size:13px;position:sticky;left:0;background:var(--bg2);z-index:2;transition:background .2s;
+}
+.gantt-head{background:var(--bg3);border-bottom:1px solid var(--line);}
+.gantt-head .gantt-label{background:var(--bg3);color:#58a6ff;}
+.gantt-cell{padding:9px 4px;text-align:center;font-size:12px;color:var(--dim);border-right:1px solid #21262d;line-height:1.5;}
+.gantt-track{position:relative;height:52px;display:grid;}
+.gantt-slot{border-right:1px solid #21262d;}
+.gantt-bar{
+  grid-row:1;align-self:center;height:34px;border-radius:8px;
+  display:flex;align-items:center;gap:6px;padding:0 12px;
+  font-size:13px;color:#0d1117;font-weight:bold;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:pointer;
+  transform-origin:left center;animation:growBar .45s cubic-bezier(.2,.9,.25,1) both;
+  transition:filter .2s, transform .2s, box-shadow .2s;
+}
+.gantt-bar:hover{filter:brightness(1.15);transform:scaleY(1.08);box-shadow:0 6px 16px #0009;}
+.gantt-bar.done{background-image:repeating-linear-gradient(45deg,#0003 0 6px,#0000 6px 12px);}
+.gantt-ctrl{display:flex;align-items:center;gap:4px;}
+.gantt-ctrl button{padding:2px 7px;font-size:12px;}
+.today-line{position:absolute;top:0;bottom:0;width:2px;background:#f85149;box-shadow:0 0 10px #f85149;z-index:3;pointer-events:none;}
+
+/* ---------- MODAIS ---------- */
+.modal{
+  position:fixed;inset:0;background:#000c;backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;z-index:100;
+  animation:fadeIn .2s;padding:20px;
+}
+.modal-box{
+  position:relative;background:var(--bg2);border:1px solid var(--line);
+  padding:26px;border-radius:12px;width:600px;max-width:100%;max-height:90vh;overflow:auto;
+  animation:zoomIn .28s cubic-bezier(.2,.9,.3,1);
+}
+.modal-box.wide{width:1000px;}
+.modal-close{
+  position:absolute;top:14px;right:14px;background:transparent;border:1px solid var(--line);
+  color:var(--dim);width:34px;height:34px;padding:0;border-radius:8px;font-size:16px;line-height:1;
+}
+.modal-close:hover{background:var(--danger);border-color:var(--danger);color:#0d1117;transform:rotate(90deg);}
+.modal-title{padding-right:44px;}
+
+/* abas dos modais */
+.mtabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin:16px 0 4px;}
+.mtab{background:transparent;border:none;border-bottom:2px solid transparent;border-radius:6px 6px 0 0;color:var(--dim);}
+.mtab:hover{color:var(--txt);transform:none;background:#ffffff08;}
+.mtab.active{color:#58a6ff;border-bottom-color:#58a6ff;background:#1f6feb14;}
+.mpane{animation:fadeUp .25s both;padding-top:8px;}
+
+/* OKR canvas */
+.canvas{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.canvas .box{background:var(--bg3);border:1px solid var(--line);border-radius:10px;padding:14px;animation:fadeUp .3s both;}
+.canvas .box.full{grid-column:1/-1;}
+.canvas .box h4{margin:0 0 8px;color:#58a6ff;font-size:13px;letter-spacing:.8px;text-transform:uppercase;}
+.kr{display:flex;align-items:center;gap:10px;margin:8px 0;background:#161b22;border:1px solid var(--line);border-radius:8px;padding:8px 10px;animation:fadeUp .25s both;}
+.kr .kr-txt{flex:1;}
+.kr input[type=range]{width:110px;margin:0;}
+.kr .kr-pct{width:44px;text-align:right;color:#39d353;font-size:12px;}
+.li{display:flex;align-items:center;gap:8px;background:#161b22;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin:6px 0;animation:fadeUp .25s both;}
+.li span{flex:1;}
+
+/* sub-kanban / roadmap */
+.sub-board{display:flex;gap:12px;flex-wrap:wrap;}
+.sub-col{flex:1;min-width:190px;background:var(--bg3);border:1px solid var(--line);border-radius:10px;padding:10px;animation:slideIn .3s both;}
+.sub-col.drop{border-color:#58a6ff;background:#1f6feb14;}
+.sub-card{
+  background:var(--bg2);border:1px solid var(--line);border-left:3px solid currentColor;
+  border-radius:8px;padding:9px;margin:8px 0;font-size:13px;cursor:grab;
+  display:flex;align-items:center;gap:8px;animation:fadeUp .25s both;transition:transform .15s;
+}
+.sub-card:hover{transform:translateX(3px);}
+.sub-card.dragging{opacity:.4;}
+.sub-card .sub-txt{flex:1;}
+.lane{border-left:4px solid currentColor;background:var(--bg3);border-radius:10px;padding:12px;margin:10px 0;animation:slideIn .3s both;}
+.lane h4{margin:0 0 8px;font-size:13px;letter-spacing:.8px;text-transform:uppercase;color:currentColor;}
+
+.green{color:var(--st-fechamento);}
+.blue{color:#58a6ff;}
+.empty{text-align:center;color:var(--dim);padding:40px 20px;border:1px dashed var(--line);border-radius:12px;animation:fadeUp .3s both;}
+
+#toast{
+  position:fixed;bottom:26px;right:26px;background:var(--bg2);
+  border:1px solid #58a6ff;border-left:4px solid #58a6ff;padding:14px 18px;border-radius:8px;
+  z-index:200;box-shadow:0 10px 30px #000a;animation:slideUp .3s;
+}
+
+/* ---------- ANIMACOES ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-14px);}to{opacity:1;transform:none;}}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+@keyframes menuIn{from{opacity:0;transform:translateY(-8px) scale(.97);}to{opacity:1;transform:none;}}
+@keyframes zoomIn{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:scale(1);}}
+@keyframes pop{0%{transform:scale(.8);}60%{transform:scale(1.12);}100%{transform:scale(1);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.45;}}
+@keyframes shine{from{transform:translateX(-100%);}to{transform:translateX(100%);}}
+@keyframes growBar{from{transform:scaleX(0);opacity:.2;}to{transform:scaleX(1);opacity:1;}}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+</style>
+</head>
+<body>
+
+<header>
+  <h2><span class="bolt">⚡</span> SuperProject</h2>
+  <div id="headerNav"></div>
+</header>
+
+<div class="container">
+
+  <!-- ================= HOME ================= -->
+  <section id="home">
+    <div class="row">
+      <button class="primary" onclick="createProject()">+ Novo Projeto</button>
+
+      <div class="menu-wrap" id="wrap-impHome">
+        <button onclick="toggleMenu(event,'impHome')">⬆ Importar <span class="caret">▾</span></button>
+        <div class="menu hidden" id="impHome">
+          <div class="menu-label">TRAZER PARA O SUPERPROJECT</div>
+          <button onclick="pickFile('txt','project')">📄 Arquivo TXT</button>
+          <button onclick="pickFile('json','project')">🧩 Arquivo JSON</button>
+          <hr>
+          <button onclick="importManual('project')">✍ Escrever manualmente</button>
+        </div>
+      </div>
+
+      <div class="menu-wrap" id="wrap-savHome">
+        <button onclick="toggleMenu(event,'savHome')">💾 Salvar <span class="caret">▾</span></button>
+        <div class="menu hidden" id="savHome">
+          <div class="menu-label">TODOS OS PROJETOS</div>
+          <button onclick="saveAll('txt')">📄 TXT (lista de tarefas)</button>
+          <button onclick="saveAll('json')">🧩 JSON (backup completo)</button>
+        </div>
+      </div>
+
+      <button class="ghost" onclick="openHelp()" title="Como usar">?</button>
+    </div>
+
+    <h2>Meus Projetos</h2>
+    <div id="projects" class="grid"></div>
+  </section>
+
+  <!-- ================= PROJETO ================= -->
+  <section id="project" class="hidden">
+    <div class="spread">
+      <div>
+        <span class="eyebrow">Projeto</span>
+        <h1 id="projectName" style="margin-top:2px"></h1>
+      </div>
+      <div class="row" id="projectActions"></div>
+    </div>
+
+    <div id="timelineStrip" class="timeline-strip"></div>
+
+    <div class="progress"><div id="globalProgress" class="progress-bar"></div></div>
+    <h3 id="globalPercent"></h3>
+
+    <span class="eyebrow">Páginas do projeto</span>
+    <div id="pageRail" class="page-rail"></div>
+
+    <div class="toolbar">
+      <span class="eyebrow">Visualização</span>
+      <div class="sep"></div>
+      <div class="view-switch" id="viewSwitch"></div>
+    </div>
+
+    <div id="pageArea"></div>
+  </section>
+
+</div>
+
+<input type="file" id="fileInput" class="hidden" accept=".txt,.json">
+
+<!-- ============ MODAL: TEXTO MANUAL ============ -->
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()" title="Fechar">✕</button>
+    <h2 class="modal-title" id="modalTitle">Importar</h2>
+    <p class="dim" id="modalHint">Uma linha por página. O primeiro texto vira o nome da página, o resto vira itens.</p>
+    <p class="green">Página - tarefa 1 - tarefa 2 - tarefa 3</p>
+    <textarea id="modalText" placeholder="Configuração Inicial - Instalar Node - Instalar Expo
+Frontend - Criar Login - Criar Home
+Backend - Criar API - Criar Banco"></textarea>
+    <div class="row">
+      <button class="primary" onclick="confirmImport()">Confirmar</button>
+      <button onclick="openHelp()">Ver exemplo completo</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: EDITAR PROJETO ============ -->
+<div id="editModal" class="modal hidden">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeEdit()" title="Fechar">✕</button>
+    <h2 class="modal-title">✏️ Editar projeto</h2>
+    <div id="editBody"></div>
+  </div>
+</div>
+
+<!-- ============ MODAL: DETALHES DO ITEM ============ -->
+<div id="detailModal" class="modal hidden">
+  <div class="modal-box wide">
+    <button class="modal-close" onclick="closeDetail()" title="Fechar">✕</button>
+    <div id="detailBody"></div>
+  </div>
+</div>
+
+<!-- ============ MODAL: AJUDA ============ -->
+<div id="helpModal" class="modal hidden">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeHelp()" title="Fechar">✕</button>
+    <h2 class="modal-title">❓ Como usar o SuperProject</h2>
+
+    <h3>Escrever um projeto de uma vez</h3>
+    <p>Uma linha por página, itens separados por hífen:</p>
+    <p class="green">Página - tarefa 1 - tarefa 2 - tarefa 3</p>
+
+    <h3>Exemplo</h3>
+    <textarea readonly>Configuração Inicial - Instalar Node - Instalar Expo - Configurar VS Code - Testar Android - Testar iOS
+Frontend - Criar Login - Criar Home - Criar Perfil
+Backend - Criar API - Criar Banco - Criar Autenticação
+Firebase - Criar Projeto - Configurar Firestore</textarea>
+
+    <h3>Resultado</h3>
+<pre>📁 Configuração Inicial
+   ☐ Instalar Node
+   ☐ Instalar Expo
+
+📁 Frontend
+   ☐ Criar Login
+   ☐ Criar Home</pre>
+
+    <h3>Regras</h3>
+    <ul>
+      <li>O primeiro texto antes do "-" vira o nome da página.</li>
+      <li>Cada item depois do "-" vira uma tarefa.</li>
+      <li>Cada linha cria uma nova página.</li>
+      <li>Você pode importar centenas de tarefas de uma vez.</li>
+    </ul>
+
+    <h3>Salvar e importar</h3>
+    <ul>
+      <li><b>Salvar → TXT</b> gera a lista no mesmo formato de cima.</li>
+      <li><b>Salvar → JSON</b> guarda tudo: fases, tipos, prazos, detalhes e OKRs.</li>
+      <li><b>Importar</b> aceita arquivo TXT, arquivo JSON ou texto escrito na hora.</li>
+    </ul>
+
+    <h3>Visualizações</h3>
+    <ul>
+      <li><b class="blue">Lista</b> — o checklist clássico, linha a linha.</li>
+      <li><b class="blue">Quadros</b> — cartões lado a lado.</li>
+      <li><b class="blue">Kanban</b> — colunas por fase, arraste para mudar.</li>
+      <li><b class="blue">Sprint</b> — cada fase com progresso próprio.</li>
+      <li><b class="blue">Gantt</b> — linha do tempo por semana ou mês.</li>
+    </ul>
+
+    <h3>Fases</h3>
+    <ul>
+      <li><span class="pill" style="color:#58a6ff">Iniciação</span> azul</li>
+      <li><span class="pill" style="color:#e3b341">Planejamento</span> amarelo</li>
+      <li><span class="pill" style="color:#a371f7">Execução</span> roxo</li>
+      <li><span class="pill" style="color:#9e6a03">Review</span> amarelo queimado</li>
+      <li><span class="pill" style="color:#39d353">Fechamento</span> verde</li>
+    </ul>
+
+    <h3>Dentro de cada item</h3>
+    <p>Clique em <b>⋯</b> em qualquer item para abrir os detalhes. Lá dentro há abas:</p>
+    <ul>
+      <li><b>Detalhes</b> — descrição, prioridade, fase, tipo e prazo.</li>
+      <li><b>OKR Canvas</b> — aparece quando o item é marcado como planejamento geral do projeto.</li>
+      <li><b>Kanban</b> e <b>Roadmap</b> — para os demais itens, organizando as subtarefas por andamento ou por prioridade.</li>
+    </ul>
+
+    <h3>Datas</h3>
+    <p>A <b>data inicial</b> e a <b>escala</b> ficam em "Editar projeto", na tela inicial. Dentro do projeto, o botão <b>Mostrar datas</b> ao lado do Gantt liga e desliga as datas no diagrama.</p>
+  </div>
+</div>
+<script>
+/* ==========================================================
+   SUPERPROJECT — estado
+   ========================================================== */
+
+let projects = JSON.parse(localStorage.getItem("devProjects")) || [];
+let currentProject = null;
+let currentPage = 0;
+
+const STATUSES = [
+  { key:"none",         label:"Backlog",      hex:"#8b949e" },
+  { key:"iniciacao",    label:"Iniciação",    hex:"#58a6ff" },
+  { key:"planejamento", label:"Planejamento", hex:"#e3b341" },
+  { key:"execucao",     label:"Execução",     hex:"#a371f7" },
+  { key:"review",       label:"Review",       hex:"#9e6a03" },
+  { key:"fechamento",   label:"Fechamento",   hex:"#39d353" }
+];
+
+const TYPES = [
+  { key:"checklist", label:"CHECKLIST", icon:"☑" },
+  { key:"task",      label:"TASK",      icon:"▸" },
+  { key:"epico",     label:"ÉPICO",     icon:"◆" }
+];
+
+const PRIOS = [
+  { key:"urgente", label:"Urgente", hex:"#f85149" },
+  { key:"normal",  label:"Normal",  hex:"#58a6ff" },
+  { key:"baixa",   label:"Baixa",   hex:"#8b949e" }
+];
+
+const SUBCOLS = [
+  { key:"todo",  label:"A fazer",  hex:"#58a6ff" },
+  { key:"doing", label:"Fazendo",  hex:"#a371f7" },
+  { key:"done",  label:"Feito",    hex:"#39d353" }
+];
+
+const VIEWS = [
+  { key:"lista",   label:"☰ Lista" },
+  { key:"quadros", label:"▦ Quadros" },
+  { key:"kanban",  label:"▤ Kanban" },
+  { key:"sprint",  label:"🏁 Sprint" },
+  { key:"gantt",   label:"📊 Gantt" }
+];
+
+const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+               "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+
+function statusOf(k){ return STATUSES.find(s => s.key === k) || STATUSES[0]; }
+function typeOf(k){ return TYPES.find(t => t.key === k) || TYPES[0]; }
+function prioOf(k){ return PRIOS.find(p => p.key === k) || PRIOS[1]; }
+function subcolOf(k){ return SUBCOLS.find(c => c.key === k) || SUBCOLS[0]; }
+
+function esc(s){
+  return String(s == null ? "" : s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+function todayISO(){
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+
+/* ==========================================================
+   Persistência + migração
+   ========================================================== */
+
+function save(){ localStorage.setItem("devProjects", JSON.stringify(projects)); }
+
+function migrate(){
+  projects.forEach(p => {
+    if(!p.startDate) p.startDate = todayISO();
+    if(!p.scale) p.scale = "week";
+    if(!p.view) p.view = "lista";
+    if(typeof p.showDates !== "boolean") p.showDates = false;
+    if(!Array.isArray(p.pages)) p.pages = [];
+
+    p.pages.forEach(pg => {
+      if(!Array.isArray(pg.tasks)) pg.tasks = [];
+      pg.tasks.forEach((t,i) => {
+        if(!t.color)  t.color = "#c9d1d9";
+        if(!t.status) t.status = "none";
+        if(!t.type)   t.type = "checklist";
+        if(typeof t.start !== "number") t.start = i;
+        if(typeof t.dur !== "number")   t.dur = 1;
+        if(typeof t.desc !== "string")  t.desc = "";
+        if(!t.prio) t.prio = "normal";
+        if(typeof t.planning !== "boolean") t.planning = (t.type === "epico");
+        if(!Array.isArray(t.subs)) t.subs = [];
+        t.subs.forEach(s => {
+          if(!s.col) s.col = "todo";
+          if(!s.prio) s.prio = "normal";
+        });
+        if(!t.okr) t.okr = { objetivo:"", krs:[], iniciativas:[], notas:"" };
+        if(!Array.isArray(t.okr.krs)) t.okr.krs = [];
+        if(!Array.isArray(t.okr.iniciativas)) t.okr.iniciativas = [];
+        t.done = !!t.done;
+      });
+    });
+  });
+}
+
+function toast(msg){
+  const old = document.getElementById("toast");
+  if(old) old.remove();
+  const el = document.createElement("div");
+  el.id = "toast";
+  el.innerHTML = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2600);
+}
+
+function proj(){ return projects[currentProject]; }
+function page(){ const p = proj(); return p ? p.pages[currentPage] : null; }
+function tasks(){ const pg = page(); return pg ? pg.tasks : []; }
+
+/* ==========================================================
+   Menus suspensos
+   ========================================================== */
+
+function closeMenus(){
+  document.querySelectorAll(".menu").forEach(m => m.classList.add("hidden"));
+  document.querySelectorAll(".menu-wrap").forEach(w => w.classList.remove("open"));
+}
+
+function toggleMenu(ev, id){
+  if(ev) ev.stopPropagation();
+  const menu = document.getElementById(id);
+  const open = !menu.classList.contains("hidden");
+  closeMenus();
+  if(!open){
+    menu.classList.remove("hidden");
+    menu.parentElement.classList.add("open");
+  }
+}
+
+document.addEventListener("click", closeMenus);
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape"){
+    closeMenus();
+    ["modal","editModal","detailModal","helpModal"].forEach(id => {
+      document.getElementById(id).classList.add("hidden");
+    });
+  }
+});
+
+/* ==========================================================
+   Navegação
+   ========================================================== */
+
+function home(){
+  currentProject = null;
+  document.getElementById("home").classList.remove("hidden");
+  document.getElementById("project").classList.add("hidden");
+  document.getElementById("headerNav").innerHTML = "";
+  renderProjects();
+}
+
+function openHelp(){ document.getElementById("helpModal").classList.remove("hidden"); }
+function closeHelp(){ document.getElementById("helpModal").classList.add("hidden"); }
+
+/* ==========================================================
+   HOME
+   ========================================================== */
+
+function renderProjects(){
+  const box = document.getElementById("projects");
+  box.innerHTML = "";
+
+  if(projects.length === 0){
+    box.innerHTML = `<div class="empty">
+      <h3>Nenhum projeto ainda</h3>
+      <p>Crie um projeto do zero, ou use "Importar" para trazer sua lista pronta.</p>
+    </div>`;
+    return;
+  }
+
+  projects.forEach((p, index) => {
+    const percent = calculateProject(p);
+    const totalTasks = p.pages.reduce((a,pg) => a + pg.tasks.length, 0);
+
+    const chips = STATUSES.slice(1).map(s => {
+      const n = countStatus(p, s.key);
+      return n ? `<span class="pill" style="color:${s.hex}">${s.label} ${n}</span>` : "";
+    }).join(" ");
+
+    const card = document.createElement("div");
+    card.className = "card project-card " + (percent === 100 ? "completed" : "");
+    card.style.animationDelay = (index * 0.05) + "s";
+
+    card.innerHTML = `
+      <div class="spread">
+        <div style="flex:1;min-width:0">
+          <span class="eyebrow">${p.pages.length} página(s) · ${totalTasks} item(ns)</span>
+          <h2 style="margin:4px 0">${esc(p.name)}</h2>
+        </div>
+        <button class="danger icon" onclick="removeProject(${index})" title="Excluir projeto">🗑</button>
+      </div>
+
+      <div class="progress"><div class="progress-bar" style="width:${percent}%"></div></div>
+      <p>${percent}% concluído</p>
+      <div class="status-row">${chips}</div>
+
+      <div class="row" style="margin-top:14px">
+        <button class="primary" onclick="openProject(${index})">Abrir</button>
+        <button onclick="openEdit(${index})">✏️ Editar projeto</button>
+      </div>`;
+
+    box.appendChild(card);
+  });
+}
+
+function countStatus(project, key){
+  let n = 0;
+  project.pages.forEach(pg => pg.tasks.forEach(t => { if((t.status||"none") === key) n++; }));
+  return n;
+}
+
+function calculateProject(project){
+  let total = 0, done = 0;
+  project.pages.forEach(pg => pg.tasks.forEach(t => { total++; if(t.done) done++; }));
+  return total === 0 ? 0 : Math.round((done/total)*100);
+}
+
+function calculatePage(pg){
+  if(!pg.tasks.length) return 0;
+  return Math.round(pg.tasks.filter(t => t.done).length / pg.tasks.length * 100);
+}
+
+function createProject(){
+  const name = prompt("Nome do projeto:");
+  if(!name) return;
+
+  projects.push({
+    name: name, startDate: todayISO(), scale:"week", view:"lista", showDates:false,
+    pages: [{
+      name:"Planejamento Geral",
+      tasks:[
+        newTask("Definir objetivo do projeto", { status:"iniciacao", type:"epico", planning:true, start:0 }),
+        newTask("Configurar ambiente", { status:"planejamento", type:"task", start:1 })
+      ]
+    }]
+  });
+
+  save();
+  renderProjects();
+  toast("Projeto criado.");
+}
+
+function newTask(text, extra){
+  return Object.assign({
+    text: text, done:false, color:"#c9d1d9", status:"none", type:"checklist",
+    start:0, dur:1, desc:"", prio:"normal", planning:false,
+    subs:[], okr:{ objetivo:"", krs:[], iniciativas:[], notas:"" }
+  }, extra || {});
+}
+
+function removeProject(index){
+  if(confirm('Excluir o projeto "' + projects[index].name + '" e todas as suas páginas?')){
+    projects.splice(index,1);
+    save();
+    renderProjects();
+    toast("Projeto excluído.");
+  }
+}
+
+/* ==========================================================
+   EDITAR PROJETO (nome, data inicial, escala, páginas)
+   ========================================================== */
+
+let editIndex = null;
+
+function openEdit(index){
+  editIndex = index;
+  document.getElementById("editModal").classList.remove("hidden");
+  renderEdit();
+}
+function closeEdit(){
+  document.getElementById("editModal").classList.add("hidden");
+  editIndex = null;
+  renderProjects();
+}
+
+function renderEdit(){
+  const p = projects[editIndex];
+  const body = document.getElementById("editBody");
+
+  const pagesHTML = p.pages.map((pg,i) => `
+    <div class="li">
+      <span class="dim" style="flex:none">${i+1}.</span>
+      <input value="${esc(pg.name)}" onchange="renamePageAt(${i},this.value)" style="margin:0">
+      <span class="dim" style="flex:none;font-size:12px">${pg.tasks.length} itens</span>
+      <button class="mini" onclick="movePage(${i},-1)" title="Subir" ${i===0?"disabled":""}>▲</button>
+      <button class="mini" onclick="movePage(${i},1)" title="Descer" ${i===p.pages.length-1?"disabled":""}>▼</button>
+    </div>`).join("");
+
+  body.innerHTML = `
+    <div class="field">
+      <label>Nome do projeto</label>
+      <input id="editName" value="${esc(p.name)}" onchange="setProjectName(this.value)">
+    </div>
+
+    <div class="row">
+      <div class="field" style="flex:1;min-width:200px">
+        <label>Data inicial</label>
+        <input type="date" value="${esc(p.startDate)}" onchange="setStartDate(this.value)">
+      </div>
+      <div class="field" style="flex:1;min-width:200px">
+        <label>Escala do cronograma</label>
+        <select onchange="setScale(this.value)">
+          <option value="week" ${p.scale==="week"?"selected":""}>Semanal (Semana 1, com datas)</option>
+          <option value="month" ${p.scale==="month"?"selected":""}>Mensal (Janeiro, Fevereiro...)</option>
+          <option value="simple" ${p.scale==="simple"?"selected":""}>Simples (Semana 1, Semana 2...)</option>
+        </select>
+      </div>
+    </div>
+    <p class="dim" style="margin-top:0">As datas aparecem no diagrama quando você liga "Mostrar datas", ao lado do Gantt.</p>
+
+    <h3 style="margin-top:22px">Páginas</h3>
+    <p class="dim">Renomeie e reordene aqui. Para excluir uma página, abra ela dentro do projeto.</p>
+    ${pagesHTML}
+    <button style="margin-top:10px" onclick="addPageFromEdit()">+ Nova página</button>`;
+}
+
+function setProjectName(v){
+  if(!v.trim()) return;
+  projects[editIndex].name = v.trim();
+  save();
+  if(currentProject === editIndex) document.getElementById("projectName").innerText = v.trim();
+}
+function renamePageAt(i, v){
+  if(!v.trim()) return;
+  projects[editIndex].pages[i].name = v.trim();
+  save();
+  if(currentProject === editIndex) renderPageRail();
+}
+function movePage(i, delta){
+  const pages = projects[editIndex].pages;
+  const j = i + delta;
+  if(j < 0 || j >= pages.length) return;
+  [pages[i], pages[j]] = [pages[j], pages[i]];
+  save();
+  renderEdit();
+  if(currentProject === editIndex){ currentPage = 0; renderPageRail(); renderPage(); }
+}
+function addPageFromEdit(){
+  const name = prompt("Nome da nova página:");
+  if(!name) return;
+  projects[editIndex].pages.push({ name:name, tasks:[] });
+  save();
+  renderEdit();
+  if(currentProject === editIndex) renderPageRail();
+}
+function setStartDate(v){
+  projects[editIndex].startDate = v || todayISO();
+  save();
+  if(currentProject === editIndex){ renderTimeline(); renderPage(); }
+}
+function setScale(v){
+  projects[editIndex].scale = v;
+  save();
+  if(currentProject === editIndex){ renderTimeline(); renderPage(); }
+}
+
+/* ==========================================================
+   PROJETO
+   ========================================================== */
+
+function openProject(index){
+  currentProject = index;
+  currentPage = 0;
+
+  document.getElementById("home").classList.add("hidden");
+  document.getElementById("project").classList.remove("hidden");
+  document.getElementById("projectName").innerText = projects[index].name;
+
+  document.getElementById("headerNav").innerHTML =
+    `<button class="back-btn" onclick="home()"><span class="arrow">←</span> Voltar</button>`;
+
+  document.getElementById("projectActions").innerHTML = `
+    <div class="menu-wrap" id="wrap-savProj">
+      <button onclick="toggleMenu(event,'savProj')">💾 Salvar <span class="caret">▾</span></button>
+      <div class="menu right hidden" id="savProj">
+        <div class="menu-label">ESTE PROJETO</div>
+        <button onclick="saveProject('txt')">📄 TXT (lista de tarefas)</button>
+        <button onclick="saveProject('json')">🧩 JSON (backup completo)</button>
+      </div>
+    </div>
+    <div class="menu-wrap" id="wrap-impProj">
+      <button onclick="toggleMenu(event,'impProj')">⬆ Importar <span class="caret">▾</span></button>
+      <div class="menu right hidden" id="impProj">
+        <div class="menu-label">ADICIONAR PÁGINAS AQUI</div>
+        <button onclick="pickFile('txt','page')">📄 Arquivo TXT</button>
+        <button onclick="pickFile('json','page')">🧩 Arquivo JSON</button>
+        <hr>
+        <button onclick="importManual('page')">✍ Escrever manualmente</button>
+      </div>
+    </div>`;
+
+  renderViewSwitch();
+  renderPageRail();
+  renderTimeline();
+  renderPage();
+}
+
+function renderViewSwitch(){
+  document.getElementById("viewSwitch").innerHTML = VIEWS.map(v =>
+    `<button class="view-btn ${proj().view === v.key ? "active" : ""}" onclick="setView('${v.key}')">${v.label}</button>`
+  ).join("");
+}
+
+function setView(key){
+  proj().view = key;
+  save();
+  renderViewSwitch();
+  renderPage();
+}
+
+function toggleDates(){
+  proj().showDates = !proj().showDates;
+  save();
+  renderPage();
+  toast(proj().showDates ? "Datas visíveis no diagrama." : "Datas ocultas.");
+}
+
+/* ---------- trilho de páginas ---------- */
+
+function renderPageRail(){
+  const rail = document.getElementById("pageRail");
+  const pages = proj().pages;
+  if(currentPage >= pages.length) currentPage = 0;
+  rail.innerHTML = "";
+
+  pages.forEach((pg, i) => {
+    const pct = calculatePage(pg);
+    const btn = document.createElement("button");
+    btn.className = "page-chip " + (i === currentPage ? "active " : "") + (pct === 100 ? "done" : "");
+    btn.style.animationDelay = (i * 0.04) + "s";
+    btn.innerHTML = `
+      <div class="chip-top">
+        <span class="chip-idx">PÁGINA ${i+1}</span>
+        <span class="chip-meta">${pg.tasks.filter(t=>t.done).length}/${pg.tasks.length}</span>
+      </div>
+      <span class="chip-name">${esc(pg.name)}</span>
+      <div class="chip-bar"><i style="width:${pct}%"></i></div>`;
+    btn.onclick = () => { currentPage = i; renderPageRail(); renderPage(); };
+    rail.appendChild(btn);
+  });
+
+  const add = document.createElement("button");
+  add.className = "page-chip add";
+  add.innerText = "+ Nova Página";
+  add.onclick = addPage;
+  rail.appendChild(add);
+}
+
+function addPage(){
+  const name = prompt("Nome da nova página:");
+  if(!name) return;
+  proj().pages.push({ name:name, tasks:[] });
+  currentPage = proj().pages.length - 1;
+  save();
+  renderPageRail();
+  renderPage();
+}
+
+function deletePage(){
+  const pages = proj().pages;
+  if(pages.length <= 1){ toast("O projeto precisa de pelo menos uma página."); return; }
+  if(!confirm('Excluir a página "' + page().name + '" e todos os seus itens?')) return;
+  pages.splice(currentPage,1);
+  currentPage = 0;
+  save();
+  renderPageRail();
+  renderPage();
+  toast("Página excluída.");
+}
+
+function refresh(){
+  save();
+  renderPageRail();
+  renderPage();
+  if(detailIndex !== null) renderDetail();
+}
+
+/* ==========================================================
+   Linha do tempo
+   ========================================================== */
+
+function baseDate(){
+  const p = proj();
+  return new Date(((p && p.startDate) ? p.startDate : todayISO()) + "T00:00:00");
+}
+function periodStart(i){
+  const d = baseDate();
+  if((proj().scale||"week") === "month") return new Date(d.getFullYear(), d.getMonth()+i, 1);
+  const nd = new Date(d); nd.setDate(nd.getDate() + i*7); return nd;
+}
+function fmtShort(d){ return String(d.getDate()).padStart(2,"0") + "/" + String(d.getMonth()+1).padStart(2,"0"); }
+function fmtFull(d){ return fmtShort(d) + "/" + d.getFullYear(); }
+
+function periodLabel(i){
+  const scale = proj().scale || "week";
+  if(scale === "simple") return { top:"Semana " + (i+1), sub:"" };
+  if(scale === "month"){
+    const d = periodStart(i);
+    return { top:MESES[d.getMonth()], sub:String(d.getFullYear()) };
+  }
+  const s = periodStart(i);
+  const e = new Date(s); e.setDate(e.getDate()+6);
+  return { top:"Semana " + (i+1), sub:fmtShort(s) + "–" + fmtShort(e) };
+}
+
+function currentPeriodFloat(){
+  const start = baseDate();
+  const now = new Date(); now.setHours(0,0,0,0);
+  if((proj().scale||"week") === "month"){
+    const months = (now.getFullYear()-start.getFullYear())*12 + (now.getMonth()-start.getMonth());
+    const dim = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+    return months + (now.getDate()-1)/dim;
+  }
+  return (now - start) / (1000*60*60*24*7);
+}
+
+function periodCount(){
+  let max = 8;
+  const p = proj();
+  if(!p) return max;
+  p.pages.forEach(pg => pg.tasks.forEach(t => { max = Math.max(max, (t.start||0) + (t.dur||1)); }));
+  return Math.min(max+1, 60);
+}
+
+function renderTimeline(){
+  const p = proj();
+  if(!p) return;
+  const scale = p.scale || "week";
+  const idx = Math.floor(currentPeriodFloat());
+
+  let agora;
+  if(idx < 0) agora = "ainda não começou";
+  else if(scale === "simple") agora = "Semana " + (idx+1);
+  else { const l = periodLabel(idx); agora = l.top + (l.sub ? " (" + l.sub + ")" : ""); }
+
+  const escala = scale === "week" ? "Semanal" : scale === "month" ? "Mensal" : "Simples";
+
+  document.getElementById("timelineStrip").innerHTML = `
+    <span>📅 Início: <b>${fmtFull(baseDate())}</b></span>
+    <span class="dim">|</span>
+    <span>Escala: <b>${escala}</b></span>
+    <span class="dim">|</span>
+    <span>Agora: <b class="now">${agora}</b></span>
+    <span class="dim">|</span>
+    <span>Horizonte: <b>${periodCount()} ${scale === "month" ? "meses" : "semanas"}</b></span>`;
+}
+
+/* ==========================================================
+   Render da página
+   ========================================================== */
+
+function ringHTML(pct, size){
+  const r = 30, c = 2*Math.PI*r;
+  return `<div class="ring" style="width:${size}px;height:${size}px">
+    <svg viewBox="0 0 74 74" width="${size}" height="${size}">
+      <circle class="bg" cx="37" cy="37" r="${r}"></circle>
+      <circle class="fg" cx="37" cy="37" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${c - c*pct/100}"></circle>
+    </svg>
+    <b>${pct}%</b>
+  </div>`;
+}
+
+function renderPage(){
+  const area = document.getElementById("pageArea");
+  const pg = page();
+  if(!pg){ area.innerHTML = ""; return; }
+
+  const pct = calculatePage(pg);
+  const done = pg.tasks.filter(t => t.done).length;
+
+  area.innerHTML = `
+    <div class="card page-head">
+      <div>
+        <span class="eyebrow">Página ${currentPage+1} de ${proj().pages.length}</span>
+        <h2>${esc(pg.name)}</h2>
+        <p class="dim" style="margin:0">${done} de ${pg.tasks.length} itens concluídos</p>
+        <div class="row" style="margin-top:14px">
+          <button onclick="addTask('checklist')">+ Checklist</button>
+          <button onclick="addTask('task')">+ Task</button>
+          <button onclick="addTask('epico')">+ Épico</button>
+        </div>
+      </div>
+      <div class="row" style="align-items:center">
+        ${ringHTML(pct, 74)}
+        <button class="danger icon" onclick="deletePage()" title="Excluir esta página">🗑</button>
+      </div>
+    </div>
+    <div id="viewArea"></div>`;
+
+  const view = document.getElementById("viewArea");
+
+  if(pg.tasks.length === 0){
+    view.innerHTML = `<div class="empty">
+      <h3>Página vazia</h3>
+      <p>Adicione um item acima, ou use "Importar" para colar vários de uma vez.</p>
+    </div>`;
+    updateProgress();
+    return;
+  }
+
+  const mode = proj().view || "lista";
+  if(mode === "lista")        renderListView(view);
+  else if(mode === "quadros") renderBoardView(view);
+  else if(mode === "kanban")  renderKanbanView(view);
+  else if(mode === "sprint")  renderSprintView(view);
+  else if(mode === "gantt")   renderGanttView(view);
+
+  updateProgress();
+}
+
+function updateProgress(){
+  const percent = calculateProject(proj());
+  document.getElementById("globalProgress").style.width = percent + "%";
+  document.getElementById("globalPercent").innerText = percent + "% do projeto concluído";
+}
+
+/* ---------- pedaços reutilizáveis ---------- */
+
+function statusRow(i, current){
+  return `<div class="status-row">` + STATUSES.slice(1).map(s => `
+    <button class="st-btn ${current === s.key ? "on" : ""}"
+      style="${current === s.key ? "background:"+s.hex+";border-color:"+s.hex+";color:#0d1117" : "color:"+s.hex}"
+      onclick="setStatus(${i},'${s.key}')" title="Marcar como ${s.label}">${s.label}</button>`).join("") + `</div>`;
+}
+
+function typeTag(i, t){
+  const ty = typeOf(t.type);
+  return `<span class="type-tag ${ty.key}" onclick="cycleType(${i})"
+    title="Clique para alternar entre Checklist, Task e Épico">${ty.icon} ${ty.label}</span>`;
+}
+
+function badges(t){
+  const done = t.subs.filter(s => s.col === "done").length;
+  const out = [];
+  if(t.desc) out.push(`<span title="Tem descrição">📝</span>`);
+  if(t.subs.length) out.push(`<span title="Subtarefas">▤ ${done}/${t.subs.length}</span>`);
+  if(t.planning) out.push(`<span title="Planejamento geral (OKR)">🎯</span>`);
+  return out.length ? `<span class="badges">${out.join("")}</span>` : "";
+}
+
+function prioPill(t){
+  const p = prioOf(t.prio);
+  return `<span class="pill" style="color:${p.hex}"><i class="prio-dot"></i>${p.label}</span>`;
+}
+
+function actionButtons(i){
+  return `<button class="mini" onclick="openDetail(${i})" title="Abrir detalhes do item">⋯</button>
+          <button class="mini" onclick="editTask(${i})" title="Renomear">✏</button>
+          <button class="mini danger" onclick="deleteTask(${i})" title="Excluir item">X</button>`;
+}
+
+/* ==========================================================
+   1) LISTA
+   ========================================================== */
+
+function renderListView(view){
+  const list = document.createElement("div");
+  list.className = "card";
+  view.appendChild(list);
+
+  tasks().forEach((task, index) => {
+    const st = statusOf(task.status);
+    const div = document.createElement("div");
+    div.className = "task " + (task.done ? "done" : "");
+    div.style.borderLeftColor = st.hex;
+    div.style.animationDelay = (index * 0.02) + "s";
+
+    div.innerHTML = `
+      <div class="task-left">
+        <input type="checkbox" ${task.done ? "checked" : ""} onchange="toggleTask(${index})">
+        ${typeTag(index, task)}
+        <span class="task-text" style="color:${esc(task.color)};text-decoration:${task.done?"line-through":"none"};cursor:pointer"
+          ondblclick="openDetail(${index})" title="Clique duas vezes para abrir os detalhes">${esc(task.text)}</span>
+        <span class="pill" style="color:${st.hex}">${st.label}</span>
+        ${prioPill(task)}
+        ${badges(task)}
+      </div>
+      <div class="row">
+        ${statusRow(index, task.status)}
+        <input type="color" value="${esc(task.color)}" onchange="changeColor(${index},this.value)" title="Cor do texto">
+        ${actionButtons(index)}
+      </div>`;
+
+    list.appendChild(div);
+  });
+}
+
+/* ==========================================================
+   2) QUADROS
+   ========================================================== */
+
+function renderBoardView(view){
+  const grid = document.createElement("div");
+  grid.className = "board-grid";
+  view.appendChild(grid);
+
+  tasks().forEach((task, index) => {
+    const st = statusOf(task.status);
+    const card = document.createElement("div");
+    card.className = "item-card " + (task.done ? "done" : "");
+    card.style.borderTopColor = st.hex;
+    card.style.animationDelay = (index * 0.03) + "s";
+
+    card.innerHTML = `
+      <div class="item-head">
+        ${typeTag(index, task)}
+        <span class="pill" style="color:${st.hex}">${st.label}</span>
+      </div>
+      <div class="item-title" style="color:${esc(task.color)};text-decoration:${task.done?"line-through":"none"}">${esc(task.text)}</div>
+      <div class="row">${prioPill(task)} ${badges(task)}</div>
+      ${statusRow(index, task.status)}
+      <div class="item-foot">
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim);cursor:pointer">
+          <input type="checkbox" ${task.done?"checked":""} onchange="toggleTask(${index})"> concluído
+        </label>
+        <div class="row" style="gap:6px">
+          <input type="color" value="${esc(task.color)}" onchange="changeColor(${index},this.value)">
+          ${actionButtons(index)}
+        </div>
+      </div>`;
+
+    grid.appendChild(card);
+  });
+}
+
+/* ==========================================================
+   3) KANBAN
+   ========================================================== */
+
+let dragIndex = null;
+
+function renderKanbanView(view){
+  const board = document.createElement("div");
+  board.className = "kanban";
+  view.appendChild(board);
+
+  STATUSES.forEach((s, ci) => {
+    const items = tasks().map((t,i) => ({t,i})).filter(o => (o.t.status||"none") === s.key);
+
+    const col = document.createElement("div");
+    col.className = "kanban-col";
+    col.style.color = s.hex;
+    col.style.animationDelay = (ci * 0.05) + "s";
+    col.ondragover = e => { e.preventDefault(); col.classList.add("drop"); };
+    col.ondragleave = () => col.classList.remove("drop");
+    col.ondrop = e => { e.preventDefault(); col.classList.remove("drop"); dropOn(s.key); };
+
+    col.innerHTML = `<div class="col-head"><span>${s.label}</span><span class="col-count">${items.length}</span></div>`;
+
+    if(items.length === 0){
+      const em = document.createElement("div");
+      em.className = "kanban-empty";
+      em.innerText = "Arraste itens para cá";
+      col.appendChild(em);
+    }
+
+    items.forEach((o,k) => {
+      const card = document.createElement("div");
+      card.className = "kanban-card";
+      card.draggable = true;
+      card.style.animationDelay = (k * 0.03) + "s";
+      card.ondragstart = () => { dragIndex = o.i; card.classList.add("dragging"); };
+      card.ondragend = () => card.classList.remove("dragging");
+      card.innerHTML = `
+        <div class="spread" style="gap:6px">
+          ${typeTag(o.i, o.t)}
+          <div class="row" style="gap:4px">${actionButtons(o.i)}</div>
+        </div>
+        <div style="margin:8px 0;color:${esc(o.t.color)};text-decoration:${o.t.done?"line-through":"none"}">${esc(o.t.text)}</div>
+        <div class="row" style="gap:6px">${prioPill(o.t)} ${badges(o.t)}</div>
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim);cursor:pointer;margin-top:8px">
+          <input type="checkbox" ${o.t.done?"checked":""} onchange="toggleTask(${o.i})"> concluído
+        </label>`;
+      col.appendChild(card);
+    });
+
+    board.appendChild(col);
+  });
+}
+
+function dropOn(statusKey){
+  if(dragIndex === null) return;
+  const t = tasks()[dragIndex];
+  t.status = statusKey;
+  if(statusKey === "fechamento") t.done = true;
+  else if(t.done) t.done = false;
+  dragIndex = null;
+  refresh();
+}
+
+/* ==========================================================
+   4) SPRINT
+   ========================================================== */
+
+function renderSprintView(view){
+  STATUSES.forEach((s, si) => {
+    const items = tasks().map((t,i) => ({t,i})).filter(o => (o.t.status||"none") === s.key);
+    if(items.length === 0 && s.key === "none") return;
+
+    const done = items.filter(o => o.t.done).length;
+    const pct = items.length ? Math.round(done/items.length*100) : 0;
+
+    const stage = document.createElement("div");
+    stage.className = "sprint-stage";
+    stage.style.color = s.hex;
+    stage.style.animationDelay = (si * 0.06) + "s";
+    stage.innerHTML = `
+      <div class="stage-head">
+        <div class="stage-title"><span class="stage-dot"></span><b>${s.label}</b>
+          <span class="dim" style="font-size:13px">${done}/${items.length}</span>
+        </div>
+        <div class="stage-bar"><div class="progress slim"><div class="progress-bar" style="width:${pct}%;background:${s.hex}"></div></div></div>
+        <span class="dim">${pct}%</span>
+      </div>
+      <div class="sprint-items"></div>`;
+
+    const box = stage.querySelector(".sprint-items");
+    if(items.length === 0) box.innerHTML = `<div class="kanban-empty">Nenhum item nesta fase</div>`;
+
+    items.forEach((o,k) => {
+      const el = document.createElement("div");
+      el.className = "sprint-item";
+      el.style.animationDelay = (k * 0.03) + "s";
+      el.innerHTML = `
+        <div class="spread" style="gap:6px">
+          ${typeTag(o.i, o.t)}
+          <span class="dim" style="font-size:11px">${periodLabel(o.t.start||0).top}</span>
+        </div>
+        <div style="color:${esc(o.t.color)};text-decoration:${o.t.done?"line-through":"none"}">${esc(o.t.text)}</div>
+        <div class="row" style="gap:6px">${prioPill(o.t)} ${badges(o.t)}</div>
+        <div class="spread" style="gap:6px;align-items:center">
+          <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--dim);cursor:pointer">
+            <input type="checkbox" ${o.t.done?"checked":""} onchange="toggleTask(${o.i})"> ok
+          </label>
+          <div class="row" style="gap:4px">${actionButtons(o.i)}</div>
+        </div>
+        ${statusRow(o.i, o.t.status)}`;
+      box.appendChild(el);
+    });
+
+    view.appendChild(stage);
+  });
+}
+
+/* ==========================================================
+   5) GANTT
+   ========================================================== */
+
+function renderGanttView(view){
+  const periods = periodCount();
+  const showDates = proj().showDates;
+  const colW = 100;
+
+  const bar = document.createElement("div");
+  bar.className = "toolbar";
+  bar.innerHTML = `
+    <span class="eyebrow">Cronograma</span>
+    <div class="sep"></div>
+    <button onclick="toggleDates()">${showDates ? "🙈 Ocultar datas" : "👁 Mostrar datas"}</button>
+    <span class="dim">${showDates ? "Mostrando as datas reais de cada período." : "Mostrando apenas Semana 1, Semana 2..."}</span>`;
+  view.appendChild(bar);
+
+  const wrap = document.createElement("div");
+  wrap.className = "gantt-wrap";
+  const gantt = document.createElement("div");
+  gantt.className = "gantt";
+  gantt.style.minWidth = (330 + periods*colW) + "px";
+
+  const head = document.createElement("div");
+  head.className = "gantt-row gantt-head";
+  head.style.gridTemplateColumns = "330px repeat(" + periods + ",1fr)";
+  let headHTML = `<div class="gantt-label"><b>Item</b></div>`;
+  for(let i=0;i<periods;i++){
+    const l = periodLabel(i);
+    headHTML += `<div class="gantt-cell"><b style="color:#c9d1d9">${l.top}</b>${(showDates && l.sub) ? "<br>"+l.sub : ""}</div>`;
+  }
+  head.innerHTML = headHTML;
+  gantt.appendChild(head);
+
+  const nowFloat = currentPeriodFloat();
+  const showToday = nowFloat >= 0 && nowFloat <= periods;
+
+  tasks().forEach((task, index) => {
+    const st = statusOf(task.status);
+    const start = Math.max(0, Math.min(task.start||0, periods-1));
+    const dur = Math.max(1, Math.min(task.dur||1, periods-start));
+
+    const row = document.createElement("div");
+    row.className = "gantt-row";
+    row.style.gridTemplateColumns = "330px 1fr";
+
+    const label = document.createElement("div");
+    label.className = "gantt-label";
+    label.innerHTML = `
+      <input type="checkbox" ${task.done?"checked":""} onchange="toggleTask(${index})">
+      <span style="flex:1;min-width:0;color:${esc(task.color)};text-decoration:${task.done?"line-through":"none"};overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+        title="${esc(task.text)}">${esc(task.text)}</span>
+      <span class="gantt-ctrl">
+        <button onclick="moveBar(${index},-1)" title="Adiantar">◀</button>
+        <button onclick="moveBar(${index},1)" title="Adiar">▶</button>
+        <button onclick="resizeBar(${index},-1)" title="Encurtar">−</button>
+        <button onclick="resizeBar(${index},1)" title="Alongar">+</button>
+        <button onclick="openDetail(${index})" title="Detalhes">⋯</button>
+      </span>`;
+
+    const track = document.createElement("div");
+    track.className = "gantt-track";
+    track.style.gridTemplateColumns = "repeat(" + periods + ",1fr)";
+
+    for(let i=0;i<periods;i++){
+      const slot = document.createElement("div");
+      slot.className = "gantt-slot";
+      slot.style.gridRow = "1";
+      slot.style.gridColumn = (i+1) + " / span 1";
+      track.appendChild(slot);
+    }
+
+    const gbar = document.createElement("div");
+    gbar.className = "gantt-bar " + (task.done ? "done" : "");
+    gbar.style.gridColumn = (start+1) + " / span " + dur;
+    gbar.style.background = st.hex;
+    gbar.style.animationDelay = (index * 0.04) + "s";
+    const l0 = periodLabel(start), l1 = periodLabel(start+dur-1);
+    gbar.title = task.text + " — " + st.label + " · " + l0.top + (showDates && l0.sub ? " ("+l0.sub+")" : "") +
+                 (dur > 1 ? " até " + l1.top : "") + " · clique para mudar a fase";
+    gbar.innerHTML = `<span>${typeOf(task.type).icon}</span><span style="overflow:hidden;text-overflow:ellipsis">${esc(task.text)}</span>`;
+    gbar.onclick = () => cycleStatus(index);
+    track.appendChild(gbar);
+
+    if(showToday){
+      const line = document.createElement("div");
+      line.className = "today-line";
+      line.style.left = (nowFloat/periods*100) + "%";
+      track.appendChild(line);
+    }
+
+    row.appendChild(label);
+    row.appendChild(track);
+    gantt.appendChild(row);
+  });
+
+  wrap.appendChild(gantt);
+  view.appendChild(wrap);
+
+  const legend = document.createElement("div");
+  legend.className = "card";
+  legend.innerHTML = `<span class="dim">Legenda:</span> ` +
+    STATUSES.slice(1).map(s => `<span class="pill" style="color:${s.hex}">${s.label}</span>`).join(" ") +
+    ` <span class="pill" style="color:#f85149">▏hoje</span>
+      <p class="dim" style="margin-top:12px">Clique na barra para avançar a fase. ◀ ▶ movem no tempo, − + mudam a duração, ⋯ abre os detalhes.</p>`;
+  view.appendChild(legend);
+}
+
+function moveBar(i, d){ const t = tasks()[i]; t.start = Math.max(0,(t.start||0)+d); refresh(); }
+function resizeBar(i, d){ const t = tasks()[i]; t.dur = Math.max(1,(t.dur||1)+d); refresh(); }
+
+/* ==========================================================
+   Ações sobre itens
+   ========================================================== */
+
+function addTask(type){
+  const text = prompt("Nome do item:");
+  if(!text) return;
+  const list = tasks();
+  list.push(newTask(text, {
+    type: type || "checklist",
+    planning: type === "epico",
+    start: list.length ? (list[list.length-1].start||0) : 0
+  }));
+  refresh();
+}
+
+function toggleTask(i){
+  const t = tasks()[i];
+  t.done = !t.done;
+  if(t.done && t.status === "none") t.status = "fechamento";
+  refresh();
+}
+function changeColor(i, c){ tasks()[i].color = c; refresh(); }
+
+function setStatus(i, key){
+  const t = tasks()[i];
+  t.status = (t.status === key) ? "none" : key;
+  if(t.status === "fechamento") t.done = true;
+  refresh();
+}
+function cycleStatus(i){
+  const t = tasks()[i];
+  const k = STATUSES.findIndex(s => s.key === (t.status||"none"));
+  t.status = STATUSES[(k+1) % STATUSES.length].key;
+  if(t.status === "fechamento") t.done = true;
+  refresh();
+}
+function cycleType(i){
+  const t = tasks()[i];
+  const k = TYPES.findIndex(x => x.key === (t.type||"checklist"));
+  t.type = TYPES[(k+1) % TYPES.length].key;
+  refresh();
+}
+function editTask(i){
+  const t = tasks()[i];
+  const v = prompt("Renomear item:", t.text);
+  if(v){ t.text = v; refresh(); }
+}
+function deleteTask(i){
+  if(!confirm("Excluir item?")) return;
+  tasks().splice(i,1);
+  if(detailIndex === i) closeDetail();
+  refresh();
+}
+
+/* ==========================================================
+   DETALHES DO ITEM
+   ========================================================== */
+
+let detailIndex = null;
+let detailTab = "detalhes";
+
+function openDetail(i){
+  detailIndex = i;
+  detailTab = "detalhes";
+  document.getElementById("detailModal").classList.remove("hidden");
+  renderDetail();
+}
+function closeDetail(){
+  document.getElementById("detailModal").classList.add("hidden");
+  detailIndex = null;
+}
+function item(){ return tasks()[detailIndex]; }
+
+function detailTabs(t){
+  const list = [{ key:"detalhes", label:"📝 Detalhes" }];
+  if(t.planning) list.push({ key:"okr", label:"🎯 OKR Canvas" });
+  else {
+    list.push({ key:"kanban", label:"▤ Kanban" });
+    list.push({ key:"roadmap", label:"🚦 Roadmap" });
+  }
+  return list;
+}
+
+function setDetailTab(k){ detailTab = k; renderDetail(); }
+
+function detailProgress(t){
+  if(t.planning){
+    if(!t.okr.krs.length) return 0;
+    return Math.round(t.okr.krs.reduce((a,k) => a + (k.pct||0), 0) / t.okr.krs.length);
+  }
+  if(!t.subs.length) return t.done ? 100 : 0;
+  return Math.round(t.subs.filter(s => s.col === "done").length / t.subs.length * 100);
+}
+
+function renderDetail(){
+  const t = item();
+  if(!t){ closeDetail(); return; }
+
+  const tabs = detailTabs(t);
+  if(!tabs.some(x => x.key === detailTab)) detailTab = "detalhes";
+
+  const st = statusOf(t.status);
+  const body = document.getElementById("detailBody");
+
+  body.innerHTML = `
+    <div class="spread">
+      <div style="flex:1;min-width:0">
+        <span class="eyebrow">${esc(page().name)} · item ${detailIndex+1}</span>
+        <h2 class="modal-title" style="margin:4px 0">${esc(t.text)}</h2>
+        <div class="row" style="gap:8px">
+          ${typeTag(detailIndex, t)}
+          <span class="pill" style="color:${st.hex}">${st.label}</span>
+          ${prioPill(t)}
+          <span class="pill" style="color:#8b949e">${periodLabel(t.start||0).top}${t.dur>1?" +"+(t.dur-1):""}</span>
+        </div>
+      </div>
+      ${ringHTML(detailProgress(t), 74)}
+    </div>
+
+    <div class="mtabs">
+      ${tabs.map(x => `<button class="mtab ${detailTab===x.key?"active":""}" onclick="setDetailTab('${x.key}')">${x.label}</button>`).join("")}
+    </div>
+    <div class="mpane" id="detailPane"></div>`;
+
+  const pane = document.getElementById("detailPane");
+  if(detailTab === "detalhes")     renderDetailMain(pane, t);
+  else if(detailTab === "okr")     renderOKR(pane, t);
+  else if(detailTab === "kanban")  renderSubKanban(pane, t);
+  else if(detailTab === "roadmap") renderRoadmap(pane, t);
+}
+
+function renderDetailMain(pane, t){
+  pane.innerHTML = `
+    <div class="field">
+      <label>Descrição — o que precisa ser feito, como e por quê</label>
+      <textarea oninput="setItemField('desc',this.value)" placeholder="Anote aqui o contexto, os critérios de aceite, links, decisões...">${esc(t.desc)}</textarea>
+    </div>
+
+    <div class="row">
+      <div class="field" style="flex:1;min-width:180px">
+        <label>Prioridade</label>
+        <select onchange="setItemField('prio',this.value)">
+          ${PRIOS.map(p => `<option value="${p.key}" ${t.prio===p.key?"selected":""}>${p.label}</option>`).join("")}
+        </select>
+      </div>
+      <div class="field" style="flex:1;min-width:180px">
+        <label>Fase</label>
+        <select onchange="setItemField('status',this.value)">
+          ${STATUSES.map(s => `<option value="${s.key}" ${t.status===s.key?"selected":""}>${s.label}</option>`).join("")}
+        </select>
+      </div>
+      <div class="field" style="flex:1;min-width:180px">
+        <label>Tipo</label>
+        <select onchange="setItemField('type',this.value)">
+          ${TYPES.map(x => `<option value="${x.key}" ${t.type===x.key?"selected":""}>${x.label}</option>`).join("")}
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field" style="flex:1;min-width:150px">
+        <label>Começa em</label>
+        <select onchange="setItemNumber('start',this.value)">
+          ${Array.from({length:periodCount()},(_,i) =>
+            `<option value="${i}" ${(t.start||0)===i?"selected":""}>${periodLabel(i).top}${proj().showDates && periodLabel(i).sub ? " ("+periodLabel(i).sub+")" : ""}</option>`).join("")}
+        </select>
+      </div>
+      <div class="field" style="flex:1;min-width:150px">
+        <label>Duração (períodos)</label>
+        <input type="number" min="1" value="${t.dur||1}" onchange="setItemNumber('dur',this.value)">
+      </div>
+      <div class="field" style="flex:none">
+        <label>Cor</label>
+        <input type="color" value="${esc(t.color)}" onchange="setItemField('color',this.value)">
+      </div>
+    </div>
+
+    <div class="li">
+      <input type="checkbox" style="flex:none" ${t.planning?"checked":""} onchange="setPlanning(this.checked)">
+      <span>Este item é <b>planejamento geral do projeto</b> — abre o OKR Model Canvas no lugar do Kanban e do Roadmap.</span>
+    </div>
+
+    <div class="li">
+      <input type="checkbox" style="flex:none" ${t.done?"checked":""} onchange="toggleTask(${detailIndex})">
+      <span>Item concluído</span>
+    </div>`;
+}
+
+function setItemField(field, value){
+  const t = item();
+  t[field] = value;
+  if(field === "status" && value === "fechamento") t.done = true;
+  save();
+  if(field === "desc"){ renderPage(); return; }   /* não redesenha o modal: manteria o cursor */
+  refresh();
+}
+function setItemNumber(field, value){
+  const n = Math.max(field === "dur" ? 1 : 0, parseInt(value,10) || 0);
+  item()[field] = n;
+  refresh();
+}
+function setPlanning(v){
+  item().planning = v;
+  detailTab = v ? "okr" : "kanban";
+  refresh();
+}
+
+/* ---------- OKR Model Canvas ---------- */
+
+function renderOKR(pane, t){
+  const o = t.okr;
+  const media = o.krs.length ? Math.round(o.krs.reduce((a,k)=>a+(k.pct||0),0)/o.krs.length) : 0;
+
+  pane.innerHTML = `
+    <p class="dim">Modelo para o planejamento geral: um objetivo claro, resultados-chave mensuráveis e as iniciativas que levam até lá.</p>
+    <div class="canvas">
+      <div class="box full">
+        <h4>🎯 Objetivo</h4>
+        <textarea style="height:80px" oninput="setOKR('objetivo',this.value)"
+          placeholder="Onde queremos chegar, em uma frase. Ex.: Lançar o app na Play Store com cadastro funcionando.">${esc(o.objetivo)}</textarea>
+      </div>
+
+      <div class="box full">
+        <h4>📈 Key Results — ${media}% em média</h4>
+        <div class="progress slim" style="margin-bottom:10px"><div class="progress-bar" style="width:${media}%"></div></div>
+        ${o.krs.length ? o.krs.map((k,i) => `
+          <div class="kr" style="animation-delay:${i*0.04}s">
+            <span class="kr-txt">${esc(k.text)}</span>
+            <input type="range" min="0" max="100" value="${k.pct||0}" onchange="setKR(${i},this.value)">
+            <span class="kr-pct">${k.pct||0}%</span>
+            <button class="mini danger" onclick="delKR(${i})">X</button>
+          </div>`).join("") : `<p class="dim">Nenhum resultado-chave ainda.</p>`}
+        <button class="mini" style="margin-top:8px" onclick="addKR()">+ Key Result</button>
+      </div>
+
+      <div class="box">
+        <h4>🚀 Iniciativas</h4>
+        ${o.iniciativas.length ? o.iniciativas.map((x,i) => `
+          <div class="li" style="animation-delay:${i*0.04}s">
+            <span>${esc(x)}</span>
+            <button class="mini danger" onclick="delIni(${i})">X</button>
+          </div>`).join("") : `<p class="dim">O que vamos fazer para mover os KRs?</p>`}
+        <button class="mini" style="margin-top:8px" onclick="addIni()">+ Iniciativa</button>
+      </div>
+
+      <div class="box">
+        <h4>⚠️ Riscos e notas</h4>
+        <textarea style="height:120px" oninput="setOKR('notas',this.value)"
+          placeholder="O que pode dar errado, dependências, decisões pendentes...">${esc(o.notas)}</textarea>
+      </div>
+    </div>`;
+}
+
+function setOKR(field, v){ item().okr[field] = v; save(); }
+function addKR(){
+  const v = prompt("Resultado-chave (algo mensurável):");
+  if(!v) return;
+  item().okr.krs.push({ text:v, pct:0 });
+  refresh();
+}
+function setKR(i, v){ item().okr.krs[i].pct = parseInt(v,10)||0; refresh(); }
+function delKR(i){ item().okr.krs.splice(i,1); refresh(); }
+function addIni(){
+  const v = prompt("Iniciativa:");
+  if(!v) return;
+  item().okr.iniciativas.push(v);
+  refresh();
+}
+function delIni(i){ item().okr.iniciativas.splice(i,1); refresh(); }
+
+/* ---------- Kanban interno do item ---------- */
+
+let subDrag = null;
+
+function renderSubKanban(pane, t){
+  pane.innerHTML = `
+    <div class="spread">
+      <p class="dim" style="margin:0">Quebre o item em subtarefas e mova entre as colunas.</p>
+      <button class="mini" onclick="addSub()">+ Subtarefa</button>
+    </div>
+    <div class="sub-board" id="subBoard"></div>`;
+
+  const board = document.getElementById("subBoard");
+
+  SUBCOLS.forEach((c, ci) => {
+    const items = t.subs.map((s,i) => ({s,i})).filter(o => o.s.col === c.key);
+    const col = document.createElement("div");
+    col.className = "sub-col";
+    col.style.color = c.hex;
+    col.style.animationDelay = (ci*0.05) + "s";
+    col.ondragover = e => { e.preventDefault(); col.classList.add("drop"); };
+    col.ondragleave = () => col.classList.remove("drop");
+    col.ondrop = e => { e.preventDefault(); col.classList.remove("drop"); dropSub(c.key); };
+    col.innerHTML = `<div class="col-head"><span>${c.label}</span><span class="col-count">${items.length}</span></div>`;
+
+    if(!items.length){
+      const em = document.createElement("div");
+      em.className = "kanban-empty";
+      em.innerText = "vazio";
+      col.appendChild(em);
+    }
+
+    items.forEach(o => {
+      const el = document.createElement("div");
+      el.className = "sub-card";
+      el.draggable = true;
+      el.style.color = prioOf(o.s.prio).hex;
+      el.ondragstart = () => { subDrag = o.i; el.classList.add("dragging"); };
+      el.ondragend = () => el.classList.remove("dragging");
+      el.innerHTML = `
+        <i class="prio-dot" title="${prioOf(o.s.prio).label}"></i>
+        <span class="sub-txt" style="color:var(--txt);text-decoration:${o.s.col==="done"?"line-through":"none"}">${esc(o.s.text)}</span>
+        <button class="mini" onclick="moveSub(${o.i},-1)" title="Voltar">◀</button>
+        <button class="mini" onclick="moveSub(${o.i},1)" title="Avançar">▶</button>
+        <button class="mini danger" onclick="delSub(${o.i})">X</button>`;
+      col.appendChild(el);
+    });
+
+    board.appendChild(col);
+  });
+}
+
+function addSub(prio){
+  const v = prompt("Nome da subtarefa:");
+  if(!v) return;
+  item().subs.push({ text:v, col:"todo", prio: prio || "normal" });
+  refresh();
+}
+function moveSub(i, d){
+  const s = item().subs[i];
+  const k = SUBCOLS.findIndex(c => c.key === s.col);
+  const n = Math.max(0, Math.min(SUBCOLS.length-1, k+d));
+  s.col = SUBCOLS[n].key;
+  refresh();
+}
+function dropSub(colKey){
+  if(subDrag === null) return;
+  item().subs[subDrag].col = colKey;
+  subDrag = null;
+  refresh();
+}
+function delSub(i){ item().subs.splice(i,1); refresh(); }
+function setSubPrio(i, p){ item().subs[i].prio = p; refresh(); }
+
+/* ---------- Roadmap de prioridades ---------- */
+
+function renderRoadmap(pane, t){
+  pane.innerHTML = `
+    <div class="spread">
+      <p class="dim" style="margin:0">As mesmas subtarefas, organizadas pelo que precisa sair primeiro.</p>
+      <div class="row" style="gap:6px">
+        ${PRIOS.map(p => `<button class="mini" style="color:${p.hex};border-color:${p.hex}66" onclick="addSub('${p.key}')">+ ${p.label}</button>`).join("")}
+      </div>
+    </div>
+    <div id="lanes"></div>`;
+
+  const lanes = document.getElementById("lanes");
+
+  PRIOS.forEach((p, pi) => {
+    const items = t.subs.map((s,i) => ({s,i})).filter(o => o.s.prio === p.key);
+    const lane = document.createElement("div");
+    lane.className = "lane";
+    lane.style.color = p.hex;
+    lane.style.animationDelay = (pi*0.06) + "s";
+    lane.innerHTML = `<h4>${p.label} · ${items.length}</h4>`;
+
+    if(!items.length){
+      const em = document.createElement("div");
+      em.className = "kanban-empty";
+      em.innerText = "Nada nesta prioridade";
+      lane.appendChild(em);
+    }
+
+    items.forEach(o => {
+      const el = document.createElement("div");
+      el.className = "sub-card";
+      el.innerHTML = `
+        <input type="checkbox" style="flex:none" ${o.s.col==="done"?"checked":""} onchange="toggleSubDone(${o.i})">
+        <span class="sub-txt" style="color:var(--txt);text-decoration:${o.s.col==="done"?"line-through":"none"}">${esc(o.s.text)}</span>
+        <span class="pill" style="color:${subcolOf(o.s.col).hex};font-size:11px">${subcolOf(o.s.col).label}</span>
+        ${PRIOS.filter(x => x.key !== p.key).map(x =>
+          `<button class="mini" style="color:${x.hex}" onclick="setSubPrio(${o.i},'${x.key}')" title="Mover para ${x.label}">${x.label}</button>`).join("")}
+        <button class="mini danger" onclick="delSub(${o.i})">X</button>`;
+      lane.appendChild(el);
+    });
+
+    lanes.appendChild(lane);
+  });
+}
+
+function toggleSubDone(i){
+  const s = item().subs[i];
+  s.col = s.col === "done" ? "todo" : "done";
+  refresh();
+}
+
+/* ==========================================================
+   IMPORTAR (texto, TXT, JSON)
+   ========================================================== */
+
+let importMode = "project";
+
+function importManual(mode){
+  importMode = mode;
+  document.getElementById("modalTitle").innerText =
+    mode === "project" ? "✍ Escrever um projeto" : "✍ Escrever páginas neste projeto";
+  document.getElementById("modal").classList.remove("hidden");
+}
+function closeModal(){ document.getElementById("modal").classList.add("hidden"); }
+
+function buildPage(line, offset){
+  const parts = line.split("-").map(x => x.trim());
+  const pg = { name: parts[0] || "Página", tasks: [] };
+  parts.slice(1).filter(Boolean).forEach((task,i) => pg.tasks.push(newTask(task, { start: offset+i })));
+  return pg;
+}
+
+function pagesFromText(text){
+  return text.split("\n").filter(x => x.trim()).map((line,i) => buildPage(line, i));
+}
+
+function confirmImport(){
+  const text = document.getElementById("modalText").value;
+  if(!text.trim()) return;
+  const pages = pagesFromText(text);
+
+  if(importMode === "project"){
+    const name = prompt("Nome do projeto:", "Projeto Importado") || "Projeto Importado";
+    addProject(name, pages);
+    document.getElementById("modalText").value = "";
+    closeModal();
+    home();
+    toast("Projeto importado com " + pages.length + " página(s).");
+    return;
+  }
+
+  pages.forEach(pg => proj().pages.push(pg));
+  document.getElementById("modalText").value = "";
+  closeModal();
+  refresh();
+  toast(pages.length + " página(s) adicionada(s).");
+}
+
+function addProject(name, pages){
+  projects.push({ name:name, startDate:todayISO(), scale:"week", view:"lista", showDates:false, pages:pages });
+  save();
+}
+
+/* ---------- arquivos ---------- */
+
+let pendingImport = null;
+
+function pickFile(kind, mode){
+  pendingImport = { kind, mode };
+  const input = document.getElementById("fileInput");
+  input.value = "";
+  input.accept = kind === "json" ? ".json" : ".txt";
+  input.click();
+}
+
+document.getElementById("fileInput").addEventListener("change", function(){
+  const file = this.files && this.files[0];
+  if(!file || !pendingImport) return;
+  const reader = new FileReader();
+  reader.onload = () => handleFile(String(reader.result), file.name);
+  reader.readAsText(file);
+});
+
+function handleFile(content, filename){
+  const { kind, mode } = pendingImport;
+  pendingImport = null;
+
+  try{
+    if(kind === "json"){
+      const data = JSON.parse(content);
+      const list = Array.isArray(data) ? data : [data];
+
+      if(mode === "project"){
+        list.forEach(p => {
+          if(!p || !Array.isArray(p.pages)) throw new Error("formato");
+          projects.push(p);
+        });
+        migrate(); save(); home();
+        toast(list.length + " projeto(s) importado(s).");
+      } else {
+        let n = 0;
+        list.forEach(p => (p.pages || []).forEach(pg => { proj().pages.push(pg); n++; }));
+        if(!n) throw new Error("formato");
+        migrate(); refresh();
+        toast(n + " página(s) adicionada(s).");
+      }
+      return;
+    }
+
+    const pages = pagesFromText(content);
+    if(!pages.length) throw new Error("vazio");
+
+    if(mode === "project"){
+      addProject(filename.replace(/\.[^.]+$/,"") || "Projeto Importado", pages);
+      home();
+      toast("Projeto importado com " + pages.length + " página(s).");
+    } else {
+      pages.forEach(pg => proj().pages.push(pg));
+      refresh();
+      toast(pages.length + " página(s) adicionada(s).");
+    }
+  }catch(err){
+    alert("Não consegui ler esse arquivo. Confira se é um TXT no formato \"Página - tarefa 1 - tarefa 2\" ou um JSON gerado pelo próprio SuperProject.");
+  }
+}
+
+/* ==========================================================
+   SALVAR (TXT / JSON)
+   ========================================================== */
+
+function download(name, content, type){
+  const blob = new Blob([content], { type:type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function projectToTxt(project){
+  let txt = project.name + "\n\n";
+  project.pages.forEach(pg => {
+    txt += pg.name;
+    pg.tasks.forEach(t => { txt += " - " + t.text; });
+    txt += "\n";
+  });
+  return txt;
+}
+
+function saveProject(kind){
+  const p = proj();
+  if(kind === "txt") download(p.name + ".txt", projectToTxt(p), "text/plain");
+  else download(p.name + ".json", JSON.stringify(p, null, 2), "application/json");
+  toast(kind.toUpperCase() + " salvo.");
+}
+
+function saveAll(kind){
+  if(!projects.length){ toast("Nenhum projeto para salvar."); return; }
+  if(kind === "txt") download("superproject.txt", projects.map(projectToTxt).join("\n"), "text/plain");
+  else download("superproject-backup.json", JSON.stringify(projects, null, 2), "application/json");
+  toast(kind.toUpperCase() + " salvo.");
+}
+
+/* ==========================================================
+   Início
+   ========================================================== */
+
+migrate();
+save();
+home();
+
+</script>
+
+</body>
+</html>
