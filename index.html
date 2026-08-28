@@ -434,10 +434,82 @@ input,textarea,select{background:var(--bg3);color:var(--input-txt);}
 @keyframes shine{from{transform:translateX(-100%);}to{transform:translateX(100%);}}
 @keyframes growBar{from{transform:scaleX(0);opacity:.2;}to{transform:scaleX(1);opacity:1;}}
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+
+/* ---------- WELCOME OVERLAY ---------- */
+#welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.5s ease-out;
+}
+.welcome-content {
+  text-align: center;
+  max-width: 550px;
+  padding: 40px;
+  animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.welcome-icon {
+  font-size: 80px;
+  line-height: 1;
+  color: #FFB21A; /* Amarelo do seu ícone */
+  display: inline-block;
+  animation: floatBolt 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 15px rgba(255, 178, 26, 0.4));
+  margin-bottom: 20px;
+}
+.welcome-title {
+  font-size: 32px;
+  margin-bottom: 15px;
+  color: var(--txt);
+}
+.welcome-text {
+  color: var(--dim);
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 35px;
+}
+.welcome-btn {
+  font-size: 16px;
+  padding: 14px 36px;
+  border-radius: 30px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  box-shadow: 0 8px 20px var(--accent-soft-strong);
+}
+.welcome-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px var(--accent-soft-strong);
+}
+#welcome-overlay.hiding {
+  animation: slideOutUp 0.6s cubic-bezier(0.5, 0, 0, 1) forwards;
+  pointer-events: none;
+}
+
+@keyframes floatBolt {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-15px) scale(1.15); filter: drop-shadow(0 0 35px rgba(255, 178, 26, 0.8)); }
+}
+@keyframes slideOutUp {
+  to { opacity: 0; transform: translateY(-100%); visibility: hidden; }
+}
 </style>
 </head>
 <body>
-
+<!-- ================= WELCOME OVERLAY ================= -->
+<div id="welcome-overlay">
+  <div class="welcome-content">
+    <div class="welcome-icon">⚡</div>
+    <h1 class="welcome-title">Bem-vindo ao SuperProject</h1>
+    <p class="welcome-text">Sua ferramenta definitiva para planejar, acompanhar e entregar projetos de forma visual e sem burocracia. Crie tarefas, organize no Kanban e acompanhe prazos no Gantt.</p>
+    <button class="welcome-btn" onclick="dismissWelcome()">Começar agora 🚀</button>
+  </div>
+</div>
 <header>
   <h2><span class="bolt">⚡</span> SuperProject</h2>
   <div class="header-tools">
@@ -863,6 +935,28 @@ function migrate(){
     });
   });
 }
+
+/* ==========================================================
+   Welcome Overlay
+   ========================================================== */
+function dismissWelcome() {
+  const overlay = document.getElementById("welcome-overlay");
+  if(overlay) {
+    overlay.classList.add("hiding");
+    // Salva no navegador que o usuário já viu a introdução
+    localStorage.setItem("superProjectWelcomeSeen", "true");
+    // Remove o elemento do HTML após a animação terminar
+    setTimeout(() => overlay.remove(), 600);
+  }
+}
+
+// Verifica se o usuário já fechou a tela de boas-vindas antes
+document.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("superProjectWelcomeSeen") === "true") {
+    const overlay = document.getElementById("welcome-overlay");
+    if (overlay) overlay.remove(); // Remove sem piscar na tela
+  }
+});
 
 function toast(msg){
   const old = document.getElementById("toast");
