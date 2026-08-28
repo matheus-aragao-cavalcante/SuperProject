@@ -478,6 +478,22 @@ input,textarea,select{background:var(--bg3);color:var(--input-txt);}
 
     <h2 id="myProjectsTitle">Meus Projetos</h2>
     <div id="projects" class="grid"></div>
+  <footer style="margin-top: 40px; padding: 25px 0; border-top: 1px dashed var(--line); text-align: center; animation: fadeUp 0.5s both;">
+      <p class="dim" style="margin-bottom: 15px; font-size: 13px;">© 2026 Desenvolvido por Matheus Aragão. Todos os direitos reservados.</p>
+      <div style="display: flex; justify-content: center; gap: 18px;">
+        
+        <a href="https://www.linkedin.com/in/matheus2002ac/" target="_blank" style="color: var(--dim); text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 13px; transition: color 0.2s;" onmouseover="this.style.color='#58a6ff'" onmouseout="this.style.color='var(--dim)'">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          LinkedIn
+        </a>
+
+        <a href="https://portfolio-matheus-data-dev.netlify.app/" target="_blank" style="color: var(--dim); text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 13px; transition: color 0.2s;" onmouseover="this.style.color='#39d353'" onmouseout="this.style.color='var(--dim)'">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M21 2h-18c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h18c1.103 0 2-.897 2-2v-16c0-1.103-.897-2-2-2zm-12 15c-2.206 0-4-1.794-4-4s1.794-4 4-4 4 1.794 4 4-1.794 4-4 4zm10-9h-6v-2h6v2z"/></svg>
+          Portfolio
+        </a>
+
+      </div>
+    </footer>
   </section>
 
   <!-- ================= PROJETO ================= -->
@@ -2403,6 +2419,25 @@ updateThemeButton();
 applyTheme(appPrefs.theme === "light" ? "light" : "dark", false);
 home();
 
+/* ==========================================================
+   Easter Egg - Developer Info
+   ========================================================== */
+console.log(`
+%c
+ _   _      _ _         _____ _                   _ 
+| | | | ___| | | ___   |_   _| |__   ___ _ __ ___| |
+| |_| |/ _ \\ | |/ _ \\    | | | '_ \\ / _ \\ '__/ _ \\ |
+|  _  |  __/ | | (_) |   | | | | | |  __/ | |  __/_|
+|_| |_|\\___|_|_|\\___/    |_| |_| |_|\\___|_|  \\___(_)
+
+Hello there, curious developer! 
+I'm Matheus Aragão, BI Developer & Data Engineer.
+
+Let's connect and build awesome data-driven solutions:
+🔗 LinkedIn:  https://www.linkedin.com/in/matheus2002ac/
+💼 Portfolio: https://portfolio-matheus-data-dev.netlify.app/
+`, "color: #58a6ff; font-family: monospace; font-size: 12px; font-weight: bold;");
+  
 </script>
 
 </body>
