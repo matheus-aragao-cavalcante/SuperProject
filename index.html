@@ -176,6 +176,60 @@ button.ghost{background:transparent;}
 .scope-head{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;}
 .scope-head h2{margin:2px 0;}
 .path{color:var(--dim);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;}
+
+/* ---------- DASHBOARD DO ESCOPO ---------- */
+.scope-head.dash{display:block;}
+.dash-top{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;}
+.dash-top h2{margin:2px 0 4px;}
+.dash-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end;animation:slideIn .35s both;}
+.dash-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:16px 0 12px;}
+.dash-kpi{
+  background:var(--bg3);border:1px solid var(--line);border-left:3px solid var(--kpi,var(--accent));border-radius:10px;
+  padding:10px 12px;display:flex;flex-direction:column;gap:2px;animation:fadeUp .35s both;transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.dash-kpi:nth-child(2){animation-delay:.04s} .dash-kpi:nth-child(3){animation-delay:.08s} .dash-kpi:nth-child(4){animation-delay:.12s} .dash-kpi:nth-child(5){animation-delay:.16s}
+.dash-kpi:hover{transform:translateY(-3px);border-color:var(--kpi,var(--accent));box-shadow:0 8px 20px var(--shadow);}
+.dash-kpi b{font-size:22px;color:var(--kpi,var(--accent));line-height:1.1;}
+.dash-kpi span{font-size:11px;color:var(--dim);letter-spacing:.6px;text-transform:uppercase;}
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;}
+.dash-tile{
+  background:var(--bg3);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0;
+  animation:fadeUp .4s both;transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.dash-tile:hover{transform:translateY(-3px);border-color:var(--project-accent,var(--accent));box-shadow:0 10px 24px var(--shadow);}
+.dash-tile h4{margin:0 0 10px;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.dash-tile h4 small{color:var(--txt);letter-spacing:0;text-transform:none;font-size:11px;background:var(--chip-bg);padding:1px 8px;border-radius:20px;}
+.dash-hero{display:flex;align-items:center;gap:18px;}
+.dash-hero .ring b{font-size:20px;}
+.dash-hero .ring .bg{stroke:var(--line-soft);}
+.dash-hero .ring .fg{filter:drop-shadow(0 0 6px #39d35388);}
+.dash-hero-txt{flex:1;min-width:0;}
+.dash-hero-txt p{margin:0 0 6px;font-size:13px;}
+.dash-donut{display:flex;align-items:center;gap:14px;}
+.dash-donut svg{width:112px;height:112px;flex:none;transform:rotate(-90deg);}
+.dash-donut circle{fill:none;stroke-width:13;stroke-linecap:butt;stroke-dasharray:0 1000;transition:stroke-dasharray .9s cubic-bezier(.2,.8,.2,1);}
+.dash-donut circle:hover{stroke-width:16;}
+.dash-donut .dbg{stroke:var(--line-soft);stroke-dasharray:none;}
+.dash-legend{list-style:none;margin:0;padding:0;font-size:12px;flex:1;min-width:0;}
+.dash-legend li{display:flex;align-items:center;gap:7px;padding:3px 0;animation:slideIn .3s both;}
+.dash-legend i{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor;flex:none;}
+.dash-legend span{flex:1;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.dash-legend b{color:var(--dim);font-weight:normal;white-space:nowrap;}
+.dash-bars{display:flex;align-items:flex-end;gap:10px;height:120px;padding-top:20px;}
+.dash-bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative;min-width:0;}
+.dash-bar i{display:block;width:100%;height:0;min-height:3px;border-radius:6px 6px 3px 3px;background:currentColor;box-shadow:0 0 12px currentColor;opacity:.9;transition:height .8s cubic-bezier(.2,.8,.2,1),opacity .2s;}
+.dash-bar:hover i{opacity:1;}
+.dash-bar b{position:absolute;top:-20px;font-size:12px;color:currentColor;}
+.dash-bar span{font-size:15px;color:currentColor;margin-top:6px;white-space:nowrap;}
+.dash-stack{display:flex;height:14px;border-radius:20px;overflow:hidden;background:var(--line-soft);margin:6px 0 10px;}
+.dash-stack span{display:block;height:100%;width:0;transition:width .8s cubic-bezier(.2,.8,.2,1);}
+.dash-stack span:hover{filter:brightness(1.2);}
+.dash-load{display:flex;align-items:flex-end;gap:3px;height:70px;margin-top:6px;}
+.dash-load i{flex:1;display:block;height:0;min-height:2px;background:var(--project-accent,var(--accent));border-radius:3px 3px 0 0;opacity:.7;transition:height .7s cubic-bezier(.2,.8,.2,1),opacity .2s;}
+.dash-load i:hover{opacity:1;}
+.dash-load i.now{background:var(--st-execucao);opacity:1;box-shadow:0 0 8px var(--st-execucao);animation:pulse 2s ease-in-out infinite;}
+.dash-axis{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);margin-top:4px;}
+@media (max-width:720px){.dash-hero{flex-direction:column;align-items:flex-start;}}
 .children-link{font-size:11px;padding:3px 9px;border-radius:20px;border:1px dashed var(--line);color:var(--dim);background:transparent;}
 .children-link:hover{color:var(--accent);border-color:var(--accent);transform:none;}
 
@@ -733,7 +787,11 @@ const I18N = {
     "prompt.renameItem":"Renomear item:",
     "view.list":"☰ Lista", "view.boards":"▦ Grade", "view.kanban":"▤ Kanban", "view.sprint":"🏁 Sprint", "view.gantt":"📊 Gantt",
     "view.treeOnly":"Na Hierarquia os itens aparecem em árvore. Escolha um nível (Épicos, Features...) para usar Lista, Grade, Kanban, Sprint ou Gantt.",
-    "footer.copyright":"© 2026 Desenvolvido por Matheus Aragão. Todos os direitos reservados."
+    "footer.copyright":"© 2026 Desenvolvido por Matheus Aragão. Todos os direitos reservados.",
+    "dash.total":"Itens no escopo", "dash.inProgress":"Em execução", "dash.finished":"Finalizados", "dash.pending":"Pendentes", "dash.urgent":"Urgentes",
+    "dash.progress":"Progresso", "dash.remaining":"{n} item(ns) final(is) ainda por concluir", "dash.phases":"Fases",
+    "dash.levels":"Itens por nível", "dash.priorities":"Prioridades", "dash.workload":"Carga por período", "dash.peak":"pico {n}",
+    "dash.noData":"Nenhum item neste escopo ainda."
   },
   en:{
     "theme.light":"☀️ Light", "theme.dark":"🌙 Dark", "theme.label":"Toggle theme",
@@ -843,7 +901,11 @@ const I18N = {
     "prompt.renameItem":"Rename item:",
     "view.list":"☰ List", "view.boards":"▦ Grid", "view.kanban":"▤ Kanban", "view.sprint":"🏁 Sprint", "view.gantt":"📊 Gantt",
     "view.treeOnly":"The Hierarchy shows items as a tree. Pick a level (Epics, Features...) to use List, Grid, Kanban, Sprint or Gantt.",
-    "footer.copyright":"© 2026 Developed by Matheus Aragão. All rights reserved."
+    "footer.copyright":"© 2026 Developed by Matheus Aragão. All rights reserved.",
+    "dash.total":"Items in scope", "dash.inProgress":"In execution", "dash.finished":"Finished", "dash.pending":"Pending", "dash.urgent":"Urgent",
+    "dash.progress":"Progress", "dash.remaining":"{n} leaf item(s) still to complete", "dash.phases":"Phases",
+    "dash.levels":"Items per level", "dash.priorities":"Priorities", "dash.workload":"Workload per period", "dash.peak":"peak {n}",
+    "dash.noData":"No items in this scope yet."
   }
 };
 
@@ -1858,22 +1920,160 @@ function renderScopeHead(area){
     eyebrow = focus ? kindLabel(focus) + " › " + plural : plural;
   }
 
+  /* ---------- números do dashboard ---------- */
+  const total = scope.length;
+  const doneLeaves = leaves.filter(l => l.done).length;
+  const stCounts = STATUSES.map(s => ({ key:s.key, label:s.label, hex:s.hex, n: scope.filter(t => (t.status||"none") === s.key).length }));
+  const prCounts = PRIOS.map(pr => ({ key:pr.key, label:pr.label, hex:pr.hex, n: scope.filter(t => (t.prio||"normal") === pr.key).length }));
+  const execN = stCounts.find(s => s.key === "execucao").n;
+  const finN  = scope.filter(t => t.done).length;
+  const urgN  = prCounts.find(x => x.key === "urgente").n;
+  const pendN = total - finN;
+
+  /* carga por período: quantos itens estão ativos em cada período do escopo (máx. 16 colunas) */
+  let minS = Infinity, maxE = 0;
+  scope.forEach(t => { const s = t.start||0, d = t.dur||1; minS = Math.min(minS, s); maxE = Math.max(maxE, s+d); });
+  if(!total){ minS = 0; maxE = 1; }
+  const span = Math.max(1, Math.min(maxE - minS, 16));
+  const load = Array.from({length:span}, (_, i) => scope.filter(t => { const s = t.start||0, e = s+(t.dur||1); return minS+i >= s && minS+i < e; }).length);
+  const loadMax = Math.max(1, ...load);
+  const nowIdx = Math.floor(currentPeriodFloat()) - minS;
+
+  /* donut de fases */
+  const R = 40, C = 2*Math.PI*R;
+  let acc = 0;
+  const segs = stCounts.filter(s => s.n).map((s, i) => {
+    const len = C * s.n / total;
+    const html = `<circle cx="56" cy="56" r="${R}" stroke="${s.hex}" data-len="${len.toFixed(2)}" data-c="${C.toFixed(2)}"
+      style="stroke-dashoffset:${(-acc).toFixed(2)};transition-delay:${(i*0.08).toFixed(2)}s"><title>${esc(s.label)}: ${s.n}</title></circle>`;
+    acc += len;
+    return html;
+  }).join("");
+  const legend = stCounts.filter(s => s.n).map((s, i) =>
+    `<li style="color:${s.hex};animation-delay:${(0.15 + i*0.06).toFixed(2)}s"><i></i><span>${esc(s.label)}</span><b>${s.n} · ${Math.round(s.n/total*100)}%</b></li>`).join("");
+
+  /* barras por nível */
+  const kindMax = Math.max(1, ...KINDS.map(k => kc[k.key] || 0));
+  const kindBars = KINDS.map((k, i) => `
+    <div class="dash-bar" style="color:var(--k-${k.key})" title="${esc(k.plural)}: ${kc[k.key]||0}">
+      <b data-count="${kc[k.key]||0}">0</b>
+      <i data-h="${Math.round((kc[k.key]||0)/kindMax*100)}" style="transition-delay:${(i*0.07).toFixed(2)}s"></i>
+      <span>${k.icon}</span>
+    </div>`).join("");
+
+  /* prioridades (barra empilhada) */
+  const prioStack = prCounts.filter(x => x.n).map((x, i) =>
+    `<span style="background:${x.hex};transition-delay:${(i*0.1).toFixed(2)}s" data-w="${(x.n/total*100).toFixed(1)}" title="${esc(x.label)}: ${x.n}"></span>`).join("");
+  const prioLegend = prCounts.map((x, i) =>
+    `<li style="color:${x.hex};animation-delay:${(0.2 + i*0.06).toFixed(2)}s"><i></i><span>${esc(x.label)}</span><b>${x.n}</b></li>`).join("");
+
+  /* carga por período */
+  const loadBars = load.map((n, i) => {
+    const lbl = periodLabel(minS + i);
+    return `<i class="${i === nowIdx ? "now" : ""}" data-h="${Math.round(n/loadMax*100)}" style="transition-delay:${(i*0.04).toFixed(2)}s" title="${esc(lbl.top + (lbl.sub ? " (" + lbl.sub + ")" : ""))}: ${n}"></i>`;
+  }).join("");
+  const axisL = periodLabel(minS).top, axisR = periodLabel(minS + span - 1).top;
+
+  const kpi = (label, n, color) => `<div class="dash-kpi" style="--kpi:${color}"><b data-count="${n}">0</b><span>${label}</span></div>`;
+
   const head = document.createElement("div");
-  head.className = "card scope-head";
+  head.className = "card scope-head dash";
   head.innerHTML = `
-    <div style="flex:1;min-width:260px">
-      <span class="eyebrow">${esc(eyebrow)}</span>
-      <h2 ${focus ? `class="k-${focus.kind}-text"` : ""}>${focus ? kindOf(focus.kind).icon + " " : ""}${esc(title)}</h2>
-      <p class="dim" style="margin:0">${tr("scope.counts",{epics:kc.epic,features:kc.feature,stories:kc.story,backlogs:kc.backlog,tasks:kc.task})}</p>
-      <p class="dim" style="margin:4px 0 0">${tr("scope.leaves",{done:leaves.filter(l=>l.done).length,total:leaves.length})}</p>
-      <div class="row" style="margin-top:14px">${addButtonsHTML()}</div>
+    <div class="dash-top">
+      <div style="flex:1;min-width:240px">
+        <span class="eyebrow">${esc(eyebrow)}</span>
+        <h2 ${focus ? `class="k-${focus.kind}-text"` : ""}>${focus ? kindOf(focus.kind).icon + " " : ""}${esc(title)}</h2>
+        <p class="dim" style="margin:0;font-size:12px">${tr("scope.counts",{epics:kc.epic,features:kc.feature,stories:kc.story,backlogs:kc.backlog,tasks:kc.task})}</p>
+      </div>
+      <div class="dash-actions">
+        ${addButtonsHTML()}
+        ${focus ? `<button class="icon" onclick="openDetail('${focus.id}')" title="${tr("scope.focusDetails")}">⋯</button>
+                   <button class="danger icon" onclick="deleteItem('${focus.id}')" title="${tr("scope.focusDelete")}">🗑</button>` : ""}
+      </div>
     </div>
-    <div class="row" style="align-items:center">
-      ${ringHTML(pct, 74)}
-      ${focus ? `<button class="icon" onclick="openDetail('${focus.id}')" title="${tr("scope.focusDetails")}">⋯</button>
-                 <button class="danger icon" onclick="deleteItem('${focus.id}')" title="${tr("scope.focusDelete")}">🗑</button>` : ""}
+
+    <div class="dash-kpis">
+      ${kpi(tr("dash.total"),      total, "var(--accent)")}
+      ${kpi(tr("dash.inProgress"), execN, "var(--st-execucao)")}
+      ${kpi(tr("dash.finished"),   finN,  "var(--st-finalizado)")}
+      ${kpi(tr("dash.pending"),    pendN, "var(--st-planejamento)")}
+      ${kpi(tr("dash.urgent"),     urgN,  "var(--danger)")}
+    </div>
+
+    <div class="dash-grid">
+      <div class="dash-tile dash-hero" style="animation-delay:.05s">
+        <div class="ring" style="width:104px;height:104px">
+          <svg viewBox="0 0 74 74" width="104" height="104">
+            <circle class="bg" cx="37" cy="37" r="30"></circle>
+            <circle class="fg" cx="37" cy="37" r="30" stroke-dasharray="${(2*Math.PI*30).toFixed(2)}" style="stroke-dashoffset:${(2*Math.PI*30).toFixed(2)}" data-off="${(2*Math.PI*30 - 2*Math.PI*30*pct/100).toFixed(2)}"></circle>
+          </svg>
+          <b><span data-count="${pct}">0</span>%</b>
+        </div>
+        <div class="dash-hero-txt">
+          <h4>${tr("dash.progress")}</h4>
+          <p>${tr("scope.leaves",{done:doneLeaves,total:leaves.length})}</p>
+          <div class="progress slim"><div class="progress-bar" data-w="${leaves.length ? Math.round(doneLeaves/leaves.length*100) : 0}" style="width:0"></div></div>
+          <p class="dim" style="margin-top:8px;font-size:12px">${tr("dash.remaining",{n:Math.max(0, leaves.length - doneLeaves)})}</p>
+        </div>
+      </div>
+
+      <div class="dash-tile" style="animation-delay:.1s">
+        <h4>${tr("dash.phases")}<small>${total}</small></h4>
+        <div class="dash-donut">
+          <svg viewBox="0 0 112 112">
+            <circle class="dbg" cx="56" cy="56" r="${R}"></circle>
+            ${segs}
+          </svg>
+          ${total ? `<ul class="dash-legend">${legend}</ul>` : `<p class="dim" style="margin:0;font-size:12px">${tr("dash.noData")}</p>`}
+        </div>
+      </div>
+
+      <div class="dash-tile" style="animation-delay:.15s">
+        <h4>${tr("dash.levels")}</h4>
+        <div class="dash-bars">${kindBars}</div>
+      </div>
+
+      <div class="dash-tile" style="animation-delay:.2s">
+        <h4>${tr("dash.priorities")}</h4>
+        <div class="dash-stack">${prioStack}</div>
+        <ul class="dash-legend">${prioLegend}</ul>
+      </div>
+
+      <div class="dash-tile" style="animation-delay:.25s">
+        <h4>${tr("dash.workload")}<small>${tr("dash.peak",{n:total ? Math.max(...load) : 0})}</small></h4>
+        <div class="dash-load">${loadBars}</div>
+        <div class="dash-axis"><span>${esc(axisL)}</span><span>${esc(axisR)}</span></div>
+      </div>
     </div>`;
   area.appendChild(head);
+  animateDashboard(head);
+}
+
+/* Dispara as animações do dashboard depois que o DOM foi pintado:
+   barras/anéis saem de 0 até o valor guardado em data-* (as transições do CSS fazem o movimento)
+   e os números sobem em contagem. Com prefers-reduced-motion tudo é aplicado direto. */
+function animateDashboard(root){
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const apply = () => {
+    root.querySelectorAll("[data-w]").forEach(el => { el.style.width = el.dataset.w + "%"; });
+    root.querySelectorAll("[data-h]").forEach(el => { el.style.height = el.dataset.h + "%"; });
+    root.querySelectorAll("[data-len]").forEach(el => { el.style.strokeDasharray = el.dataset.len + " " + el.dataset.c; });
+    root.querySelectorAll("[data-off]").forEach(el => { el.style.strokeDashoffset = el.dataset.off; });
+    root.querySelectorAll("[data-count]").forEach(el => countUp(el, parseInt(el.dataset.count,10) || 0, reduce ? 0 : 900));
+  };
+  if(reduce || typeof requestAnimationFrame !== "function"){ apply(); return; }
+  requestAnimationFrame(() => requestAnimationFrame(apply));
+}
+function countUp(el, target, dur){
+  if(!dur){ el.textContent = target; return; }
+  const t0 = performance.now();
+  const step = now => {
+    const k = Math.min(1, (now - t0) / dur);
+    const eased = 1 - Math.pow(1 - k, 3);
+    el.textContent = Math.round(target * eased);
+    if(k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
 }
 
 function renderWorkspace(){
