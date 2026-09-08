@@ -745,6 +745,29 @@ button.primary{box-shadow:0 5px 18px color-mix(in srgb,var(--accent) 14%,transpa
 .dash-tile{padding:12px;background:color-mix(in srgb,var(--bg3) 78%,transparent);box-shadow:none;}
 .dash-tile h4{text-transform:none;letter-spacing:.4px;}
 
+/* Dashboard compacta da página inicial */
+.home-dashboard{
+  margin:4px 0 24px;padding:16px;border:1px solid var(--line);border-radius:16px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--bg2) 94%,transparent),color-mix(in srgb,var(--accent) 4%,var(--bg2)));
+  box-shadow:0 10px 28px #0002;animation:fadeUp .3s both;
+}
+.home-dashboard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:12px;}
+.home-dashboard-head h2{margin:0;color:var(--txt);font-size:18px;letter-spacing:-.35px;}
+.home-dashboard-head p{margin:3px 0 0;color:var(--dim);font-size:12px;}
+.home-dashboard-kpis{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:9px;margin-bottom:12px;}
+.home-dashboard-kpi{background:var(--bg3);border:1px solid var(--line-soft);border-radius:11px;padding:10px 11px;min-width:0;}
+.home-dashboard-kpi b{display:block;color:var(--txt);font-size:20px;line-height:1.05;}
+.home-dashboard-kpi span{display:block;color:var(--dim);font-size:10px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.home-dashboard-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px;}
+.home-dashboard-project{background:color-mix(in srgb,var(--bg3) 88%,transparent);border:1px solid var(--line-soft);border-radius:11px;padding:10px 11px;cursor:pointer;transition:transform .18s,border-color .18s;}
+.home-dashboard-project:hover{transform:translateY(-2px);border-color:var(--accent);}
+.home-dashboard-project-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px;}
+.home-dashboard-project-head strong{color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.home-dashboard-project-head span{color:var(--accent);font-size:12px;font-weight:700;flex:none;}
+.home-dashboard-project-meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--dim);font-size:10px;margin-top:6px;}
+.home-actions.compact{padding-top:4px;margin-bottom:16px;}
+@media (max-width:720px){.home-dashboard-kpis{grid-template-columns:repeat(2,1fr);}.home-dashboard-list{grid-template-columns:1fr;}}
+
 /* Modal de edição e exclusão */
 .modal{backdrop-filter:blur(8px);}
 .modal-box{border-radius:18px;box-shadow:0 26px 80px #0009;}
@@ -821,7 +844,7 @@ button.primary{box-shadow:0 5px 18px color-mix(in srgb,var(--accent) 14%,transpa
 
   <!-- ================= HOME ================= -->
   <section id="home">
-    <div class="home-intro">
+    <div class="home-intro" id="homeIntro">
       <div>
         <span class="eyebrow" id="homeHeroEyebrow">Workspace de projetos</span>
         <h1 id="homeHeroTitle">Do épico à entrega, tudo conectado.</h1>
@@ -841,7 +864,7 @@ button.primary{box-shadow:0 5px 18px color-mix(in srgb,var(--accent) 14%,transpa
         </div>
       </div>
     </div>
-    <div class="row home-actions">
+    <div class="row home-actions" id="homeActions">
       <button id="newProjectBtn" class="primary" onclick="createProject()">+ Novo Projeto</button>
 
       <div class="menu-wrap" id="wrap-impHome">
@@ -867,6 +890,8 @@ button.primary{box-shadow:0 5px 18px color-mix(in srgb,var(--accent) 14%,transpa
       <button id="helpBtn" class="ghost" onclick="openHelp()" title="Como usar">?</button>
     </div>
 
+    <section id="homeDashboard" class="home-dashboard hidden" aria-live="polite"></section>
+
     <h2 id="myProjectsTitle">Meus Projetos</h2>
     <div id="projects" class="grid"></div>
   <footer style="margin-top: 40px; padding: 25px 0; border-top: 1px dashed var(--line); text-align: center; animation: fadeUp 0.5s both;">
@@ -875,6 +900,10 @@ button.primary{box-shadow:0 5px 18px color-mix(in srgb,var(--accent) 14%,transpa
         <a href="https://www.linkedin.com/in/matheus2002ac/" target="_blank" style="text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 13px; transition: color 0.2s;">
           <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
           LinkedIn
+        </a>
+        <a href="https://github.com/matheus-aragao-cavalcante/SuperProject/" target="_blank" rel="noopener noreferrer" aria-label="GitHub do SuperProject" style="text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 13px; transition: color 0.2s;">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .7a11.3 11.3 0 0 0-3.57 22c.56.1.77-.24.77-.54v-2.12c-3.12.68-3.78-1.33-3.78-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.39-1.22.71-1.5-2.49-.28-5.11-1.25-5.11-5.56 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.11 1.15A10.8 10.8 0 0 1 12 6.17c.96 0 1.92.13 2.82.38 2.16-1.46 3.1-1.15 3.1-1.15.62 1.55.23 2.7.12 2.98.72.79 1.16 1.8 1.16 3.02 0 4.32-2.63 5.27-5.13 5.55.4.35.76 1.03.76 2.08v3.09c0 .3.2.65.78.54A11.3 11.3 0 0 0 12 .7Z"/></svg>
+          GitHub
         </a>
         <a href="https://portfolio-matheus-data-dev.netlify.app/" target="_blank" style="text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 13px; transition: color 0.2s;">
           <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M21 2h-18c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h18c1.103 0 2-.897 2-2v-16c0-1.103-.897-2-2-2zm-12 15c-2.206 0-4-1.794-4-4s1.794-4 4-4 4 1.794 4 4-1.794 4-4 4zm10-9h-6v-2h6v2z"/></svg>
@@ -1848,7 +1877,61 @@ function home(){
   document.getElementById("headerNav").innerHTML = "";
   applyCurrentProjectColors();
   renderProjects();
-  restartHomeMotion();
+  syncHomeState();
+}
+
+function syncHomeState(){
+  const hasProjects = projects.length > 0;
+  document.getElementById("homeIntro")?.classList.toggle("hidden", hasProjects);
+  document.getElementById("myProjectsTitle")?.classList.toggle("hidden", !hasProjects);
+  document.getElementById("projects")?.classList.toggle("hidden", !hasProjects);
+  document.getElementById("homeDashboard")?.classList.toggle("hidden", !hasProjects);
+  document.getElementById("homeActions")?.classList.toggle("compact", hasProjects);
+  if(hasProjects) renderHomeDashboard();
+  else restartHomeMotion();
+}
+
+function renderHomeDashboard(){
+  const box = document.getElementById("homeDashboard");
+  if(!box) return;
+
+  const data = projects.map((p,index) => {
+    const percent = calculateProject(p);
+    const tasks = p.items.filter(t => t.kind === "task");
+    const running = tasks.filter(t => !t.done && (t.status||"none") === "execucao").length;
+    const pending = tasks.filter(t => !t.done).length;
+    return { p, index, percent, tasks:tasks.length, running, pending };
+  });
+  const ongoing = data.filter(x => x.percent < 100);
+  const visible = ongoing.slice(0, 6);
+  const avg = ongoing.length ? Math.round(ongoing.reduce((sum,x) => sum + x.percent, 0) / ongoing.length) : 100;
+  const runningTasks = ongoing.reduce((sum,x) => sum + x.running, 0);
+  const pendingTasks = ongoing.reduce((sum,x) => sum + x.pending, 0);
+  const pt = APP_LANG === "pt";
+
+  const cards = visible.length ? visible.map(x => `
+    <article class="home-dashboard-project" role="button" tabindex="0" onclick="openProject(${x.index})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openProject(${x.index})}">
+      <div class="home-dashboard-project-head"><strong title="${esc(x.p.name)}">${esc(x.p.name)}</strong><span>${x.percent}%</span></div>
+      <div class="progress slim"><div class="progress-bar" style="width:${x.percent}%"></div></div>
+      <div class="home-dashboard-project-meta">
+        <span>${x.running} ${pt ? "em execução" : "in execution"}</span>
+        <span>${x.pending} ${pt ? "abertas" : "open"}</span>
+        <span>${x.tasks} ${pt ? "tarefas" : "tasks"}</span>
+      </div>
+    </article>`).join("") : `<div class="empty" style="grid-column:1/-1;padding:18px">${pt ? "Todos os projetos estão concluídos." : "All projects are completed."}</div>`;
+
+  box.innerHTML = `
+    <div class="home-dashboard-head">
+      <div><h2>${pt ? "Visão geral" : "Overview"}</h2><p>${pt ? "Resumo dos projetos que ainda estão em andamento." : "Summary of projects that are still in progress."}</p></div>
+      <span class="eyebrow">${ongoing.length} ${pt ? "em andamento" : "in progress"}</span>
+    </div>
+    <div class="home-dashboard-kpis">
+      <div class="home-dashboard-kpi"><b>${projects.length}</b><span>${pt ? "Projetos cadastrados" : "Projects"}</span></div>
+      <div class="home-dashboard-kpi"><b>${avg}%</b><span>${pt ? "Progresso médio em andamento" : "Average ongoing progress"}</span></div>
+      <div class="home-dashboard-kpi"><b>${runningTasks}</b><span>${pt ? "Tarefas em execução" : "Tasks in execution"}</span></div>
+      <div class="home-dashboard-kpi"><b>${pendingTasks}</b><span>${pt ? "Tarefas abertas" : "Open tasks"}</span></div>
+    </div>
+    <div class="home-dashboard-list">${cards}</div>`;
 }
 function restartHomeMotion(){
   const intro = document.querySelector(".home-product-intro");
@@ -1877,10 +1960,7 @@ function renderProjects(){
   box.innerHTML = "";
 
   if(projects.length === 0){
-    box.innerHTML = `<div class="empty">
-      <h3>${tr("empty.projectsTitle")}</h3>
-      <p>${tr("empty.projectsText")}</p>
-    </div>`;
+    if(!document.getElementById("home")?.classList.contains("hidden")) syncHomeState();
     return;
   }
 
@@ -1931,6 +2011,7 @@ function renderProjects(){
 
     box.appendChild(card);
   });
+  if(!document.getElementById("home")?.classList.contains("hidden")) syncHomeState();
 }
 
 function blankProject(name){
@@ -2007,6 +2088,7 @@ function confirmCreateProject(){
   closeCreateProject();
   save();
   renderProjects();
+  syncHomeState();
   toast(tr("toast.projectCreated"));
 }
 
@@ -4083,17 +4165,10 @@ function confirmImport(){
 let pendingImport = null;
 
 function pickFile(kind, mode){
-  let name = null;
-  /* Importar Projeto: o nome do projeto é informado antes de escolher o arquivo (JSON já traz o nome) */
-  if(mode === "project" && kind === "txt"){
-    name = prompt(tr("prompt.projectName"));
-    if(!name || !name.trim()) return;
-    name = name.trim();
-  }
-  pendingImport = { kind, mode, name };
+  pendingImport = { kind, mode };
   const input = document.getElementById("fileInput");
   input.value = "";
-  input.accept = kind === "json" ? ".json" : ".txt";
+  input.accept = kind === "json" ? ".json,application/json" : ".txt,text/plain";
   input.click();
 }
 
@@ -4101,62 +4176,176 @@ document.getElementById("fileInput").addEventListener("change", function(){
   const file = this.files && this.files[0];
   if(!file || !pendingImport) return;
   const reader = new FileReader();
-  reader.onload = () => handleFile(String(reader.result), file.name);
-  reader.readAsText(file);
+  reader.onload = () => handleFile(String(reader.result || ""), file.name);
+  reader.onerror = () => {
+    pendingImport = null;
+    alert(APP_LANG === "pt" ? "Não foi possível ler o arquivo selecionado." : "Could not read the selected file.");
+  };
+  reader.readAsText(file, "UTF-8");
 });
 
+function importFileError(detail){
+  const base = tr("import.errorFile");
+  alert(detail ? base + "\n\n" + detail : base);
+}
+
+function fileBaseName(filename){
+  return String(filename || "").replace(/\.[^.]+$/, "").trim() || tr("default.importedProject");
+}
+
+function extractJsonProjects(data){
+  if(Array.isArray(data)) return data;
+  if(!data || typeof data !== "object") throw new Error("formato");
+  if(Array.isArray(data.projects)) return data.projects;
+  if(data.project && typeof data.project === "object") return [data.project];
+  if(Array.isArray(data.items) || Array.isArray(data.pages)) return [data];
+  throw new Error("formato");
+}
+
+function prepareImportedProject(raw, fallbackName){
+  if(!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("formato");
+  if(!Array.isArray(raw.items) && !Array.isArray(raw.pages)) throw new Error("formato");
+  const p = migrateProject(JSON.parse(JSON.stringify(raw)));
+  if(!p.name || !String(p.name).trim()) p.name = fallbackName || tr("default.importedProject");
+  p.items = cloneItems(p.items);
+  normalizeHierarchy(p);
+  return p;
+}
+
+/*
+  TXT aceito em três formatos:
+  1) texto hierárquico puro;
+  2) TXT salvo pelo próprio SuperProject (nome do projeto + linha em branco + hierarquia);
+  3) vários projetos salvos em um único TXT pelo botão "Salvar > TXT".
+*/
+function parseTxtProjectBlocks(content, filename){
+  const text = String(content || "").replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n").trim();
+  if(!text) throw new Error(APP_LANG === "pt" ? "O arquivo TXT está vazio." : "The TXT file is empty.");
+
+  /* Formato marcado, caso um backup externo use cabeçalhos explícitos. */
+  const marked = [];
+  let current = null;
+  text.split("\n").forEach(line => {
+    const m = line.match(/^\s*#\s*SUPERPROJECT\s+PROJECT\s*:\s*(.+?)\s*$/i);
+    if(m){
+      if(current) marked.push(current);
+      current = { name:m[1].trim(), body:[] };
+    }else if(current){
+      current.body.push(line);
+    }
+  });
+  if(current) marked.push(current);
+  if(marked.length){
+    return marked.map((b,i) => ({ name:b.name || fileBaseName(filename) + (i ? " " + (i+1) : ""), text:b.body.join("\n").trim() }));
+  }
+
+  /* Compatibilidade com o TXT que esta versão já exportava: blocos alternados nome/hierarquia. */
+  const chunks = text.split(/\n\s*\n+/).map(x => x.trim()).filter(Boolean);
+  const baseName = fileBaseName(filename);
+  const looksLikeLegacyExport = chunks.length > 2 || (chunks.length === 2 && (chunks[0].toLowerCase() === baseName.toLowerCase() || baseName.toLowerCase() === "superproject"));
+  if(looksLikeLegacyExport && chunks.length % 2 === 0){
+    const legacy = [];
+    let valid = true;
+    for(let i=0;i<chunks.length;i+=2){
+      if(chunks[i].includes("\n")){ valid = false; break; }
+      const parsed = parseImportText(chunks[i+1]);
+      if(parsed.errors.length){ valid = false; break; }
+      legacy.push({ name:chunks[i], text:chunks[i+1] });
+    }
+    if(valid && legacy.length) return legacy;
+  }
+
+  /* Um único TXT exportado pelo app: primeira linha = nome, linha seguinte vazia. */
+  const lines = text.split("\n");
+  if(lines.length > 2 && lines[0].trim() && !lines[1].trim()){
+    const body = lines.slice(2).join("\n").trim();
+    const parsed = parseImportText(body);
+    if(!parsed.errors.length) return [{ name:lines[0].trim(), text:body }];
+  }
+
+  /* TXT hierárquico comum: o nome vem do próprio arquivo. */
+  return [{ name:fileBaseName(filename), text }];
+}
+
+function importJsonFile(content, filename, mode){
+  const data = JSON.parse(String(content || "").replace(/^\uFEFF/, ""));
+  const rawList = extractJsonProjects(data);
+  if(!rawList.length) throw new Error("formato");
+  const list = rawList.map((raw,i) => prepareImportedProject(raw, fileBaseName(filename) + (rawList.length > 1 ? " " + (i+1) : "")));
+
+  if(mode === "project"){
+    list.forEach(p => projects.push(p));
+    save();
+    home();
+    toast(tr("toast.projectsImported",{count:list.length}));
+    return;
+  }
+
+  const target = proj();
+  if(!target) throw new Error("formato");
+  let n = 0, e = 0;
+  list.forEach(p => p.items.forEach(c => { target.items.push(c); n++; if(c.kind === "epic") e++; }));
+  if(!n) throw new Error("formato");
+  normalizeHierarchy(target);
+  save();
+  refresh();
+  toast(tr("toast.epicsAdded",{epics:e, items:n}));
+}
+
+function importTxtFile(content, filename, mode){
+  const blocks = parseTxtProjectBlocks(content, filename);
+  const parsedBlocks = blocks.map((block, bi) => {
+    const res = parseImportText(block.text);
+    if(res.errors.length){
+      const details = res.errors.map(x => tr("import.line",{n:x.n,msg:x.msg})).join("\n");
+      throw new Error((blocks.length > 1 ? (APP_LANG === "pt" ? `Projeto ${bi+1} (${block.name})` : `Project ${bi+1} (${block.name})`) + "\n" : "") + details);
+    }
+    return { block, res };
+  });
+
+  if(mode === "project"){
+    let totalEpics = 0, totalItems = 0;
+    parsedBlocks.forEach(({block,res}) => {
+      const p = blankProject(block.name || fileBaseName(filename));
+      const stats = applyParsedLines(p, res.lines);
+      totalEpics += stats.epics; totalItems += stats.items;
+      projects.push(p);
+    });
+    save();
+    home();
+    if(parsedBlocks.length === 1) toast(tr("toast.projectImported",{epics:totalEpics,items:totalItems}));
+    else toast(tr("toast.projectsImported",{count:parsedBlocks.length}));
+    return;
+  }
+
+  const target = proj();
+  if(!target) throw new Error("formato");
+  let totalEpics = 0, totalItems = 0;
+  parsedBlocks.forEach(({res}) => {
+    const stats = applyParsedLines(target, res.lines);
+    totalEpics += stats.epics; totalItems += stats.items;
+  });
+  save();
+  refresh();
+  toast(tr("toast.epicsAdded",{epics:totalEpics,items:totalItems}));
+}
+
 function handleFile(content, filename){
-  const { kind, mode, name } = pendingImport;
+  const pending = pendingImport;
   pendingImport = null;
+  if(!pending) return;
+
+  const extension = String(filename || "").split(".").pop().toLowerCase();
+  const kind = extension === "json" ? "json" : extension === "txt" ? "txt" : pending.kind;
 
   try{
-    if(kind === "json"){
-      const data = JSON.parse(content);
-      const list = Array.isArray(data) ? data : [data];
-      list.forEach(p => { if(!p || typeof p !== "object" || (!Array.isArray(p.items) && !Array.isArray(p.pages))) throw new Error("formato"); });
-
-      if(mode === "project"){
-        list.forEach(raw => {
-          const p = migrateProject(JSON.parse(JSON.stringify(raw)));
-          if(!p.name) p.name = name || filename.replace(/\.[^.]+$/,"") || tr("default.importedProject");
-          p.items = cloneItems(p.items);
-          projects.push(p);
-        });
-        save(); home();
-        toast(tr("toast.projectsImported",{count:list.length}));
-      } else {
-        let n = 0, e = 0;
-        list.forEach(raw => {
-          const p = migrateProject(JSON.parse(JSON.stringify(raw)));
-          const clones = cloneItems(p.items);
-          clones.forEach(c => { proj().items.push(c); n++; if(c.kind === "epic") e++; });
-        });
-        if(!n) throw new Error("formato");
-        normalizeHierarchy(proj());
-        refresh();
-        toast(tr("toast.epicsAdded",{epics:e, items:n}));
-      }
-      return;
-    }
-
-    const res = parseImportText(content);
-    if(res.errors.length){
-      alert(tr("import.errorsTitle") + "\n\n" + res.errors.map(x => tr("import.line",{n:x.n, msg:x.msg})).join("\n"));
-      return;
-    }
-    if(mode === "project"){
-      const p = blankProject(name || filename.replace(/\.[^.]+$/,"") || tr("default.importedProject"));
-      const stats = applyParsedLines(p, res.lines);
-      projects.push(p);
-      save(); home();
-      toast(tr("toast.projectImported", stats));
-    } else {
-      const stats = applyParsedLines(proj(), res.lines);
-      refresh();
-      toast(tr("toast.epicsAdded", stats));
-    }
+    if(kind === "json") importJsonFile(content, filename, pending.mode);
+    else importTxtFile(content, filename, pending.mode);
   }catch(err){
-    alert(tr("import.errorFile"));
+    const detail = err && err.message && err.message !== "formato" ? err.message : (APP_LANG === "pt"
+      ? "Formato inválido. Use um TXT hierárquico do SuperProject ou um JSON de projeto/backup exportado pelo SuperProject."
+      : "Invalid format. Use a SuperProject hierarchy TXT or a project/backup JSON exported by SuperProject.");
+    importFileError(detail);
   }
 }
 
