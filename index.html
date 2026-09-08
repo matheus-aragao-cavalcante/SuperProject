@@ -648,8 +648,8 @@ button.primary{box-shadow:0 5px 18px color-mix(in srgb,var(--accent) 14%,transpa
 .home-actions .menu{z-index:120;}
 #projects{position:relative;z-index:1;}
 
-/* Kanban: seis fases cabem no desktop; telas menores mantêm rolagem horizontal. */
-.kanban.kanban-all-phases{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;overflow:visible;padding-bottom:8px;align-items:start;}
+/* Kanban: as cinco fases em andamento cabem no desktop; Pendentes ficam em uma área separada acima. */
+.kanban.kanban-all-phases{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;overflow:visible;padding-bottom:8px;align-items:start;}
 .kanban.kanban-all-phases .kanban-col{min-width:0;padding:10px;}
 .kanban.kanban-all-phases .col-head{gap:6px;font-size:12px;}
 .kanban.kanban-all-phases .kanban-card{padding:9px;min-width:0;}
@@ -661,6 +661,33 @@ button.primary{box-shadow:0 5px 18px color-mix(in srgb,var(--accent) 14%,transpa
 .kanban-assign-row{margin-top:8px;padding-top:7px;border-top:1px dashed var(--line-soft);}
 .kanban-assign-row label{display:block;color:var(--dim);font-size:10px;margin-bottom:2px;}
 .kanban-assign-row select{margin:0;padding:7px 26px 7px 8px;font-size:11px;}
+
+
+/* Pendentes de atribuição de fase — ficam fora das etapas para não competir com o trabalho em andamento. */
+.pending-zone{
+  margin:12px 0 18px;padding:14px;border:1px dashed color-mix(in srgb,var(--dim) 58%,var(--line));
+  border-radius:14px;background:color-mix(in srgb,var(--bg2) 88%,var(--bg3));
+}
+.pending-zone.collapsed{padding:10px 12px;margin-bottom:14px;background:color-mix(in srgb,var(--bg2) 94%,var(--bg3));}
+.pending-zone-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.pending-zone-title{display:flex;align-items:center;gap:9px;min-width:0;}
+.pending-zone-title strong{color:var(--txt);font-size:14px;}
+.pending-zone-title small{display:block;color:var(--dim);font-size:10px;margin-top:2px;}
+.pending-count{display:inline-flex;align-items:center;justify-content:center;min-width:26px;padding:2px 8px;border-radius:999px;background:var(--chip-bg);color:var(--txt);font-size:11px;}
+.pending-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.pending-tools select{width:auto;min-width:175px;margin:0;padding:8px 30px 8px 9px;font-size:11px;}
+.pending-selection{font-size:11px;color:var(--dim);padding:0 3px;}
+.pending-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:9px;margin-top:12px;}
+.pending-card{background:var(--bg3);border:1px solid var(--line);border-left:3px solid var(--st-none);border-radius:10px;padding:10px;min-width:0;}
+.pending-card-head{display:flex;align-items:flex-start;gap:8px;}
+.pending-card-head>input{margin-top:4px;flex:none;}
+.pending-card-body{min-width:0;flex:1;}
+.pending-card-title{font-size:13px;color:var(--txt);cursor:pointer;overflow-wrap:anywhere;margin:3px 0 6px;}
+.pending-card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.pending-card .kanban-assign-row{margin-top:8px;}
+.pending-empty{margin-top:10px;padding:12px;border:1px dashed var(--line-soft);border-radius:9px;color:var(--dim);font-size:12px;text-align:center;}
+.view-empty-running{margin:10px 0 0;padding:18px;border:1px dashed var(--line);border-radius:12px;color:var(--dim);text-align:center;}
+@media (max-width:720px){.pending-tools{width:100%;}.pending-tools select{flex:1;min-width:150px;}}
 
 /* Tela de detalhes: mesmos campos e ações, organizados em blocos mais legíveis. */
 #detailModal .modal-box{width:min(1120px,calc(100vw - 34px));padding:28px 32px;}
@@ -1049,15 +1076,15 @@ const I18N = {
     "item.details":"Abrir detalhes do item", "item.rename":"Renomear", "item.delete":"Excluir item",
     "item.doubleClick":"Clique duas vezes para abrir os detalhes", "item.textColor":"Cor do texto",
     "tree.collapse":"Recolher", "tree.expand":"Expandir", "common.completed":"concluído", "kanban.dragHere":"Arraste itens para cá",
-    "new.title":"Novo item", "new.name":"Nome", "new.kind":"Nível na hierarquia", "new.parent":"Item pai",
-    "new.noParent":"— sem pai (raiz do projeto) —", "new.create":"Criar", "new.nameRequired":"Dê um nome ao item.",
-    "new.parentHint":"O pai precisa estar em um nível acima. Deixe sem pai para criar na raiz.",
+    "new.title":"Novo item", "new.name":"Nome", "new.kind":"Nível na hierarquia", "new.parent":"Vínculo hierárquico",
+    "new.noParent":"— sem vínculo (raiz do projeto) —", "new.create":"Criar", "new.nameRequired":"Dê um nome ao item.",
+    "new.parentHint":"O vínculo deve apontar para um item de nível acima. Deixe sem vínculo para criar na raiz.",
     "toast.itemCreated":"{kind} criado(a).",
     "confirm.deleteItem":"Excluir “{name}”{extra}?", "confirm.deleteChildren":" e seus {n} itens filhos",
     "detail.details":"📝 Detalhes", "detail.path":"Caminho", "detail.root":"raiz do projeto",
     "detail.description":"Descrição — o que precisa ser feito, como e por quê",
     "detail.descriptionPlaceholder":"Anote aqui o contexto, os critérios de aceite, links, decisões...",
-    "detail.priority":"Prioridade", "detail.phase":"Fase", "detail.level":"Nível", "detail.parent":"Item pai", "detail.starts":"Começa em",
+    "detail.priority":"Prioridade", "detail.phase":"Fase", "detail.level":"Nível", "detail.parent":"Vínculo hierárquico", "detail.starts":"Começa em",
     "detail.duration":"Duração (períodos)", "detail.color":"Cor",
     "detail.childrenInfo":"{n} item(ns) abaixo deste na hierarquia.", "detail.openChildren":"🌳 Ver filhos na hierarquia",
     "detail.planning":"Este item é <b>planejamento geral</b> — abre o OKR Model Canvas no lugar do Kanban e do Roadmap.",
@@ -1075,7 +1102,7 @@ const I18N = {
     "toast.projectImported":"Projeto importado: {epics} épico(s), {items} item(ns).", "toast.epicsAdded":"{epics} épico(s) e {items} item(ns) adicionados.",
     "toast.projectsImported":"{count} projeto(s) importado(s).",
     "toast.saved":"{kind} salvo.", "toast.nothingToSave":"Nenhum projeto para salvar.",
-    "status.backlog":"Sem fase", "status.initiation":"Iniciação", "status.planning":"Planejamento", "status.execution":"Execução",
+    "status.backlog":"Pendente", "status.initiation":"Iniciação", "status.planning":"Planejamento", "status.execution":"Execução",
     "status.review":"Review", "status.finished":"Finalizado", "status.mark":"Marcar como {status}",
     "prio.urgent":"Urgente", "prio.normal":"Normal", "prio.low":"Baixa", "sub.todo":"A fazer", "sub.doing":"Fazendo", "sub.done":"Feito",
     "badge.description":"Tem descrição", "badge.subtasks":"Subtarefas", "badge.planning":"Planejamento geral (OKR)",
@@ -1163,15 +1190,15 @@ const I18N = {
     "item.details":"Open item details", "item.rename":"Rename", "item.delete":"Delete item",
     "item.doubleClick":"Double-click to open details", "item.textColor":"Text color",
     "tree.collapse":"Collapse", "tree.expand":"Expand", "common.completed":"completed", "kanban.dragHere":"Drag items here",
-    "new.title":"New item", "new.name":"Name", "new.kind":"Hierarchy level", "new.parent":"Parent item",
-    "new.noParent":"— no parent (project root) —", "new.create":"Create", "new.nameRequired":"Give the item a name.",
-    "new.parentHint":"The parent must be on a higher level. Leave it empty to create at the root.",
+    "new.title":"New item", "new.name":"Name", "new.kind":"Hierarchy level", "new.parent":"Hierarchy link",
+    "new.noParent":"— no link (project root) —", "new.create":"Create", "new.nameRequired":"Give the item a name.",
+    "new.parentHint":"The link must point to an item on a higher level. Leave it empty to create at the root.",
     "toast.itemCreated":"{kind} created.",
     "confirm.deleteItem":"Delete “{name}”{extra}?", "confirm.deleteChildren":" and its {n} child items",
     "detail.details":"📝 Details", "detail.path":"Path", "detail.root":"project root",
     "detail.description":"Description — what needs to be done, how, and why",
     "detail.descriptionPlaceholder":"Add context, acceptance criteria, links, decisions...",
-    "detail.priority":"Priority", "detail.phase":"Phase", "detail.level":"Level", "detail.parent":"Parent item", "detail.starts":"Starts in",
+    "detail.priority":"Priority", "detail.phase":"Phase", "detail.level":"Level", "detail.parent":"Hierarchy link", "detail.starts":"Starts in",
     "detail.duration":"Duration (periods)", "detail.color":"Color",
     "detail.childrenInfo":"{n} item(s) below this one in the hierarchy.", "detail.openChildren":"🌳 View children in the hierarchy",
     "detail.planning":"This item is <b>general planning</b> — it opens the OKR Model Canvas instead of Kanban and Roadmap.",
@@ -1189,7 +1216,7 @@ const I18N = {
     "toast.projectImported":"Project imported: {epics} epic(s), {items} item(s).", "toast.epicsAdded":"{epics} epic(s) and {items} item(s) added.",
     "toast.projectsImported":"{count} project(s) imported.",
     "toast.saved":"{kind} saved.", "toast.nothingToSave":"No projects to save.",
-    "status.backlog":"No phase", "status.initiation":"Initiation", "status.planning":"Planning", "status.execution":"Execution",
+    "status.backlog":"Pending", "status.initiation":"Initiation", "status.planning":"Planning", "status.execution":"Execution",
     "status.review":"Review", "status.finished":"Finished", "status.mark":"Mark as {status}",
     "prio.urgent":"Urgent", "prio.normal":"Normal", "prio.low":"Low", "sub.todo":"To do", "sub.doing":"Doing", "sub.done":"Done",
     "badge.description":"Has description", "badge.subtasks":"Subtasks", "badge.planning":"General planning (OKR)",
@@ -1298,8 +1325,8 @@ const STATUSES = [
 ];
 const DONE_STATUS = "finalizado";
 
-/* Níveis da hierarquia. depth define quem pode ser pai de quem:
-   um item só pode ter como pai um item com depth menor. User Story e Backlog
+/* Níveis da hierarquia. depth define quais vínculos hierárquicos são permitidos:
+   um item só pode se vincular a um item com depth menor. User Story e Backlog
    dividem o mesmo nível (depth 2) mas são tipos distintos. */
 const KINDS = [
   { key:"epic",    depth:0, icon:"◆", label:tr("kind.epic"),    plural:tr("kind.epics"),    children:["feature"] },
@@ -1404,7 +1431,7 @@ function validParentsFor(kindKey, excludeId){
   const depth = kindOf(kindKey).depth;
   return orderedItems(null).filter(t => kindOf(t.kind).depth < depth && t.id !== excludeId && !(excludeId && isDescendant(t.id, excludeId)));
 }
-/* garante que nenhum item tenha como pai um item de nível igual ou inferior */
+/* garante que nenhum item tenha como vínculo um item de nível igual ou inferior */
 function normalizeHierarchy(p){
   const list = itemsOf(p);
   const ids = new Set(list.map(t => t.id));
@@ -1508,7 +1535,7 @@ function migrateProject(p){
 }
 function migrate(){ projects.forEach(migrateProject); }
 
-/* clona itens de outro projeto gerando ids novos (mantendo as relações pai/filho) */
+/* clona itens de outro projeto gerando ids novos (mantendo as relações de vínculo/filho) */
 function cloneItems(items){
   const map = {};
   const out = items.map(t => { const c = JSON.parse(JSON.stringify(t)); map[t.id] = c.id = uid(); return c; });
@@ -1645,14 +1672,14 @@ function renderHelp(){
         <li><b>Backlog</b> — a technical or operational block of work. Its children are <b>Tasks</b>: concrete work units.</li>
       </ul>
       <p><b>User Story vs. Backlog:</b> both sit on the same level under a Feature, but they are different things and are always shown apart. Use a User Story when the value is described from the user's side; use a Backlog when it is a list of work the team has to do. A Feature can have both at the same time.</p>
-      <p>A level may be skipped (for example, Tasks directly under a Feature). The rule is only that a parent must be on a higher level than its child.</p>
+      <p>A level may be skipped (for example, Tasks directly under a Feature). The hierarchy link must point to an item on a higher level.</p>
 
       <h3>2. Creating a project and items</h3>
       <ul>
         <li><b>+ New Project</b> opens a short setup screen for the project name, start date and timeline scale. The starter Epic → Feature → Backlog → Tasks structure remains available and is selected by default.</li>
-        <li>Inside the project, the <b>+ Epic</b>, <b>+ Feature</b>, <b>+ User Story</b>, <b>+ Backlog</b> and <b>+ Task</b> buttons open the <b>New item</b> dialog. Name, level and parent are filled in based on where you are; change them if needed.</li>
+        <li>Inside the project, the <b>+ Epic</b>, <b>+ Feature</b>, <b>+ User Story</b>, <b>+ Backlog</b> and <b>+ Task</b> buttons open the <b>New item</b> dialog. Name, level and hierarchy link are filled in based on where you are; change them if needed.</li>
         <li>In the <b>Hierarchy</b> tree, every item shows its own add buttons for the children it accepts, plus ▲ ▼ to reorder among siblings.</li>
-        <li>Open any item with <b>⋯</b> to change its <b>level</b> or <b>parent</b>. Children that would become invalid are moved up automatically.</li>
+        <li>Open any item with <b>⋯</b> to change its <b>level</b> or <b>hierarchy link</b>. Children that would become invalid are moved up automatically.</li>
         <li>Deleting an item also deletes everything below it (you will be asked to confirm).</li>
       </ul>
 
@@ -1661,7 +1688,7 @@ function renderHelp(){
         <li><b>🌳 Hierarchy</b> — the full tree. Click ▸/▾ to collapse a branch and <b>▸ View children</b> to focus on an item.</li>
         <li><b>Epics, Features, User Stories, Backlogs, Tasks/Events</b> — show only the items of that level, as a List, Grid, Kanban, Sprint or Gantt. The counter on each button tells how many items exist in the current scope.</li>
         <li><b>Focus / breadcrumb</b> — when you open the children of an item, a breadcrumb appears (Project › Epic › Feature ...). Everything you see is limited to that branch. Click a crumb to go back up, or <b>✕ Clear focus</b> to see the whole project.</li>
-        <li>Each card shows its path (parents) and a <b>▸ children</b> link so you always know where an item lives.</li>
+        <li>Each card shows its path (higher-level links) and a <b>▸ children</b> link so you always know where an item lives.</li>
       </ul>
 
       <h3>4. Views</h3>
@@ -1712,7 +1739,7 @@ function renderHelp(){
       <p>Progress of an Epic, Feature, User Story or Backlog is calculated from the leaf items below it.</p>
 
       <h3>7. Inside each item</h3>
-      <p>Click <b>⋯</b> on any item to open details. The dialog has tabs:</p><ul><li><b>Details</b> — description, priority, phase, level, parent, timeline and color.</li><li><b>OKR Canvas</b> — shown when the item is marked as general planning (the default for new Epics).</li><li><b>Kanban</b> and <b>Roadmap</b> — internal subtasks organized by progress or priority.</li></ul>
+      <p>Click <b>⋯</b> on any item to open details. The dialog has tabs:</p><ul><li><b>Details</b> — description, priority, phase, level, hierarchy link, timeline and color.</li><li><b>OKR Canvas</b> — shown when the item is marked as general planning (the default for new Epics).</li><li><b>Kanban</b> and <b>Roadmap</b> — internal subtasks organized by progress or priority.</li></ul>
 
       <h3>8. Saving and dates</h3>
       <ul><li><b>Save → TXT</b> writes the hierarchy in the same import format above.</li><li><b>Save → JSON</b> stores everything: phases, priorities, deadlines, details and OKRs.</li><li>The <b>start date</b> and <b>scale</b> are in "Edit project". Inside the project, <b>Show dates</b> next to Gantt toggles real dates.</li><li>Text colors you pick for items are adjusted automatically so they stay readable in both the light and dark themes.</li></ul>`;
@@ -1730,14 +1757,14 @@ function renderHelp(){
         <li><b>Backlog</b> — um bloco de trabalho técnico ou operacional. Seus filhos são <b>Tasks</b>: unidades concretas de trabalho.</li>
       </ul>
       <p><b>User Story × Backlog:</b> os dois ficam no mesmo nível, dentro de uma Feature, mas são coisas diferentes e sempre aparecem separados. Use User Story quando o valor é descrito pelo lado de quem usa; use Backlog quando é uma lista de trabalho que o time precisa executar. Uma Feature pode ter os dois ao mesmo tempo.</p>
-      <p>Um nível pode ser pulado (por exemplo, Tasks direto dentro de uma Feature). A única regra é que o pai precisa estar em um nível acima do filho.</p>
+      <p>Um nível pode ser pulado (por exemplo, Tasks direto dentro de uma Feature). A única regra é que o vínculo hierárquico precisa apontar para um nível acima do item.</p>
 
       <h3>2. Criar projeto e itens</h3>
       <ul>
         <li><b>+ Novo Projeto</b> abre uma etapa curta para definir nome, data inicial e escala do cronograma. A estrutura inicial Épico → Feature → Backlog → Tasks continua disponível e vem marcada por padrão.</li>
-        <li>Dentro do projeto, os botões <b>+ Épico</b>, <b>+ Feature</b>, <b>+ User Story</b>, <b>+ Backlog</b> e <b>+ Task</b> abrem o diálogo <b>Novo item</b>. Nome, nível e pai já vêm preenchidos de acordo com onde você está; mude se precisar.</li>
+        <li>Dentro do projeto, os botões <b>+ Épico</b>, <b>+ Feature</b>, <b>+ User Story</b>, <b>+ Backlog</b> e <b>+ Task</b> abrem o diálogo <b>Novo item</b>. Nome, nível e vínculo hierárquico já vêm preenchidos de acordo com onde você está; mude se precisar.</li>
         <li>Na árvore da <b>Hierarquia</b>, cada item mostra seus próprios botões de adicionar os filhos que ele aceita, além de ▲ ▼ para reordenar entre irmãos.</li>
-        <li>Abra qualquer item com <b>⋯</b> para mudar o <b>nível</b> ou o <b>item pai</b>. Filhos que ficariam inválidos sobem automaticamente.</li>
+        <li>Abra qualquer item com <b>⋯</b> para mudar o <b>nível</b> ou o <b>vínculo hierárquico</b>. Filhos que ficariam inválidos sobem automaticamente.</li>
         <li>Excluir um item exclui tudo o que está abaixo dele (a plataforma pede confirmação).</li>
       </ul>
 
@@ -1746,7 +1773,7 @@ function renderHelp(){
         <li><b>🌳 Hierarquia</b> — a árvore completa. Clique em ▸/▾ para recolher um ramo e em <b>▸ Ver filhos</b> para focar em um item.</li>
         <li><b>Épicos, Features, User Stories, Backlogs, Tasks/Eventos</b> — mostram somente os itens daquele nível, em Lista, Grade, Kanban, Sprint ou Gantt. O contador de cada botão diz quantos itens existem no escopo atual.</li>
         <li><b>Foco / trilha</b> — ao abrir os filhos de um item, aparece uma trilha (Projeto › Épico › Feature ...). Tudo o que você vê fica limitado a esse ramo. Clique em um degrau da trilha para subir, ou em <b>✕ Limpar foco</b> para ver o projeto inteiro.</li>
-        <li>Cada cartão mostra seu caminho (pais) e um link <b>▸ filhos</b>, para você sempre saber onde o item está.</li>
+        <li>Cada cartão mostra seu caminho (vínculos superiores) e um link <b>▸ filhos</b>, para você sempre saber onde o item está.</li>
       </ul>
 
       <h3>4. Visualizações</h3>
@@ -1797,7 +1824,7 @@ function renderHelp(){
       <p>O progresso de um Épico, Feature, User Story ou Backlog é calculado pelos itens finais (folhas) abaixo dele.</p>
 
       <h3>7. Dentro de cada item</h3>
-      <p>Clique em <b>⋯</b> em qualquer item para abrir os detalhes. Lá dentro há abas:</p><ul><li><b>Detalhes</b> — descrição, prioridade, fase, nível, item pai, prazo e cor.</li><li><b>OKR Canvas</b> — aparece quando o item é marcado como planejamento geral (padrão dos Épicos novos).</li><li><b>Kanban</b> e <b>Roadmap</b> — subtarefas internas do item, por andamento ou por prioridade.</li></ul>
+      <p>Clique em <b>⋯</b> em qualquer item para abrir os detalhes. Lá dentro há abas:</p><ul><li><b>Detalhes</b> — descrição, prioridade, fase, nível, vínculo hierárquico, prazo e cor.</li><li><b>OKR Canvas</b> — aparece quando o item é marcado como planejamento geral (padrão dos Épicos novos).</li><li><b>Kanban</b> e <b>Roadmap</b> — subtarefas internas do item, por andamento ou por prioridade.</li></ul>
 
       <h3>8. Salvar e datas</h3>
       <ul><li><b>Salvar → TXT</b> gera a hierarquia no mesmo formato de importação acima.</li><li><b>Salvar → JSON</b> guarda tudo: fases, prioridades, prazos, detalhes e OKRs.</li><li>A <b>data inicial</b> e a <b>escala</b> ficam em "Editar projeto". Dentro do projeto, <b>Mostrar datas</b> ao lado do Gantt liga e desliga as datas no diagrama.</li><li>As cores de texto que você escolher para os itens são ajustadas automaticamente para continuarem legíveis nos temas claro e escuro.</li></ul>`;
@@ -2133,7 +2160,7 @@ function setScale(v){
   if(currentProject === editIndex){ renderTimeline(); renderWorkspace(); }
 }
 
-/* troca de posição entre irmãos (mesmo pai) dentro do array plano */
+/* troca de posição entre irmãos (mesmo vínculo) dentro do array plano */
 function moveSiblingIn(p, id, delta){
   const t = byId(id, p); if(!t) return;
   const sibs = childrenOf(t.parentId, p);
@@ -2162,7 +2189,7 @@ function openProject(index){
     `<button class="back-btn" onclick="home()"><span class="arrow">←</span> ${APP_LANG==="pt"?"Voltar":"Back"}</button>`;
 
   document.getElementById("projectActions").innerHTML = `
-    <button class="primary" onclick="openNewItem('task',null)" title="${APP_LANG === "pt" ? "Criar uma nova tarefa e escolher seu pai" : "Create a new task and choose its parent"}">+ ${APP_LANG === "pt" ? "Nova tarefa" : "New task"}</button>
+    <button class="primary" onclick="openNewItem('task',null)" title="${APP_LANG === "pt" ? "Criar uma nova tarefa e escolher seu vínculo hierárquico" : "Create a new task and choose its parent"}">+ ${APP_LANG === "pt" ? "Nova tarefa" : "New task"}</button>
     <div class="menu-wrap" id="wrap-impProj">
       <button class="primary" onclick="toggleMenu(event,'impProj')">${tr("project.importEpics")} <span class="caret">▾</span></button>
       <div class="menu right hidden" id="impProj">
@@ -2242,7 +2269,7 @@ function rawVisibleItems(){
   const p = proj(); if(!p) return [];
   const f = filterState();
   if(p.level === "tree") return scopeItems();
-  /* O modo "Tarefas sem pai" é global ao projeto para que elas continuem acessíveis
+  /* O modo "Tarefas sem vínculo" é global ao projeto para que elas continuem acessíveis
      mesmo quando o usuário estiver focado dentro de um ramo da hierarquia. */
   if(p.level === "task" && f.unassignedOnly) return itemsOf(p).filter(t => t.kind === "task" && !t.parentId);
   return scopeItems().filter(t => t.kind === p.level);
@@ -2364,7 +2391,7 @@ function renderContextFilters(){
         ${PRIOS.map(pr => `<option value="${pr.key}" ${f.prio===pr.key?"selected":""}>${esc(pr.label)}</option>`).join("")}
       </select>
       <div class="filter-search-wrap"><span>⌕</span><input value="${esc(f.query)}" placeholder="${APP_LANG === "pt" ? "Buscar neste nível" : "Search this level"}" onchange="setContextFilter('query',this.value)" onkeydown="if(event.key==='Enter')this.blur()"></div>
-      ${p.level === "task" ? `<button class="unassigned-btn ${f.unassignedOnly ? "active" : ""}" onclick="toggleUnassignedTasks()">${f.unassignedOnly ? "✓ " : ""}${APP_LANG === "pt" ? "Tarefas sem pai" : "Unassigned tasks"} <span class="filter-count">${looseTasks}</span></button>` : ""}
+      ${p.level === "task" ? `<button class="unassigned-btn ${f.unassignedOnly ? "active" : ""}" onclick="toggleUnassignedTasks()">${f.unassignedOnly ? "✓ " : ""}${APP_LANG === "pt" ? "Tarefas sem vínculo" : "Unlinked tasks"} <span class="filter-count">${looseTasks}</span></button>` : ""}
       ${contextFilterActive() ? `<button class="ghost filter-reset" onclick="resetContextFilters()">↺ ${APP_LANG === "pt" ? "Limpar filtros" : "Reset filters"}</button>` : ""}
     </div>
   </div>`;
@@ -2660,7 +2687,7 @@ function updateProgress(){
     <div class="quick-stat"><b>${tasks.length}</b><span>${APP_LANG === "pt" ? "Tarefas do projeto" : "Project tasks"}</span></div>
     <div class="quick-stat running"><b>${running}</b><span>${APP_LANG === "pt" ? "Em andamento" : "In progress"}</span></div>
     <div class="quick-stat pending"><b>${pending}</b><span>${APP_LANG === "pt" ? "Pendentes" : "Pending"}</span></div>
-    ${loose ? `<div class="quick-stat loose" title="${APP_LANG === "pt" ? "Tarefas sem vínculo com um item pai" : "Tasks without a parent item"}"><b>${loose}</b><span>${APP_LANG === "pt" ? "Sem pai" : "Unassigned"}</span></div>` : ""}`;
+    ${loose ? `<div class="quick-stat loose" title="${APP_LANG === "pt" ? "Tarefas sem vínculo hierárquico" : "Tasks without a parent item"}"><b>${loose}</b><span>${APP_LANG === "pt" ? "Sem vínculo" : "Unassigned"}</span></div>` : ""}`;
 }
 
 function refresh(){
@@ -2774,7 +2801,7 @@ function actionButtons(id){
     </div>
   </div>`;
 }
-/* caminho (pais) + link para os filhos — mostra a posição do item na hierarquia */
+/* caminho (vínculos superiores) + link para os filhos — mostra a posição do item na hierarquia */
 function hierarchyMeta(t){
   const path = pathOf(t);
   const kids = childrenOf(t.id);
@@ -2852,16 +2879,148 @@ function treeNode(t, idx){
 function toggleCollapse(id){ if(collapsed.has(id)) collapsed.delete(id); else collapsed.add(id); renderWorkspace(); }
 function moveSibling(id, delta){ moveSiblingIn(proj(), id, delta); refresh(); }
 
+
+/* ==========================================================
+   PENDENTES DE ATRIBUIÇÃO DE FASE
+   Itens com status "none" ficam em uma área própria antes das etapas.
+   ========================================================== */
+
+const pendingSelection = new Set();
+function pendingVisibleItems(){ return visibleItems().filter(t => (t.status || "none") === "none"); }
+function activeVisibleItems(){ return visibleItems().filter(t => (t.status || "none") !== "none"); }
+function togglePendingArea(){
+  const p = proj(); if(!p) return;
+  p.hidePending = !p.hidePending;
+  save();
+  renderWorkspace();
+}
+function updatePendingSelectionUI(){
+  const items = pendingVisibleItems();
+  const selected = items.filter(t => pendingSelection.has(t.id)).length;
+  const count = document.getElementById("pendingSelectedCount");
+  const clearBtn = document.getElementById("pendingClearBtn");
+  const assignBtn = document.getElementById("pendingAssignBtn");
+  if(count) count.textContent = selected + " " + (APP_LANG === "pt" ? "selecionado(s)" : "selected");
+  if(clearBtn) clearBtn.disabled = !selected;
+  if(assignBtn) assignBtn.disabled = !selected;
+  document.querySelectorAll(".pending-item-check").forEach(cb => { cb.checked = pendingSelection.has(cb.dataset.id); });
+}
+function togglePendingSelection(id, checked){
+  if(checked) pendingSelection.add(id); else pendingSelection.delete(id);
+  updatePendingSelectionUI();
+}
+function selectAllPending(checked){
+  pendingVisibleItems().forEach(t => checked ? pendingSelection.add(t.id) : pendingSelection.delete(t.id));
+  updatePendingSelectionUI();
+}
+function movePendingItem(id, statusKey){
+  if(!statusKey || statusKey === "none") return;
+  const t = byId(id);
+  if(!t || !STATUSES.some(s => s.key === statusKey)) return;
+  t.status = statusKey;
+  t.done = statusKey === DONE_STATUS;
+  pendingSelection.delete(id);
+  refresh();
+}
+function bulkAssignPending(){
+  const sel = document.getElementById("pendingBulkPhase");
+  const statusKey = sel ? sel.value : "";
+  if(!statusKey){ toast(APP_LANG === "pt" ? "Escolha a etapa de destino." : "Choose a destination phase."); return; }
+  const ids = pendingVisibleItems().filter(t => pendingSelection.has(t.id)).map(t => t.id);
+  if(!ids.length){ toast(APP_LANG === "pt" ? "Selecione pelo menos um item pendente." : "Select at least one pending item."); return; }
+  ids.forEach(id => {
+    const t = byId(id); if(!t) return;
+    t.status = statusKey;
+    t.done = statusKey === DONE_STATUS;
+    pendingSelection.delete(id);
+  });
+  refresh();
+  toast(APP_LANG === "pt" ? `${ids.length} item(ns) enviados para ${statusOf(statusKey).label}.` : `${ids.length} item(s) moved to ${statusOf(statusKey).label}.`);
+}
+function renderPendingZone(view){
+  const p = proj(); if(!p) return;
+  const items = pendingVisibleItems();
+  const visibleIds = new Set(items.map(t => t.id));
+  [...pendingSelection].forEach(id => { if(!byId(id) || !visibleIds.has(id)) pendingSelection.delete(id); });
+  const selected = items.filter(t => pendingSelection.has(t.id)).length;
+  const hidden = !!p.hidePending;
+
+  const zone = document.createElement("section");
+  zone.className = "pending-zone" + (hidden ? " collapsed" : "");
+  zone.innerHTML = `
+    <div class="pending-zone-head">
+      <div class="pending-zone-title">
+        <span style="font-size:18px">◌</span>
+        <div><strong>${APP_LANG === "pt" ? "Pendentes de atribuição" : "Pending assignment"}</strong><small>${APP_LANG === "pt" ? "Itens ainda sem etapa definida; ficam separados do trabalho em andamento." : "Items with no phase yet; kept separate from active work."}</small></div>
+        <span class="pending-count">${items.length}</span>
+      </div>
+      <div class="pending-tools">
+        ${hidden ? "" : `
+          <button class="mini ghost" onclick="selectAllPending(true)" ${items.length ? "" : "disabled"}>☑ ${APP_LANG === "pt" ? "Selecionar todos" : "Select all"}</button>
+          <button class="mini ghost" id="pendingClearBtn" onclick="selectAllPending(false)" ${selected ? "" : "disabled"}>☐ ${APP_LANG === "pt" ? "Desmarcar" : "Clear"}</button>
+          <span class="pending-selection" id="pendingSelectedCount">${selected} ${APP_LANG === "pt" ? "selecionado(s)" : "selected"}</span>
+          <select id="pendingBulkPhase" aria-label="${APP_LANG === "pt" ? "Etapa de destino" : "Destination phase"}">
+            <option value="">${APP_LANG === "pt" ? "Enviar selecionados para…" : "Move selected to…"}</option>
+            ${STATUSES.filter(s => s.key !== "none").map(s => `<option value="${s.key}">${esc(s.label)}</option>`).join("")}
+          </select>
+          <button class="mini primary" id="pendingAssignBtn" onclick="bulkAssignPending()" ${selected ? "" : "disabled"}>→ ${APP_LANG === "pt" ? "Atribuir etapa" : "Assign phase"}</button>`}
+        <button class="mini" onclick="togglePendingArea()">${hidden ? (APP_LANG === "pt" ? "👁 Mostrar pendentes" : "👁 Show pending") : (APP_LANG === "pt" ? "🙈 Ocultar pendentes" : "🙈 Hide pending")}</button>
+      </div>
+    </div>`;
+
+  if(!hidden){
+    if(!items.length){
+      zone.insertAdjacentHTML("beforeend", `<div class="pending-empty">${APP_LANG === "pt" ? "Nenhum item aguardando atribuição de etapa." : "No items waiting for a phase assignment."}</div>`);
+    } else {
+      const grid = document.createElement("div");
+      grid.className = "pending-grid";
+      items.forEach((t,index) => {
+        const card = document.createElement("div");
+        card.className = "pending-card";
+        card.style.animationDelay = (Math.min(index,20) * .02) + "s";
+        card.innerHTML = `
+          <div class="pending-card-head">
+            <input type="checkbox" class="pending-item-check" data-id="${t.id}" ${pendingSelection.has(t.id) ? "checked" : ""} onchange="togglePendingSelection('${t.id}',this.checked)" aria-label="${APP_LANG === "pt" ? "Selecionar pendente" : "Select pending item"}">
+            <div class="pending-card-body">
+              <div class="spread" style="gap:6px">${kindTag(t)}<div class="row" style="gap:4px">${actionButtons(t.id)}</div></div>
+              <div class="pending-card-title" style="${textStyle(t)}" ondblclick="openDetail('${t.id}')">${esc(t.text)}</div>
+              ${hierarchyMeta(t)}
+              <div class="pending-card-meta">${prioPill(t)} ${badges(t)}</div>
+              <div class="kanban-assign-row"><label>${APP_LANG === "pt" ? "Atribuir etapa" : "Assign phase"}</label><select onchange="movePendingItem('${t.id}',this.value);this.value=''">
+                <option value="">${APP_LANG === "pt" ? "Escolher etapa…" : "Choose phase…"}</option>
+                ${STATUSES.filter(s => s.key !== "none").map(s => `<option value="${s.key}">${esc(s.label)}</option>`).join("")}
+              </select></div>
+            </div>
+          </div>`;
+        grid.appendChild(card);
+      });
+      zone.appendChild(grid);
+    }
+  }
+  view.appendChild(zone);
+}
+
+function renderNoActiveItems(view){
+  const box = document.createElement("div");
+  box.className = "view-empty-running";
+  box.textContent = APP_LANG === "pt" ? "Nenhum item atribuído a uma etapa ainda." : "No items assigned to an active phase yet.";
+  view.appendChild(box);
+}
+
 /* ==========================================================
    1) LISTA
    ========================================================== */
 
 function renderListView(view){
+  renderPendingZone(view);
+  const items = activeVisibleItems();
+  if(!items.length){ renderNoActiveItems(view); return; }
+
   const list = document.createElement("div");
   list.className = "card";
   view.appendChild(list);
 
-  visibleItems().forEach((t, index) => {
+  items.forEach((t, index) => {
     const st = statusOf(t.status);
     const div = document.createElement("div");
     div.className = "task " + (t.done ? "done" : "");
@@ -2892,11 +3051,15 @@ function renderListView(view){
    ========================================================== */
 
 function renderBoardView(view){
+  renderPendingZone(view);
+  const items = activeVisibleItems();
+  if(!items.length){ renderNoActiveItems(view); return; }
+
   const grid = document.createElement("div");
   grid.className = "board-grid";
   view.appendChild(grid);
 
-  visibleItems().forEach((t, index) => {
+  items.forEach((t, index) => {
     const st = statusOf(t.status);
     const card = document.createElement("div");
     card.className = "item-card " + (t.done ? "done" : "");
@@ -2932,33 +3095,29 @@ function renderBoardView(view){
 let dragId = null;
 
 function renderKanbanView(view){
+  renderPendingZone(view);
   const board = document.createElement("div");
   board.className = "kanban kanban-all-phases";
   view.appendChild(board);
-  const all = visibleItems();
-  const taskLevel = proj()?.level === "task";
+  const all = activeVisibleItems();
 
-  STATUSES.forEach((s, ci) => {
+  STATUSES.filter(s => s.key !== "none").forEach((s, ci) => {
     const items = all.filter(t => (t.status||"none") === s.key);
-    const isTaskInbox = taskLevel && s.key === "none";
 
     const col = document.createElement("div");
-    col.className = "kanban-col" + (isTaskInbox ? " kanban-inbox" : "");
+    col.className = "kanban-col";
     col.style.color = s.hex;
     col.style.animationDelay = (ci * 0.035) + "s";
     col.ondragover = e => { e.preventDefault(); col.classList.add("drop"); };
     col.ondragleave = () => col.classList.remove("drop");
     col.ondrop = e => { e.preventDefault(); col.classList.remove("drop"); dropOn(s.key); };
 
-    col.innerHTML = `<div class="col-head"><span>${isTaskInbox ? (APP_LANG === "pt" ? "Tarefas sem fase" : "Tasks without phase") : s.label}</span><span class="col-count">${items.length}</span></div>
-      ${isTaskInbox ? `<p class="kanban-col-hint">${APP_LANG === "pt" ? "Arraste para uma fase ou escolha abaixo em cada tarefa." : "Drag to a phase or choose one from each task below."}</p>` : ""}`;
+    col.innerHTML = `<div class="col-head"><span>${s.label}</span><span class="col-count">${items.length}</span></div>`;
 
     if(items.length === 0){
       const em = document.createElement("div");
       em.className = "kanban-empty";
-      em.innerText = isTaskInbox
-        ? (APP_LANG === "pt" ? "Nenhuma tarefa aguardando fase." : "No tasks waiting for a phase.")
-        : tr("kanban.dragHere");
+      em.innerText = tr("kanban.dragHere");
       col.appendChild(em);
     }
 
@@ -2978,10 +3137,6 @@ function renderKanbanView(view){
         <div class="kanban-card-title" style="${textStyle(t)}" ondblclick="openDetail('${t.id}')">${esc(t.text)}</div>
         ${hierarchyMeta(t)}
         <div class="row kanban-card-meta" style="gap:6px">${prioPill(t)} ${badges(t)}</div>
-        ${isTaskInbox ? `<div class="kanban-assign-row"><label>${APP_LANG === "pt" ? "Enviar para" : "Move to"}</label><select onchange="moveKanbanItem('${t.id}',this.value);this.value=''">
-          <option value="">${APP_LANG === "pt" ? "Escolher fase…" : "Choose phase…"}</option>
-          ${STATUSES.filter(x => x.key !== "none").map(x => `<option value="${x.key}">${esc(x.label)}</option>`).join("")}
-        </select></div>` : ""}
         <label class="kanban-done-check">
           <input type="checkbox" ${t.done?"checked":""} onchange="toggleItem('${t.id}')"> ${tr("common.completed")}
         </label>`;
@@ -3016,10 +3171,12 @@ function dropOn(statusKey){
    ========================================================== */
 
 function renderSprintView(view){
-  const all = visibleItems();
-  STATUSES.forEach((s, si) => {
+  renderPendingZone(view);
+  const all = activeVisibleItems();
+  if(!all.length){ renderNoActiveItems(view); return; }
+
+  STATUSES.filter(s => s.key !== "none").forEach((s, si) => {
     const items = all.filter(t => (t.status||"none") === s.key);
-    if(items.length === 0 && s.key === "none") return;
 
     const done = items.filter(t => t.done).length;
     const pct = items.length ? Math.round(done/items.length*100) : 0;
@@ -3164,9 +3321,6 @@ function renderGanttView(view){
     gantt.appendChild(row);
   });
 
-  wrap.appendChild(gantt);
-  view.appendChild(wrap);
-
   const legend = document.createElement("div");
   legend.className = "card";
   legend.innerHTML = `<span class="dim">${tr("gantt.legend")}</span> ` +
@@ -3174,6 +3328,9 @@ function renderGanttView(view){
     ` <span class="pill" style="color:#f85149">${tr("gantt.today")}</span>
       <p class="dim" style="margin-top:12px">${tr("gantt.help")}</p>`;
   view.appendChild(legend);
+
+  wrap.appendChild(gantt);
+  view.appendChild(wrap);
 }
 
 function moveBar(id, d){ const t = byId(id); if(!t) return; t.start = Math.max(0,(t.start||0)+d); refresh(); }
@@ -3274,7 +3431,7 @@ function confirmDeleteItem(){
   refresh();
   toast(APP_LANG === "pt" ? "Item e hierarquia excluídos." : "Item and hierarchy deleted.");
 }
-/* muda o nível do item; pais/filhos inválidos são reacomodados */
+/* muda o nível do item; vínculos/filhos inválidos são reacomodados */
 function setItemKind(id, kind){
   const t = byId(id); if(!t || !KINDS.some(k => k.key === kind)) return;
   t.kind = kind;
@@ -3478,7 +3635,7 @@ function renderDetailMain(pane, t){
             <select onchange="setItemParent('${t.id}',this.value)">
               ${parentOptionsHTML(t.kind, t.parentId, t.id)}
             </select>
-            <small>${parent ? `${APP_LANG === "pt" ? "Atual" : "Current"}: ${esc(parent.text)}` : (APP_LANG === "pt" ? "Sem item pai." : "No parent item.")}</small>
+            <small>${parent ? `${APP_LANG === "pt" ? "Atual" : "Current"}: ${esc(parent.text)}` : (APP_LANG === "pt" ? "Sem vínculo hierárquico." : "No hierarchy link.")}</small>
           </div>
         </div>
         ${kids.length ? `<div class="detail-children-note"><span><b>${kids.length}</b> ${APP_LANG === "pt" ? "item(ns) abaixo deste nível" : "item(s) below this level"}</span><button class="mini" onclick="closeDetail();focusItem('${t.id}')">${tr("detail.openChildren")}</button></div>` : ""}
@@ -3531,7 +3688,7 @@ function renderDetailMain(pane, t){
         </label>
         <label class="detail-toggle-row done-toggle">
           <input type="checkbox" ${t.done?"checked":""} onchange="toggleItem('${t.id}')">
-          <span><b>${APP_LANG === "pt" ? "Marcar como concluído" : "Mark as completed"}</b><small>${APP_LANG === "pt" ? "Atualiza o progresso deste item e da hierarquia acima." : "Updates progress for this item and its parent hierarchy."}</small></span>
+          <span><b>${APP_LANG === "pt" ? "Marcar como concluído" : "Mark as completed"}</b><small>${APP_LANG === "pt" ? "Atualiza o progresso deste item e da hierarquia acima." : "Updates progress for this item and the hierarchy above."}</small></span>
         </label>
       </section>
     </div>`;
@@ -3833,7 +3990,7 @@ function parseImportText(text){
   return { lines, errors };
 }
 
-/* aplica as linhas interpretadas em um projeto, reaproveitando itens com o mesmo nome sob o mesmo pai */
+/* aplica as linhas interpretadas em um projeto, reaproveitando itens com o mesmo nome sob o mesmo vínculo */
 function findChild(p, parentId, kind, text){
   const key = text.trim().toLowerCase();
   return childrenOf(parentId, p).find(c => c.kind === kind && c.text.trim().toLowerCase() === key) || null;
