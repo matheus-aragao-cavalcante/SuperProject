@@ -507,6 +507,164 @@ footer a:hover{color:var(--accent);}
 #welcome-overlay.hiding{animation:slideOutUp .6s cubic-bezier(.5,0,0,1) forwards;pointer-events:none;}
 @keyframes floatBolt{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-15px) scale(1.15);filter:drop-shadow(0 0 35px rgba(255,178,26,.8));}}
 @keyframes slideOutUp{to{opacity:0;transform:translateY(-100%);visibility:hidden;}}
+
+
+/* ==========================================================
+   SUPERPROJECT UX 2026 — camada incremental de interface
+   Mantém dark mode/identidade tecnológica e não altera a lógica.
+   ========================================================== */
+:root{
+  --radius-sm:8px; --radius-md:12px; --radius-lg:18px;
+  --focus-ring:0 0 0 3px var(--accent-soft-strong);
+  --st-planejamento:#a371f7; --st-execucao:#58a6ff; --st-review:#e3b341;
+}
+*{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+pre,code,.path{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;}
+body{zoom:1;line-height:1.45;background:
+  radial-gradient(circle at 80% -10%,color-mix(in srgb,var(--accent) 9%,transparent),transparent 32rem),var(--bg);}
+header{height:64px;background:color-mix(in srgb,var(--bg2) 88%,transparent);backdrop-filter:blur(14px);padding:0 22px;box-shadow:0 8px 30px #0003;}
+header h2{font-size:18px;letter-spacing:-.3px;}
+button{border-radius:9px;padding:9px 13px;font-weight:600;letter-spacing:-.1px;}
+button:hover{transform:translateY(-1px);}
+button.primary{box-shadow:0 5px 18px color-mix(in srgb,var(--accent) 14%,transparent);}
+.container{max-width:1600px;padding:26px 32px 48px;}
+.card{border-radius:var(--radius-lg);box-shadow:0 8px 28px #0002;}
+.eyebrow{font-family:inherit;font-weight:700;letter-spacing:1.05px;}
+
+.home-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;padding:22px 0 14px;max-width:980px;}
+.home-intro h1{font-size:clamp(28px,4vw,46px);line-height:1.08;letter-spacing:-1.5px;color:var(--txt);margin:8px 0 10px;}
+.home-intro p{font-size:15px;max-width:760px;margin:0;}
+.home-actions{padding:12px 0 22px;border-bottom:1px solid var(--line-soft);margin-bottom:24px;}
+#myProjectsTitle{font-size:20px;color:var(--txt);margin:4px 0 16px;}
+.project-card{padding:20px;box-shadow:0 10px 30px #0003;}
+.project-card::before{height:4px;transform:scaleX(1);opacity:.8;}
+.project-card-head h2{font-size:19px;letter-spacing:-.4px;}
+.project-card-progress-head{display:flex;justify-content:space-between;align-items:center;margin:14px 0 7px;font-size:12px;color:var(--dim);}
+.project-card-progress-head b{color:var(--txt);font-size:15px;}
+.project-card-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0;}
+.project-card-kpis span{display:flex;flex-direction:column;gap:1px;background:var(--bg3);border:1px solid var(--line-soft);border-radius:10px;padding:8px 9px;color:var(--dim);font-size:10px;}
+.project-card-kpis b{font-size:17px;color:var(--txt);}
+.project-statuses{margin-top:4px;opacity:.86;}
+
+.project-hero-panel{background:linear-gradient(135deg,var(--bg2),color-mix(in srgb,var(--bg2) 82%,var(--accent) 5%));border:1px solid var(--line);border-radius:20px;padding:22px 24px;margin-bottom:12px;box-shadow:0 14px 38px #0003;position:relative;overflow:hidden;}
+.project-hero-panel::after{content:"";position:absolute;right:-100px;top:-160px;width:360px;height:360px;border-radius:50%;background:color-mix(in srgb,var(--project-accent,var(--accent)) 10%,transparent);filter:blur(8px);pointer-events:none;}
+.project-hero-head{position:relative;z-index:1;}
+.project-main-title{font-size:clamp(26px,3vw,38px);letter-spacing:-1.2px;line-height:1.1;}
+.project-progress-layout{display:grid;grid-template-columns:minmax(280px,1.25fr) minmax(340px,.9fr);gap:18px;align-items:end;margin-top:18px;position:relative;z-index:1;}
+.project-progress-main{min-width:0;}
+.project-progress-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;color:var(--dim);font-size:12px;font-weight:700;}
+.project-progress-head strong{font-size:20px;color:var(--st-finalizado);}
+.project-progress-track{height:11px;background:color-mix(in srgb,var(--bg3) 86%,transparent);}
+.project-quick-stats{display:grid;grid-template-columns:repeat(4,minmax(84px,1fr));gap:8px;}
+.quick-stat{background:color-mix(in srgb,var(--bg3) 88%,transparent);border:1px solid var(--line-soft);border-radius:12px;padding:9px 10px;display:flex;flex-direction:column;min-width:0;}
+.quick-stat b{font-size:20px;color:var(--txt);line-height:1.1;}
+.quick-stat span{color:var(--dim);font-size:10px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.quick-stat.running{border-color:color-mix(in srgb,var(--accent) 45%,var(--line));}.quick-stat.running b{color:var(--accent);}
+.quick-stat.pending{border-color:color-mix(in srgb,var(--st-planejamento) 40%,var(--line));}.quick-stat.pending b{color:var(--st-planejamento);}
+.quick-stat.loose{border-color:color-mix(in srgb,var(--k-task) 40%,var(--line));}.quick-stat.loose b{color:var(--k-task);}
+.timeline-strip{margin:10px 0 16px;padding:8px 12px;box-shadow:none;opacity:.86;font-size:12px;}
+.crumbs{margin-top:12px;}
+.level-bar{padding:4px 0 2px;gap:8px;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin;}
+.level-btn{white-space:nowrap;border-radius:11px;padding:9px 12px;}
+#viewToolbar{margin-bottom:8px;}
+.toolbar{border-radius:12px;box-shadow:0 5px 18px #0001;}
+
+/* Filtros por aba/nível */
+.filter-panel{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:8px 0 16px;box-shadow:0 6px 22px #0002;}
+.filter-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px;}
+.filter-panel-head>div{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.filter-panel-head strong{color:var(--txt);font-size:14px;}
+.filter-result{font-size:11px;color:var(--dim);background:var(--bg3);border:1px solid var(--line-soft);padding:3px 8px;border-radius:999px;}
+.help-tip{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:1px solid var(--line);border-radius:50%;color:var(--dim);font-size:11px;cursor:help;}
+.filter-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.filter-trigger,.unassigned-btn{white-space:nowrap;}
+.filter-trigger.active,.unassigned-btn.active{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);}
+.unassigned-btn{border-color:color-mix(in srgb,var(--k-task) 45%,var(--line));}
+.unassigned-btn.active{border-color:var(--k-task);color:var(--k-task);background:color-mix(in srgb,var(--k-task) 12%,transparent);}
+.filter-count{display:inline-flex;align-items:center;justify-content:center;min-width:24px;padding:1px 6px;border-radius:999px;background:var(--chip-bg);font-size:10px;color:var(--txt);}
+.filter-select{width:auto;min-width:160px;margin:0;padding:9px 34px 9px 10px;background-color:var(--bg3);}
+.filter-search-wrap{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding-left:9px;min-width:210px;flex:1;max-width:340px;}
+.filter-search-wrap:focus-within{border-color:var(--accent);box-shadow:var(--focus-ring);}
+.filter-search-wrap span{color:var(--dim);}
+.filter-search-wrap input{border:none;background:transparent;box-shadow:none!important;margin:0;padding:9px 8px 9px 0;}
+.filter-reset{margin-left:auto;}
+.filter-menu{width:min(440px,calc(100vw - 44px));max-width:440px;padding:8px;}
+.filter-menu-search{margin:4px 4px 7px;width:calc(100% - 8px);}
+.filter-menu-actions{display:flex;gap:6px;padding:0 4px 7px;border-bottom:1px solid var(--line-soft);}
+.filter-menu-actions button{flex:1;text-align:center;}
+.filter-options{max-height:340px;overflow:auto;padding:4px;}
+.filter-option{display:flex;align-items:flex-start;gap:9px;padding:8px;border-radius:8px;cursor:pointer;}
+.filter-option:hover{background:var(--surface-hover);}
+.filter-option input{margin:3px 0 0;transform:scale(1.05);}
+.filter-option-text{display:flex;flex-direction:column;min-width:0;flex:1;}
+.filter-option-text b{font-size:12px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.filter-option-text small{font-size:10px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* Hierarquia e ações menos poluídas */
+.tree{gap:7px;}
+.tree-node{border-radius:12px;padding:9px 11px;box-shadow:0 3px 10px #0001;}
+.tree-node:hover{border-color:color-mix(in srgb,var(--project-accent,var(--accent)) 42%,var(--line));}
+.tree-children{margin-left:16px;padding-left:12px;border-left:1px solid color-mix(in srgb,var(--line) 72%,transparent);}
+.node-actions{opacity:.58;transition:opacity .18s;}
+.tree-node:hover>.node-row>.node-actions,.node-actions:focus-within{opacity:1;}
+.item-actions{position:relative;}
+.kebab-btn{font-size:18px;line-height:.9;min-width:32px;}
+.item-actions-menu{min-width:190px;}
+.menu .menu-danger{color:var(--danger);}
+.menu .menu-danger:hover{background:var(--danger-soft);color:var(--danger);}
+.task{border-radius:11px;padding:11px 12px;}
+.item-card,.kanban-col,.sprint-stage{border-radius:14px;}
+.kanban-card,.sprint-item{border-radius:10px;}
+
+/* Dashboard: números principais em destaque, análises avançadas mais discretas */
+.scope-head.dash{padding:18px;}
+.dash-kpis{grid-template-columns:repeat(5,minmax(110px,1fr));margin:14px 0 10px;}
+.dash-kpi{background:color-mix(in srgb,var(--bg3) 82%,transparent);border-left-width:2px;padding:9px 10px;}
+.dash-kpi b{font-size:20px;}.dash-kpi span{letter-spacing:.35px;text-transform:none;font-size:10px;}
+.dash-grid{gap:9px;}
+.dash-tile{padding:12px;background:color-mix(in srgb,var(--bg3) 78%,transparent);box-shadow:none;}
+.dash-tile h4{text-transform:none;letter-spacing:.4px;}
+
+/* Modal de edição e exclusão */
+.modal{backdrop-filter:blur(8px);}
+.modal-box{border-radius:18px;box-shadow:0 26px 80px #0009;}
+.detail-header-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end;}
+.delete-modal{z-index:150;background:#000d;}
+.delete-box{width:760px;}
+.danger-text{color:var(--danger);}
+.delete-title{color:var(--txt);font-size:24px;letter-spacing:-.6px;}
+.delete-warning{display:flex;flex-direction:column;gap:3px;background:var(--danger-soft);border:1px solid color-mix(in srgb,var(--danger) 45%,var(--line));border-radius:12px;padding:12px 14px;color:var(--txt);margin:14px 0;}
+.delete-warning b{color:var(--danger);}
+.delete-warning span{font-size:12px;color:var(--dim);}
+.delete-summary{font-size:11px;color:var(--dim);margin:0 0 10px;}
+.delete-preview{border:1px solid var(--line);border-radius:12px;background:var(--bg3);overflow:hidden;}
+.delete-preview-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line);font-size:12px;}
+.delete-preview-head span{background:var(--danger-soft);color:var(--danger);border-radius:999px;padding:2px 8px;}
+.delete-tree{max-height:360px;overflow:auto;margin:0;padding:12px 18px 14px 34px;}
+.delete-tree ul{padding-left:26px;margin:6px 0;}
+.delete-tree li{margin:5px 0;}
+.delete-tree-row{display:flex;align-items:center;gap:8px;min-width:0;}
+.delete-tree-row strong{font-size:12px;color:var(--txt);overflow-wrap:anywhere;}
+.delete-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;}
+
+@media (max-width:980px){
+  .project-progress-layout{grid-template-columns:1fr;}
+  .project-quick-stats{grid-template-columns:repeat(2,1fr);}
+  .dash-kpis{grid-template-columns:repeat(2,1fr);}
+}
+@media (max-width:720px){
+  .container{padding:18px 14px 38px;}
+  .home-intro{padding-top:12px;}.home-intro h1{font-size:32px;}
+  .project-hero-panel{padding:18px 15px;border-radius:16px;}
+  #projectActions{justify-content:flex-start;}
+  .project-quick-stats{grid-template-columns:repeat(2,1fr);}
+  .filter-controls{align-items:stretch;}
+  .filter-select,.filter-search-wrap,.filter-controls>.menu-wrap,.filter-trigger,.unassigned-btn{width:100%;max-width:none;}
+  .filter-reset{margin-left:0;}
+  .node-actions{opacity:1;}
+  .project-card-kpis{grid-template-columns:1fr;}
+}
+
 </style>
 </head>
 <body>
@@ -531,7 +689,14 @@ footer a:hover{color:var(--accent);}
 
   <!-- ================= HOME ================= -->
   <section id="home">
-    <div class="row">
+    <div class="home-intro">
+      <div>
+        <span class="eyebrow" id="homeHeroEyebrow">Workspace de projetos</span>
+        <h1 id="homeHeroTitle">Planejamento claro, do épico à entrega.</h1>
+        <p class="dim" id="homeHeroText">Organize a hierarquia, acompanhe o progresso e encontre rapidamente o que precisa de atenção.</p>
+      </div>
+    </div>
+    <div class="row home-actions">
       <button id="newProjectBtn" class="primary" onclick="createProject()">+ Novo Projeto</button>
 
       <div class="menu-wrap" id="wrap-impHome">
@@ -576,18 +741,27 @@ footer a:hover{color:var(--accent);}
 
   <!-- ================= PROJETO ================= -->
   <section id="project" class="hidden">
-    <div class="spread">
-      <div>
-        <span class="eyebrow" id="projectEyebrow">Projeto</span>
-        <h1 id="projectName" class="project-main-title" style="margin-top:2px"></h1>
+    <div class="project-hero-panel">
+      <div class="spread project-hero-head">
+        <div>
+          <span class="eyebrow" id="projectEyebrow">Projeto</span>
+          <h1 id="projectName" class="project-main-title" style="margin-top:2px"></h1>
+        </div>
+        <div class="row" id="projectActions"></div>
       </div>
-      <div class="row" id="projectActions"></div>
+      <div class="project-progress-layout">
+        <div class="project-progress-main">
+          <div class="project-progress-head">
+            <span id="projectProgressLabel">Progresso do projeto</span>
+            <strong id="globalPercent">0%</strong>
+          </div>
+          <div class="progress project-progress-track"><div id="globalProgress" class="progress-bar"></div></div>
+        </div>
+        <div id="projectQuickStats" class="project-quick-stats"></div>
+      </div>
     </div>
 
     <div id="timelineStrip" class="timeline-strip"></div>
-
-    <div class="progress"><div id="globalProgress" class="progress-bar"></div></div>
-    <h3 id="globalPercent"></h3>
 
     <div id="crumbs" class="crumbs"></div>
 
@@ -599,6 +773,7 @@ footer a:hover{color:var(--accent);}
       <div class="sep"></div>
       <div class="view-switch" id="viewSwitch"></div>
     </div>
+    <div id="contextFilters"></div>
 
     <div id="workArea"></div>
   </section>
@@ -982,13 +1157,17 @@ try{ projects = JSON.parse(localStorage.getItem("devProjects")) || []; }catch(_)
 let currentProject = null;
 let currentFocus = null;              /* id do item em foco (escopo da navegação) */
 const collapsed = new Set();          /* nós recolhidos na árvore (apenas nesta sessão) */
+/* Filtros de visualização são estado de interface e nunca alteram/exportam os itens do projeto. */
+const projectViewFilters = new WeakMap();
+let reopenItemsFilterMenu = false;
+let pendingDeleteId = null;
 
 const STATUSES = [
   { key:"none",         label:tr("status.backlog"),    hex:"#8b949e" },
   { key:"iniciacao",    label:tr("status.initiation"), hex:"#58a6ff" },
-  { key:"planejamento", label:tr("status.planning"),   hex:"#e3b341" },
-  { key:"execucao",     label:tr("status.execution"),  hex:"#a371f7" },
-  { key:"review",       label:tr("status.review"),     hex:"#9e6a03" },
+  { key:"planejamento", label:tr("status.planning"),   hex:"#a371f7" },
+  { key:"execucao",     label:tr("status.execution"),  hex:"#58a6ff" },
+  { key:"review",       label:tr("status.review"),     hex:"#e3b341" },
   { key:"finalizado",   label:tr("status.finished"),   hex:"#39d353" }
 ];
 const DONE_STATUS = "finalizado";
@@ -1257,8 +1436,8 @@ document.addEventListener("click", closeMenus);
 document.addEventListener("keydown", e => {
   if(e.key === "Escape"){
     closeMenus();
-    ["modal","editModal","detailModal","helpModal","newModal"].forEach(id => document.getElementById(id).classList.add("hidden"));
-    detailId = null; editIndex = null;
+    ["modal","editModal","detailModal","helpModal","newModal","deleteModal"].forEach(id => { const el=document.getElementById(id); if(el) el.classList.add("hidden"); });
+    detailId = null; editIndex = null; pendingDeleteId = null;
   }
 });
 
@@ -1272,6 +1451,9 @@ function applyStaticLanguage(){
   setText("welcomeTitle", tr("welcome.title"));
   setText("welcomeText", tr("welcome.text"));
   setText("welcomeBtn", tr("welcome.btn"));
+  setText("homeHeroEyebrow", APP_LANG === "pt" ? "Workspace de projetos" : "Project workspace");
+  setText("homeHeroTitle", APP_LANG === "pt" ? "Planejamento claro, do épico à entrega." : "Clear planning, from epic to delivery.");
+  setText("homeHeroText", APP_LANG === "pt" ? "Organize a hierarquia, acompanhe o progresso e encontre rapidamente o que precisa de atenção." : "Organize the hierarchy, track progress, and quickly find what needs attention.");
   setText("newProjectBtn", tr("home.newProject"));
   setHTML("importHomeBtn", tr("home.import") + ' <span class="caret">▾</span>');
   setText("importHomeLabel", tr("home.importLabel"));
@@ -1537,6 +1719,9 @@ function renderProjects(){
   projects.forEach((p, index) => {
     const percent = calculateProject(p);
     const kc = countKinds(p.items);
+    const projectTasks = p.items.filter(t => t.kind === "task");
+    const taskRunning = projectTasks.filter(t => !t.done && (t.status||"none") === "execucao").length;
+    const taskPending = projectTasks.filter(t => !t.done).length;
 
     const chips = STATUSES.slice(1).map(s => {
       const n = countStatus(p, s.key);
@@ -1562,9 +1747,14 @@ function renderProjects(){
       <span class="eyebrow project-card-meta">${tr("project.meta",{epics:kc.epic,items:p.items.length})}</span>
       <div class="kind-counts">${kindChips}</div>
 
+      <div class="project-card-progress-head"><span>${APP_LANG === "pt" ? "Progresso do projeto" : "Project progress"}</span><b>${percent}%</b></div>
       <div class="progress"><div class="progress-bar" style="width:${percent}%"></div></div>
-      <p>${tr("project.completed",{percent})}</p>
-      <div class="status-row">${chips}</div>
+      <div class="project-card-kpis">
+        <span><b>${projectTasks.length}</b>${APP_LANG === "pt" ? "Tarefas" : "Tasks"}</span>
+        <span><b>${taskRunning}</b>${APP_LANG === "pt" ? "Em andamento" : "In progress"}</span>
+        <span><b>${taskPending}</b>${APP_LANG === "pt" ? "Pendentes" : "Pending"}</span>
+      </div>
+      <div class="status-row project-statuses">${chips}</div>
 
       <div class="row" style="margin-top:14px">
         <button class="primary" onclick="openProject(${index})">${tr("common.open")}</button>
@@ -1776,6 +1966,7 @@ function openProject(index){
     `<button class="back-btn" onclick="home()"><span class="arrow">←</span> ${APP_LANG==="pt"?"Voltar":"Back"}</button>`;
 
   document.getElementById("projectActions").innerHTML = `
+    <button class="primary" onclick="openNewItem('task',null)" title="${APP_LANG === "pt" ? "Criar uma nova tarefa e escolher seu pai" : "Create a new task and choose its parent"}">+ ${APP_LANG === "pt" ? "Nova tarefa" : "New task"}</button>
     <div class="menu-wrap" id="wrap-impProj">
       <button class="primary" onclick="toggleMenu(event,'impProj')">${tr("project.importEpics")} <span class="caret">▾</span></button>
       <div class="menu right hidden" id="impProj">
@@ -1838,11 +2029,155 @@ function toggleDates(){
 
 /* itens dentro do escopo atual (todo o projeto ou o ramo em foco) */
 function scopeItems(){ return currentFocus ? orderedItems(currentFocus) : orderedItems(null); }
-/* itens que as visualizações Lista/Grade/Kanban/Sprint/Gantt mostram */
-function visibleItems(){
+
+/* ---------- filtros contextuais de visualização ----------
+   São intencionalmente separados do modelo: filtrar nunca remove, move, renomeia
+   ou reatribui itens. Cada aba + foco mantém seu próprio estado durante a sessão. */
+function filterState(){
+  const p = proj();
+  if(!p) return { selectedIds:null, status:"", prio:"", query:"", unassignedOnly:false };
+  let states = projectViewFilters.get(p);
+  if(!states){ states = {}; projectViewFilters.set(p, states); }
+  const key = (p.level || "tree") + "|" + (currentFocus || "root");
+  if(!states[key]) states[key] = { selectedIds:null, status:"", prio:"", query:"", unassignedOnly:false };
+  return states[key];
+}
+function rawVisibleItems(){
   const p = proj(); if(!p) return [];
+  const f = filterState();
   if(p.level === "tree") return scopeItems();
+  /* O modo "Tarefas sem pai" é global ao projeto para que elas continuem acessíveis
+     mesmo quando o usuário estiver focado dentro de um ramo da hierarquia. */
+  if(p.level === "task" && f.unassignedOnly) return itemsOf(p).filter(t => t.kind === "task" && !t.parentId);
   return scopeItems().filter(t => t.kind === p.level);
+}
+function passesViewFilters(t, f){
+  if(f.selectedIds instanceof Set && !f.selectedIds.has(t.id)) return false;
+  if(f.status && (t.status || "none") !== f.status) return false;
+  if(f.prio && (t.prio || "normal") !== f.prio) return false;
+  const q = String(f.query || "").trim().toLowerCase();
+  if(q){
+    const hay = (t.text + " " + pathOf(t) + " " + kindLabel(t)).toLowerCase();
+    if(!hay.includes(q)) return false;
+  }
+  return true;
+}
+/* itens que Lista/Grade/Kanban/Sprint/Gantt mostram após os filtros visuais */
+function visibleItems(){
+  const f = filterState();
+  return rawVisibleItems().filter(t => passesViewFilters(t, f));
+}
+function treeBranchVisible(t){
+  const f = filterState();
+  if(passesViewFilters(t, f)) return true;
+  return childrenOf(t.id).some(treeBranchVisible);
+}
+function contextFilterActive(){
+  const f = filterState();
+  return (f.selectedIds instanceof Set) || !!f.status || !!f.prio || !!String(f.query||"").trim() || !!f.unassignedOnly;
+}
+function setContextFilter(field, value){
+  const f = filterState();
+  if(!["status","prio","query"].includes(field)) return;
+  f[field] = value || "";
+  renderWorkspace();
+}
+function toggleUnassignedTasks(){
+  const f = filterState();
+  f.unassignedOnly = !f.unassignedOnly;
+  f.selectedIds = null;
+  renderWorkspace();
+}
+function resetContextFilters(){
+  const f = filterState();
+  f.selectedIds = null; f.status = ""; f.prio = ""; f.query = ""; f.unassignedOnly = false;
+  renderWorkspace();
+}
+function selectAllContextItems(){
+  filterState().selectedIds = null;
+  reopenItemsFilterMenu = true;
+  renderWorkspace();
+}
+function clearAllContextItems(){
+  filterState().selectedIds = new Set();
+  reopenItemsFilterMenu = true;
+  renderWorkspace();
+}
+function toggleContextItem(id, checked){
+  const f = filterState();
+  const candidates = rawVisibleItems();
+  if(!(f.selectedIds instanceof Set)) f.selectedIds = new Set(candidates.map(t => t.id));
+  if(checked) f.selectedIds.add(id); else f.selectedIds.delete(id);
+  reopenItemsFilterMenu = true;
+  renderWorkspace();
+}
+function filterItemOptions(input){
+  const q = String(input.value || "").trim().toLowerCase();
+  const menu = input.closest(".filter-menu"); if(!menu) return;
+  menu.querySelectorAll(".filter-option").forEach(el => {
+    el.classList.toggle("hidden", q && !String(el.dataset.search || "").includes(q));
+  });
+}
+function renderContextFilters(){
+  const host = document.getElementById("contextFilters"); if(!host || !proj()) return;
+  const p = proj(), f = filterState(), candidates = rawVisibleItems();
+  const selectedN = f.selectedIds instanceof Set ? candidates.filter(t => f.selectedIds.has(t.id)).length : candidates.length;
+  const shownN = p.level === "tree" ? candidates.filter(t => passesViewFilters(t,f)).length : visibleItems().length;
+  const levelName = p.level === "tree" ? (APP_LANG === "pt" ? "Hierarquia" : "Hierarchy") : kindOf(p.level).plural;
+  const looseTasks = itemsOf(p).filter(t => t.kind === "task" && !t.parentId).length;
+  const itemMenuId = "filterItemsMenu";
+  const options = candidates.map(t => {
+    const checked = !(f.selectedIds instanceof Set) || f.selectedIds.has(t.id);
+    const path = pathOf(t);
+    const meta = path ? path + " › " + t.text : t.text;
+    return `<label class="filter-option" data-search="${esc(meta.toLowerCase())}" onclick="event.stopPropagation()">
+      <input type="checkbox" ${checked ? "checked" : ""} onchange="toggleContextItem('${t.id}',this.checked)">
+      <span class="k-${t.kind}-text">${kindOf(t.kind).icon}</span>
+      <span class="filter-option-text"><b>${esc(t.text)}</b>${path ? `<small>${esc(path)}</small>` : ""}</span>
+    </label>`;
+  }).join("");
+
+  host.innerHTML = `<div class="filter-panel">
+    <div class="filter-panel-head">
+      <div>
+        <span class="eyebrow">${APP_LANG === "pt" ? "Filtro contextual" : "Context filter"}</span>
+        <strong>${esc(levelName)}</strong>
+        <span class="filter-result">${APP_LANG === "pt" ? "Mostrando" : "Showing"} ${shownN} ${APP_LANG === "pt" ? "de" : "of"} ${candidates.length}</span>
+      </div>
+      <span class="help-tip" title="${APP_LANG === "pt" ? "Os filtros afetam apenas a visualização. Nenhum item é removido ou alterado." : "Filters affect only the view. No item is removed or changed."}">?</span>
+    </div>
+    <div class="filter-controls">
+      <div class="menu-wrap" id="wrap-${itemMenuId}">
+        <button class="filter-trigger ${f.selectedIds instanceof Set ? "active" : ""}" onclick="toggleMenu(event,'${itemMenuId}')">☑ ${APP_LANG === "pt" ? "Itens" : "Items"} <span class="filter-count">${selectedN}/${candidates.length}</span> <span class="caret">▾</span></button>
+        <div class="menu right filter-menu hidden" id="${itemMenuId}" onclick="event.stopPropagation()">
+          <div class="menu-label">${APP_LANG === "pt" ? "ESCOLHA EXATAMENTE O QUE EXIBIR" : "CHOOSE EXACTLY WHAT TO SHOW"}</div>
+          <input class="filter-menu-search" placeholder="${APP_LANG === "pt" ? "Buscar item..." : "Search item..."}" oninput="filterItemOptions(this)" onclick="event.stopPropagation()">
+          <div class="filter-menu-actions">
+            <button class="mini" onclick="event.stopPropagation();selectAllContextItems()">${APP_LANG === "pt" ? "Selecionar todos" : "Select all"}</button>
+            <button class="mini" onclick="event.stopPropagation();clearAllContextItems()">${APP_LANG === "pt" ? "Desmarcar todos" : "Clear all"}</button>
+          </div>
+          <div class="filter-options">${options || `<p class="dim" style="padding:8px 10px;margin:0">${APP_LANG === "pt" ? "Nenhum item neste contexto." : "No items in this context."}</p>`}</div>
+        </div>
+      </div>
+      <select class="filter-select" aria-label="${APP_LANG === "pt" ? "Filtrar por fase" : "Filter by phase"}" onchange="setContextFilter('status',this.value)">
+        <option value="">${APP_LANG === "pt" ? "Todas as fases" : "All phases"}</option>
+        ${STATUSES.map(st => `<option value="${st.key}" ${f.status===st.key?"selected":""}>${esc(st.label)}</option>`).join("")}
+      </select>
+      <select class="filter-select" aria-label="${APP_LANG === "pt" ? "Filtrar por prioridade" : "Filter by priority"}" onchange="setContextFilter('prio',this.value)">
+        <option value="">${APP_LANG === "pt" ? "Todas as prioridades" : "All priorities"}</option>
+        ${PRIOS.map(pr => `<option value="${pr.key}" ${f.prio===pr.key?"selected":""}>${esc(pr.label)}</option>`).join("")}
+      </select>
+      <div class="filter-search-wrap"><span>⌕</span><input value="${esc(f.query)}" placeholder="${APP_LANG === "pt" ? "Buscar neste nível" : "Search this level"}" onchange="setContextFilter('query',this.value)" onkeydown="if(event.key==='Enter')this.blur()"></div>
+      ${p.level === "task" ? `<button class="unassigned-btn ${f.unassignedOnly ? "active" : ""}" onclick="toggleUnassignedTasks()">${f.unassignedOnly ? "✓ " : ""}${APP_LANG === "pt" ? "Tarefas sem pai" : "Unassigned tasks"} <span class="filter-count">${looseTasks}</span></button>` : ""}
+      ${contextFilterActive() ? `<button class="ghost filter-reset" onclick="resetContextFilters()">↺ ${APP_LANG === "pt" ? "Limpar filtros" : "Reset filters"}</button>` : ""}
+    </div>
+  </div>`;
+
+  if(reopenItemsFilterMenu){
+    const menu = document.getElementById(itemMenuId), wrap = document.getElementById("wrap-"+itemMenuId);
+    if(menu && wrap){ menu.classList.remove("hidden"); wrap.classList.add("open"); }
+    reopenItemsFilterMenu = false;
+  }
 }
 
 function renderCrumbs(){
@@ -1993,7 +2328,7 @@ function renderScopeHead(area){
     </div>
 
     <div class="dash-kpis">
-      ${kpi(tr("dash.total"),      total, "var(--accent)")}
+      ${kpi(APP_LANG === "pt" ? "Itens deste contexto" : "Items in this context", total, "var(--accent)")}
       ${kpi(tr("dash.inProgress"), execN, "var(--st-execucao)")}
       ${kpi(tr("dash.finished"),   finN,  "var(--st-finalizado)")}
       ${kpi(tr("dash.pending"),    pendN, "var(--st-planejamento)")}
@@ -2010,7 +2345,7 @@ function renderScopeHead(area){
           <b><span data-count="${pct}">0</span>%</b>
         </div>
         <div class="dash-hero-txt">
-          <h4>${tr("dash.progress")}</h4>
+          <h4>${APP_LANG === "pt" ? "Progresso do projeto" : "Project progress"}</h4>
           <p>${tr("scope.leaves",{done:doneLeaves,total:leaves.length})}</p>
           <div class="progress slim"><div class="progress-bar" data-w="${leaves.length ? Math.round(doneLeaves/leaves.length*100) : 0}" style="width:0"></div></div>
           <p class="dim" style="margin-top:8px;font-size:12px">${tr("dash.remaining",{n:Math.max(0, leaves.length - doneLeaves)})}</p>
@@ -2082,6 +2417,7 @@ function renderWorkspace(){
   renderCrumbs();
   renderLevelBar();
   renderViewSwitch();
+  renderContextFilters();
 
   const area = document.getElementById("workArea");
   area.innerHTML = "";
@@ -2096,7 +2432,10 @@ function renderWorkspace(){
   } else {
     const list = visibleItems();
     if(!list.length){
-      view.innerHTML = `<div class="empty"><h3>${tr("scope.emptyTitle")}</h3><p>${scopeItems().length ? tr("scope.emptyLevel") : tr("scope.emptyText")}</p></div>`;
+      const filteredOut = contextFilterActive() && rawVisibleItems().length;
+      view.innerHTML = filteredOut
+        ? `<div class="empty"><h3>${APP_LANG === "pt" ? "Nenhum item corresponde aos filtros" : "No items match the filters"}</h3><p>${APP_LANG === "pt" ? "Ajuste a seleção, fase ou prioridade. Os itens continuam no projeto." : "Adjust the selection, phase, or priority. Your items are still in the project."}</p><button onclick="resetContextFilters()">↺ ${APP_LANG === "pt" ? "Limpar filtros" : "Reset filters"}</button></div>`
+        : `<div class="empty"><h3>${tr("scope.emptyTitle")}</h3><p>${scopeItems().length ? tr("scope.emptyLevel") : tr("scope.emptyText")}</p></div>`;
     } else {
       const mode = p.view || "lista";
       if(mode === "lista")        renderListView(view);
@@ -2110,9 +2449,22 @@ function renderWorkspace(){
 }
 
 function updateProgress(){
-  const percent = calculateProject(proj());
+  const p = proj(); if(!p) return;
+  const percent = calculateProject(p);
   document.getElementById("globalProgress").style.width = percent + "%";
-  document.getElementById("globalPercent").innerText = tr("project.completed",{percent});
+  document.getElementById("globalPercent").innerText = percent + "%";
+  const progressLabel = document.getElementById("projectProgressLabel");
+  if(progressLabel) progressLabel.innerText = APP_LANG === "pt" ? "Progresso do projeto" : "Project progress";
+  const tasks = itemsOf(p).filter(t => t.kind === "task");
+  const running = tasks.filter(t => !t.done && (t.status||"none") === "execucao").length;
+  const pending = tasks.filter(t => !t.done).length;
+  const loose = tasks.filter(t => !t.parentId).length;
+  const quick = document.getElementById("projectQuickStats");
+  if(quick) quick.innerHTML = `
+    <div class="quick-stat"><b>${tasks.length}</b><span>${APP_LANG === "pt" ? "Tarefas do projeto" : "Project tasks"}</span></div>
+    <div class="quick-stat running"><b>${running}</b><span>${APP_LANG === "pt" ? "Em andamento" : "In progress"}</span></div>
+    <div class="quick-stat pending"><b>${pending}</b><span>${APP_LANG === "pt" ? "Pendentes" : "Pending"}</span></div>
+    ${loose ? `<div class="quick-stat loose" title="${APP_LANG === "pt" ? "Tarefas sem vínculo com um item pai" : "Tasks without a parent item"}"><b>${loose}</b><span>${APP_LANG === "pt" ? "Sem pai" : "Unassigned"}</span></div>` : ""}`;
 }
 
 function refresh(){
@@ -2215,9 +2567,16 @@ function prioPill(t){
   return `<span class="pill" style="color:${p.hex}"><i class="prio-dot"></i>${p.label}</span>`;
 }
 function actionButtons(id){
-  return `<button class="mini" onclick="openDetail('${id}')" title="${tr("item.details")}">⋯</button>
-          <button class="mini" onclick="renameItem('${id}')" title="${tr("item.rename")}">✏</button>
-          <button class="mini danger" onclick="deleteItem('${id}')" title="${tr("item.delete")}">X</button>`;
+  const menuId = "itemActions-" + id;
+  return `<div class="menu-wrap item-actions" id="wrap-${menuId}">
+    <button class="mini icon ghost kebab-btn" onclick="toggleMenu(event,'${menuId}')" title="${APP_LANG === "pt" ? "Mais ações" : "More actions"}" aria-label="${APP_LANG === "pt" ? "Mais ações" : "More actions"}">⋯</button>
+    <div class="menu right hidden item-actions-menu" id="${menuId}">
+      <button onclick="openDetail('${id}')">✏ ${APP_LANG === "pt" ? "Editar / detalhes" : "Edit / details"}</button>
+      <button onclick="renameItem('${id}')">⌁ ${tr("item.rename")}</button>
+      <hr>
+      <button class="menu-danger" onclick="deleteItem('${id}')">🗑 ${tr("item.delete")}</button>
+    </div>
+  </div>`;
 }
 /* caminho (pais) + link para os filhos — mostra a posição do item na hierarquia */
 function hierarchyMeta(t){
@@ -2235,18 +2594,22 @@ function textStyle(t){ return `color:${itemColor(t)};text-decoration:${t.done?"l
    ========================================================== */
 
 function renderTreeView(view){
-  const roots = childrenOf(currentFocus);
+  const allRoots = childrenOf(currentFocus);
+  const roots = allRoots.filter(treeBranchVisible);
   const box = document.createElement("div");
   box.className = "tree";
   view.appendChild(box);
   if(!roots.length){
-    box.innerHTML = `<div class="empty"><h3>${tr("scope.emptyTitle")}</h3><p>${tr("scope.emptyText")}</p></div>`;
+    box.innerHTML = contextFilterActive() && allRoots.length
+      ? `<div class="empty"><h3>${APP_LANG === "pt" ? "Nenhum item corresponde aos filtros" : "No items match the filters"}</h3><p>${APP_LANG === "pt" ? "A hierarquia foi apenas filtrada; nada foi removido." : "The hierarchy is only filtered; nothing was removed."}</p><button onclick="resetContextFilters()">↺ ${APP_LANG === "pt" ? "Limpar filtros" : "Reset filters"}</button></div>`
+      : `<div class="empty"><h3>${tr("scope.emptyTitle")}</h3><p>${tr("scope.emptyText")}</p></div>`;
     return;
   }
   roots.forEach((t, i) => box.appendChild(treeNode(t, i)));
 }
 function treeNode(t, idx){
-  const kids = childrenOf(t.id);
+  const allKids = childrenOf(t.id);
+  const kids = allKids.filter(treeBranchVisible);
   const st = statusOf(t.status);
   const k = kindOf(t.kind);
   const open = !collapsed.has(t.id);
@@ -2632,17 +2995,70 @@ function renameItem(id){
   const v = prompt(tr("prompt.renameItem"), t.text);
   if(v && v.trim()){ t.text = v.trim(); refresh(); }
 }
+function deletionTreeHTML(id){
+  const t = byId(id); if(!t) return "";
+  const kids = childrenOf(id);
+  return `<li>
+    <div class="delete-tree-row"><span class="kind-tag k-${t.kind}">${kindOf(t.kind).icon} ${esc(kindLabel(t))}</span><strong>${esc(t.text)}</strong></div>
+    ${kids.length ? `<ul>${kids.map(c => deletionTreeHTML(c.id)).join("")}</ul>` : ""}
+  </li>`;
+}
+function ensureDeleteModal(){
+  let modal = document.getElementById("deleteModal");
+  if(modal) return modal;
+  modal = document.createElement("div");
+  modal.id = "deleteModal";
+  modal.className = "modal hidden delete-modal";
+  modal.onclick = e => { if(e.target === modal) closeDeleteModal(); };
+  modal.innerHTML = `<div class="modal-box delete-box"><button class="modal-close" onclick="closeDeleteModal()" title="${APP_LANG === "pt" ? "Fechar" : "Close"}">✕</button><div id="deleteBody"></div></div>`;
+  document.body.appendChild(modal);
+  return modal;
+}
 function deleteItem(id){
   const t = byId(id); if(!t) return;
+  pendingDeleteId = id;
+  closeMenus();
+  const modal = ensureDeleteModal();
   const desc = descendantsOf(id);
-  const extra = desc.length ? tr("confirm.deleteChildren",{n:desc.length}) : "";
-  if(!confirm(tr("confirm.deleteItem",{name:t.text, extra}))) return;
+  const all = [t].concat(desc);
+  const counts = countKinds(all);
+  const breakdown = KINDS.filter(k => counts[k.key]).map(k => `${kindOf(k.key).icon} ${counts[k.key]} ${counts[k.key] === 1 ? k.label : k.plural}`).join(" · ");
+  document.getElementById("deleteBody").innerHTML = `
+    <span class="eyebrow danger-text">${APP_LANG === "pt" ? "Ação irreversível" : "Irreversible action"}</span>
+    <h2 class="modal-title delete-title">${APP_LANG === "pt" ? "Excluir este item e toda a hierarquia abaixo?" : "Delete this item and its entire hierarchy?"}</h2>
+    <div class="delete-warning">
+      <b>${APP_LANG === "pt" ? "Esta exclusão não pode ser desfeita." : "This deletion cannot be undone."}</b>
+      <span>${APP_LANG === "pt" ? `Serão excluídos ${all.length} item(ns), incluindo todos os filhos.` : `${all.length} item(s) will be deleted, including every child.`}</span>
+    </div>
+    <div class="delete-summary">${esc(breakdown)}</div>
+    <div class="delete-preview">
+      <div class="delete-preview-head"><strong>${APP_LANG === "pt" ? "Estrutura completa que será excluída" : "Complete structure that will be deleted"}</strong><span>${all.length}</span></div>
+      <ul class="delete-tree">${deletionTreeHTML(id)}</ul>
+    </div>
+    <div class="delete-actions">
+      <button onclick="closeDeleteModal()">${APP_LANG === "pt" ? "Cancelar" : "Cancel"}</button>
+      <button class="danger" onclick="confirmDeleteItem()">🗑 ${APP_LANG === "pt" ? `Excluir ${all.length} item(ns)` : `Delete ${all.length} item(s)`}</button>
+    </div>`;
+  modal.classList.remove("hidden");
+}
+function closeDeleteModal(){
+  const modal = document.getElementById("deleteModal");
+  if(modal) modal.classList.add("hidden");
+  pendingDeleteId = null;
+}
+function confirmDeleteItem(){
+  const id = pendingDeleteId;
+  const t = byId(id); if(!t){ closeDeleteModal(); return; }
+  const desc = descendantsOf(id);
   const remove = new Set([id].concat(desc.map(d => d.id)));
+  const parentId = t.parentId || null;
   const p = proj();
   p.items = p.items.filter(x => !remove.has(x.id));
   if(detailId && remove.has(detailId)) closeDetail();
-  if(currentFocus && remove.has(currentFocus)) currentFocus = t.parentId || null;
+  if(currentFocus && remove.has(currentFocus)) currentFocus = parentId;
+  closeDeleteModal();
   refresh();
+  toast(APP_LANG === "pt" ? "Item e hierarquia excluídos." : "Item and hierarchy deleted.");
 }
 /* muda o nível do item; pais/filhos inválidos são reacomodados */
 function setItemKind(id, kind){
@@ -2793,7 +3209,10 @@ function renderDetail(){
           <span class="pill" style="color:#8b949e">${periodLabel(t.start||0).top}${t.dur>1?" +"+(t.dur-1):""}</span>
         </div>
       </div>
-      ${ringHTML(detailProgress(t), 74)}
+      <div class="detail-header-actions">
+        ${ringHTML(detailProgress(t), 74)}
+        <button class="danger" onclick="deleteItem('${t.id}')">🗑 ${APP_LANG === "pt" ? "Excluir" : "Delete"}</button>
+      </div>
     </div>
 
     <div class="mtabs">
