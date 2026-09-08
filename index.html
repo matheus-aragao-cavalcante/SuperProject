@@ -506,7 +506,7 @@ footer a:hover{color:var(--accent);}
     <h2 id="myProjectsTitle">Meus Projetos</h2>
     <div id="projects" class="grid"></div>
   <footer style="margin-top: 40px; padding: 25px 0; border-top: 1px dashed var(--line); text-align: center; animation: fadeUp 0.5s both;">
-      <p class="dim" style="margin-bottom: 15px; font-size: 13px;">© 2026 Desenvolvido por Matheus Aragão. Todos os direitos reservados.</p>
+      <p class="dim" id="footerCopyright" style="margin-bottom: 15px; font-size: 13px;">© 2026 Desenvolvido por Matheus Aragão. Todos os direitos reservados.</p>
       <div style="display: flex; justify-content: center; gap: 18px;">
         <a href="https://www.linkedin.com/in/matheus2002ac/" target="_blank" style="text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 13px; transition: color 0.2s;">
           <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
@@ -616,8 +616,10 @@ let appPrefs = {};
 try{ appPrefs = JSON.parse(localStorage.getItem(PREFS_KEY) || "{}"); }catch(_){ appPrefs = {}; }
 
 function detectLanguage(){
-  const raw = (navigator.languages && navigator.languages[0]) || navigator.language || "pt-BR";
-  return String(raw).toLowerCase().startsWith("pt") ? "pt" : "en";
+  try{
+    const raw = (navigator.languages && navigator.languages[0]) || navigator.language || "";
+    return String(raw).toLowerCase().startsWith("pt") ? "pt" : "en";
+  }catch(_){ return "en"; }
 }
 const APP_LANG = detectLanguage();
 document.documentElement.lang = APP_LANG === "pt" ? "pt-BR" : "en";
@@ -730,7 +732,8 @@ const I18N = {
     "gantt.today":"▏hoje", "gantt.help":"Clique na barra para avançar a fase. ◀ ▶ movem no tempo, − + mudam a duração, ⋯ abre os detalhes.",
     "prompt.renameItem":"Renomear item:",
     "view.list":"☰ Lista", "view.boards":"▦ Grade", "view.kanban":"▤ Kanban", "view.sprint":"🏁 Sprint", "view.gantt":"📊 Gantt",
-    "view.treeOnly":"Na Hierarquia os itens aparecem em árvore. Escolha um nível (Épicos, Features...) para usar Lista, Grade, Kanban, Sprint ou Gantt."
+    "view.treeOnly":"Na Hierarquia os itens aparecem em árvore. Escolha um nível (Épicos, Features...) para usar Lista, Grade, Kanban, Sprint ou Gantt.",
+    "footer.copyright":"© 2026 Desenvolvido por Matheus Aragão. Todos os direitos reservados."
   },
   en:{
     "theme.light":"☀️ Light", "theme.dark":"🌙 Dark", "theme.label":"Toggle theme",
@@ -839,7 +842,8 @@ const I18N = {
     "gantt.today":"▏today", "gantt.help":"Click a bar to advance its phase. ◀ ▶ move it in time, − + change duration, ⋯ opens details.",
     "prompt.renameItem":"Rename item:",
     "view.list":"☰ List", "view.boards":"▦ Grid", "view.kanban":"▤ Kanban", "view.sprint":"🏁 Sprint", "view.gantt":"📊 Gantt",
-    "view.treeOnly":"The Hierarchy shows items as a tree. Pick a level (Epics, Features...) to use List, Grid, Kanban, Sprint or Gantt."
+    "view.treeOnly":"The Hierarchy shows items as a tree. Pick a level (Epics, Features...) to use List, Grid, Kanban, Sprint or Gantt.",
+    "footer.copyright":"© 2026 Developed by Matheus Aragão. All rights reserved."
   }
 };
 
@@ -1218,6 +1222,7 @@ function applyStaticLanguage(){
   setText("saveHomeJson", tr("home.saveJson"));
   const help=document.getElementById("helpBtn"); if(help) help.title=tr("common.help");
   setText("myProjectsTitle", tr("home.myProjects"));
+  setText("footerCopyright", tr("footer.copyright"));
   setText("projectEyebrow", tr("common.project"));
   setText("projectLevelsLabel", tr("project.levels"));
   setText("viewLabel", tr("project.view"));
