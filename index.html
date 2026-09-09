@@ -833,7 +833,7 @@ button.primary{box-shadow:0 5px 18px color-mix(in srgb,var(--accent) 14%,transpa
   </div>
 </div>
 <header>
-  <h2><span class="bolt">⚡</span> SuperProject</h2>
+  <h2><span class="bolt" onclick="home()">⚡</span> SuperProject</h2>
   <div class="header-tools">
     <button id="themeToggle" class="ghost" onclick="toggleTheme()" aria-label="Alternar tema"></button>
     <div id="headerNav"></div>
@@ -2268,7 +2268,7 @@ function openProject(index){
   applyCurrentProjectColors();
 
   document.getElementById("headerNav").innerHTML =
-    `<button class="back-btn" onclick="home()"><span class="arrow">←</span> ${APP_LANG==="pt"?"Voltar":"Back"}</button>`;
+    `<button class="back-btn" SuperProject><span class="arrow">←</span> ${APP_LANG==="pt"?"Voltar":"Back"}</button>`;
 
   document.getElementById("projectActions").innerHTML = `
     <button class="primary" onclick="openNewItem('task',null)" title="${APP_LANG === "pt" ? "Criar uma nova tarefa e escolher seu vínculo hierárquico" : "Create a new task and choose its parent"}">+ ${APP_LANG === "pt" ? "Nova tarefa" : "New task"}</button>
