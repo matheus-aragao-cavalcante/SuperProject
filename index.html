@@ -833,7 +833,8 @@ button.primary{box-shadow:0 5px 18px color-mix(in srgb,var(--accent) 14%,transpa
   </div>
 </div>
 <header>
-  <h2><span class="bolt">⚡</span> SuperProject</h2>
+  <h2 onclick="home()" onkeydown="if(event.key==='Enter'||event.key===' '){home()}" tabindex="0" role="button" style="cursor:pointer" title="Voltar para a página inicial">
+  <span class="bolt">⚡</span> SuperProject</h2>
   <div class="header-tools">
     <button id="themeToggle" class="ghost" onclick="toggleTheme()" aria-label="Alternar tema"></button>
     <div id="headerNav"></div>
